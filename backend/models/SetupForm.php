@@ -52,7 +52,7 @@ class SetupForm extends Model
         $user = new User();
         $user->username = $this->username;
         $user->email = $this->email;
-        $user->status = 10; //Pre ativar
+        $user->status = User::STATUS_ACTIVE; //Pre ativar
         $user->setPassword($this->password);
         $user->generateAuthKey();
 
@@ -74,7 +74,7 @@ class SetupForm extends Model
         $user = new User();
         $user->username = $this->username;
         $user->email = $this->email;
-        $user->status = $preAtivar ? 10 : 9;
+        $user->status = $preAtivar ? User::STATUS_ACTIVE : User::STATUS_INACTIVE;
         $user->generateAuthKey();
 
         if($user->save())

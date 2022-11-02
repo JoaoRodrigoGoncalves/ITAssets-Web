@@ -4,13 +4,14 @@ namespace common\models;
 
 use Yii;
 use yii\base\Model;
+use yii\rbac\Role;
 
 /**
  * Login form
  */
 class LoginForm extends Model
 {
-    public $username;
+    public $email;
     public $password;
     public $rememberMe = true;
 
@@ -24,71 +25,83 @@ class LoginForm extends Model
     {
         return [
             // username and password are both required
-            [['username', 'password'], 'required'],
+            [['email', 'password'], 'required'],
+            // email tem de ser do tipo email
+            ['email', 'email'],
             // rememberMe must be a boolean value
             ['rememberMe', 'boolean'],
-            // password is validated by validatePassword()
-            ['password', 'validatePassword'],
         ];
     }
 
     /**
-     * Validates the password.
-     * This method serves as the inline validation for password.
-     *
-     * @param string $attribute the attribute currently being validated
-     * @param array $params the additional name-value pairs given in the rule
+     * Realiza as devidas verificações e inicia a sessão do utilizador
+     * @param array $allowedRoles Array de roles autorizadas a iniciar sessão
+     * @see yii\rbac\Role
+     * @return bool Se a sessão foi iniciada ou não
      */
-    public function validatePassword($attribute, $params)
+    public function loginUser(array $allowedRoles): bool
     {
-        if (!$this->hasErrors()) {
+        if($this->validate())
+        {
             $user = $this->getUser();
-
-            if($user) //Validação já existente no código base. Validação de existencia de utilizador
+            if($user)
             {
-                $authManager = Yii::$app->authManager;
-                $userRBAC = $authManager->getRolesByUser($user->id);
+                $auth = Yii::$app->authManager;
 
-                // Validação de permissões
-                if(in_array($authManager->getRole('administrador'), $userRBAC) || in_array($authManager->getRole('operadorLogistico'), $userRBAC)) {
-                    if (!$user->validatePassword($this->password)) {
-                        $this->addError($attribute, 'Nome de utilizador ou palavra-passe incorretos.');
+                $userRoles = $auth->getRolesByUser($user->id);
+
+                $isLoginAllowed = false;
+                foreach ($allowedRoles as $allowedRole) {
+                    if(in_array($allowedRole, $userRoles))
+                        $isLoginAllowed = true;
+                }
+
+                if($isLoginAllowed)
+                {
+                    if($user->validatePassword($this->password))
+                    {
+                        return Yii::$app->user->login($user, $this->rememberMe ? 3600 * 24 * 30 : 0);
+                    }
+                    else
+                    {
+                        $this->addError("passowrd", "Credenciais incorretas");
                     }
                 }
                 else
                 {
-                    $this->addError($attribute, 'Permissões insuficientes.');
+                    $this->addError("password", "Permissões insuficientes");
                 }
             }
             else
             {
-                $this->addError($attribute, 'Nome de utilizador ou palavra-passe incorretos.');
+                $this->addError("password", "Credenciais incorretas");
             }
         }
-    }
-
-    /**
-     * Logs in a user using the provided username and password.
-     *
-     * @return bool whether the user is logged in successfully
-     */
-    public function login()
-    {
-        if ($this->validate()) {
-            return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600 * 24 * 30 : 0);
+        else
+        {
+            $this->addError("password", "Uhhh campos?");
         }
         return false;
     }
 
     /**
-     * Finds user by [[username]]
+     * @deprecated Apenas está aqui para não rebentar com os testes. NÃO UTILIZAR
+     * @return bool false
+     */
+    public function login()
+    {
+        return false;
+    }
+
+    /**
+     * Finds user by [[email]]
      *
      * @return User|null
      */
     protected function getUser()
     {
         if ($this->_user === null) {
-            $this->_user = User::findByUsername($this->username);
+            $this->_user = User::findOne(['email' => $this->email, 'status' => User::STATUS_ACTIVE]);
         }
 
         return $this->_user;

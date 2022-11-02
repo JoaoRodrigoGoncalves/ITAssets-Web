@@ -67,20 +67,23 @@ class LoginController extends Controller
     public function actionIndex()
     {
         if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
+            return $this->redirect(Url::to(['dashboard/index']));
         }
 
-        $admins = Yii::$app->authManager->getUserIdsByRole("administrador");
+        $auth = Yii::$app->authManager;
+
+        $admins = $auth->getUserIdsByRole("administrador");
         if(count($admins) > 0)
         {
             $this->layout = 'main-login';
 
             $model = new LoginForm();
-            if($this->request->isPost){
+            if($this->request->isPost)
+            {
                 $model->load(Yii::$app->request->post());
-                if ($model->login()) {
-                    dd("sessão");
-                    return $this->goBack();
+
+                if ($model->loginUser([$auth->getRole("administrador"), $auth->getRole("operadorLogistica")])) {
+                    return $this->redirect(Url::to(['dashboard/index']));
                 }
             }
 
@@ -104,7 +107,7 @@ class LoginController extends Controller
     public function actionLogout()
     {
         Yii::$app->user->logout();
-        return $this->goHome();
+        return $this->redirect(Url::to(['login/index']));
     }
 
     /**

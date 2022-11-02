@@ -32,6 +32,7 @@ class LoginFormTest extends \Codeception\Test\Unit
 
     public function testLoginNoUser()
     {
+        // TODO: Corrigir código para funcionar com o novo sistema de autenticação
         $model = new LoginForm([
             'username' => 'not_existing_username',
             'password' => 'not_existing_password',
@@ -43,6 +44,7 @@ class LoginFormTest extends \Codeception\Test\Unit
 
     public function testLoginWrongPassword()
     {
+        // TODO: Corrigir código para funcionar com o novo sistema de autenticação
         $model = new LoginForm([
             'username' => 'bayer.hudson',
             'password' => 'wrong_password',
@@ -55,6 +57,7 @@ class LoginFormTest extends \Codeception\Test\Unit
 
     public function testLoginCorrect()
     {
+        // TODO: Corrigir código para funcionar com o novo sistema de autenticação
         $model = new LoginForm([
             'username' => 'bayer.hudson',
             'password' => 'password_0',
