@@ -4,9 +4,12 @@ namespace backend\controllers;
 
 use common\models\LoginForm;
 use common\models\User;
+use backend\models\SetupForm;
+use PHPUnit\TextUI\XmlConfiguration\UpdateSchemaLocationTo93;
 use Yii;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\Response;
 
@@ -49,7 +52,6 @@ class LoginController extends Controller
      */
     public function actions()
     {
-        // TODO: Não me cheira que seja para aqui
         return [
             'error' => [
                 'class' => \yii\web\ErrorAction::class,
@@ -74,8 +76,12 @@ class LoginController extends Controller
             $this->layout = 'main-login';
 
             $model = new LoginForm();
-            if ($model->load(Yii::$app->request->post()) && $model->login()) {
-                return $this->goBack();
+            if($this->request->isPost){
+                $model->load(Yii::$app->request->post());
+                if ($model->login()) {
+                    dd("sessão");
+                    return $this->goBack();
+                }
             }
 
             $model->password = '';
@@ -86,7 +92,7 @@ class LoginController extends Controller
         }
         else
         {
-            return $this->redirect('login/setup');
+            return $this->redirect(Url::to(['login/setup']));
         }
     }
 
@@ -112,20 +118,18 @@ class LoginController extends Controller
             return $this->goHome();
         }
 
-        $model = new User();
+        $model = new SetupForm();
 
         if($this->request->isPost){
-            $model->status = 10; // Active
-            if($model->load($this->request->post()) && $model->save()){
-                $manager = Yii::$app->authManager;
-                $manager->assign($manager->getRole('administrador'), $model->id);
-                return $this->redirect('login');
+            $model->load(Yii::$app->request->post());
+            if($model->setupFirstAdmin()){
+                return $this->redirect(Url::to(['login/index']));
             }
-        } else {
-            $model->password = "";
         }
 
+        $model->password = "";
         $this->layout = 'main-login';
+
         return $this->render('setup', [
             'model' => $model,
         ]);

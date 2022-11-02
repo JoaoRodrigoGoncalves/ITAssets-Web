@@ -54,7 +54,9 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            [['username', 'email', 'password'], 'required', 'message' => 'Campo Obrigatório'], // Campos obrigatórios
+            [['username', 'email'], 'required', 'message' => 'Campo Obrigatório'], // Campos obrigatórios
+            ['email', 'unique', 'targetClass' => '\common\models\User', 'message' => 'O E-Mail indicado já está em uso'],
+            [['username', 'email'], 'string', 'min' => 2, 'max' => 255],
             ['email', 'email'], // validação de email
             ['status', 'default', 'value' => self::STATUS_INACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_DELETED]],
@@ -191,13 +193,6 @@ class User extends ActiveRecord implements IdentityInterface
     public function setPassword($password)
     {
         $this->password_hash = Yii::$app->security->generatePasswordHash($password);
-    }
-
-    /**
-     * Devolve uma string vazia para o formulário de setup funcionar
-     */
-    public function getPassword(){
-        return "";
     }
 
     /**
