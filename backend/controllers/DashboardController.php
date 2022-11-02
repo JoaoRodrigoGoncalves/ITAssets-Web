@@ -2,18 +2,12 @@
 
 namespace backend\controllers;
 
-use common\models\LoginForm;
-use Yii;
-use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
-use yii\web\Controller;
-use yii\web\Response;
+use yii\filters\VerbFilter;
 
-/**
- * Site controller
- */
-class SiteController extends Controller
+class DashboardController extends \yii\web\Controller
 {
+
     /**
      * {@inheritdoc}
      */
@@ -24,24 +18,18 @@ class SiteController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['error'],
-                        'allow' => true,
-                        'roles' => ['?']
-                    ],
-                    [
                         'actions' => ['index'],
                         'allow' => true,
-                        'roles' => ['@'],
+                        'roles' => ['administrador', 'operadorLogistico']
                     ],
                 ],
             ],
-            // TODO: Verificar o que é que faz
-            'verbs' => [
-                'class' => VerbFilter::class,
-                'actions' => [
-                    'logout' => ['post'],
-                ],
-            ],
+//            'verbs' => [
+//                'class' => VerbFilter::class,
+//                'actions' => [
+//                    'logout' => ['post'],
+//                ],
+//            ],
         ];
     }
 
@@ -57,13 +45,10 @@ class SiteController extends Controller
         ];
     }
 
-    /**
-     * Displays homepage.
-     *
-     * @return string
-     */
     public function actionIndex()
     {
+        $this->layout = 'main';
         return $this->render('index');
     }
+
 }

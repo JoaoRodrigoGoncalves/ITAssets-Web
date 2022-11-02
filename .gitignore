@@ -4,7 +4,10 @@
 /yii_test.bat
 
 # phpstorm project files
-.idea
+!.idea
+.idea/*
+# nao ignorar scopes
+!.idea/scopes
 
 # netbeans project files
 nbproject
