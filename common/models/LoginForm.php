@@ -43,8 +43,26 @@ class LoginForm extends Model
     {
         if (!$this->hasErrors()) {
             $user = $this->getUser();
-            if (!$user || !$user->validatePassword($this->password)) {
-                $this->addError($attribute, 'Incorrect username or password.');
+
+            if($user) //Validação já existente no código base. Validação de existencia de utilizador
+            {
+                $authManager = Yii::$app->authManager;
+                $userRBAC = $authManager->getRolesByUser($user->id);
+
+                // Validação de permissões
+                if(in_array($authManager->getRole('administrador'), $userRBAC) || in_array($authManager->getRole('operadorLogistico'), $userRBAC)) {
+                    if (!$user->validatePassword($this->password)) {
+                        $this->addError($attribute, 'Nome de utilizador ou palavra-passe incorretos.');
+                    }
+                }
+                else
+                {
+                    $this->addError($attribute, 'Permissões insuficientes.');
+                }
+            }
+            else
+            {
+                $this->addError($attribute, 'Nome de utilizador ou palavra-passe incorretos.');
             }
         }
     }
@@ -59,7 +77,6 @@ class LoginForm extends Model
         if ($this->validate()) {
             return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600 * 24 * 30 : 0);
         }
-        
         return false;
     }
 

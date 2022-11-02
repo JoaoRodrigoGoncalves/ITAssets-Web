@@ -49,7 +49,7 @@ class LoginController extends Controller
      */
     public function actions()
     {
-        // CHECKLATER: Não me cheira que seja para aqui
+        // TODO: Não me cheira que seja para aqui
         return [
             'error' => [
                 'class' => \yii\web\ErrorAction::class,
@@ -69,7 +69,6 @@ class LoginController extends Controller
         }
 
         $admins = Yii::$app->authManager->getUserIdsByRole("administrador");
-
         if(count($admins) > 0)
         {
             $this->layout = 'main-login';
@@ -87,7 +86,7 @@ class LoginController extends Controller
         }
         else
         {
-            return $this->redirect('setup');
+            return $this->redirect('login/setup');
         }
     }
 
@@ -113,10 +112,22 @@ class LoginController extends Controller
             return $this->goHome();
         }
 
-        //CHECKLATER: Se é preciso passar um model
+        $model = new User();
 
+        if($this->request->isPost){
+            $model->status = 10; // Active
+            if($model->load($this->request->post()) && $model->save()){
+                $manager = Yii::$app->authManager;
+                $manager->assign($manager->getRole('administrador'), $model->id);
+                return $this->redirect('login');
+            }
+        } else {
+            $model->password = "";
+        }
+
+        $this->layout = 'main-login';
         return $this->render('setup', [
-            'model' => new SetupForm()
+            'model' => $model,
         ]);
     }
 }
