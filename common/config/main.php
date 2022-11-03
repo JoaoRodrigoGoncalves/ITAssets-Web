@@ -7,22 +7,15 @@ return [
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
     'components' => [
         'urlManager' => [
-
             'class' => 'yii\web\UrlManager',
-
             'enablePrettyUrl' => true,
-
             'showScriptName' => false,
-
         ],
-
         'authManager' => [
             'class' => 'yii\rbac\DbManager',
             // uncomment if you want to cache RBAC items hierarchy
             // 'cache' => 'cache',
         ],
-
-        // ...
     ],
 ];
 

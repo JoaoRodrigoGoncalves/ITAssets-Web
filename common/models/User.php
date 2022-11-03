@@ -54,8 +54,24 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
+            [['username', 'email'], 'required', 'message' => 'Campo Obrigatório'], // Campos obrigatórios
+            ['email', 'unique', 'targetClass' => '\common\models\User', 'message' => 'O E-Mail indicado já está em uso'],
+            [['username', 'email'], 'string', 'min' => 2, 'max' => 255],
+            ['email', 'email'], // validação de email
             ['status', 'default', 'value' => self::STATUS_INACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_DELETED]],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function attributeLabels()
+    {
+        return [
+            'username' => 'Nome de Utilizador',
+            'password' => 'Palavra-Passe',
+            'email' => 'E-Mail'
         ];
     }
 

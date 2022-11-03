@@ -4,9 +4,12 @@ namespace backend\controllers;
 
 use common\models\LoginForm;
 use common\models\User;
+use backend\models\SetupForm;
+use PHPUnit\TextUI\XmlConfiguration\UpdateSchemaLocationTo93;
 use Yii;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\Response;
 
@@ -49,7 +52,6 @@ class LoginController extends Controller
      */
     public function actions()
     {
-        // CHECKLATER: Não me cheira que seja para aqui
         return [
             'error' => [
                 'class' => \yii\web\ErrorAction::class,
@@ -65,18 +67,24 @@ class LoginController extends Controller
     public function actionIndex()
     {
         if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
+            return $this->redirect(Url::to(['dashboard/index']));
         }
 
-        $admins = Yii::$app->authManager->getUserIdsByRole("administrador");
+        $auth = Yii::$app->authManager;
 
+        $admins = $auth->getUserIdsByRole("administrador");
         if(count($admins) > 0)
         {
             $this->layout = 'main-login';
 
             $model = new LoginForm();
-            if ($model->load(Yii::$app->request->post()) && $model->login()) {
-                return $this->goBack();
+            if($this->request->isPost)
+            {
+                $model->load(Yii::$app->request->post());
+
+                if ($model->loginUser([$auth->getRole("administrador"), $auth->getRole("operadorLogistica")])) {
+                    return $this->redirect(Url::to(['dashboard/index']));
+                }
             }
 
             $model->password = '';
@@ -87,7 +95,7 @@ class LoginController extends Controller
         }
         else
         {
-            return $this->redirect('setup');
+            return $this->redirect(Url::to(['login/setup']));
         }
     }
 
@@ -99,7 +107,7 @@ class LoginController extends Controller
     public function actionLogout()
     {
         Yii::$app->user->logout();
-        return $this->goHome();
+        return $this->redirect(Url::to(['login/index']));
     }
 
     /**
@@ -113,10 +121,20 @@ class LoginController extends Controller
             return $this->goHome();
         }
 
-        //CHECKLATER: Se é preciso passar um model
+        $model = new SetupForm();
+
+        if($this->request->isPost){
+            $model->load(Yii::$app->request->post());
+            if($model->setupFirstAdmin()){
+                return $this->redirect(Url::to(['login/index']));
+            }
+        }
+
+        $model->password = "";
+        $this->layout = 'main-login';
 
         return $this->render('setup', [
-            'model' => new SetupForm()
+            'model' => $model,
         ]);
     }
 }
