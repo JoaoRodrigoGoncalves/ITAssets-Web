@@ -40,9 +40,12 @@ AppAsset::register($this);
     ];
 
     //se nao tiver logado
-    /*if (Yii::$app->user->isGuest) {
+    if (!Yii::$app->user->isGuest) {
+        $menuItems = [
+            ['label' => 'Pedidos Reparação', 'url' => ['/site/PedidosReparacao']],
+        ];
 
-    }*/
+    }
 
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav me-auto mb-2 mb-md-0'],
