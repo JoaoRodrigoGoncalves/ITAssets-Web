@@ -35,21 +35,12 @@ AppAsset::register($this);
             'class' => 'navbar navbar-expand-md navbar-dark bg-dark fixed-top',
         ],
     ]);
-    $menuItems = [
-        //['label' => 'Home', 'url' => ['/site/index']],
-    ];
 
-    //se nao tiver logado
-    if (!Yii::$app->user->isGuest) {
-        $menuItems = [
-            ['label' => 'Pedidos Reparação', 'url' => ['/site/PedidosReparacao']],
-        ];
 
-    }
 
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav me-auto mb-2 mb-md-0'],
-        'items' => $menuItems,
+
     ]);
     if (Yii::$app->user->isGuest) {
         echo Html::tag('div',Html::a('Login',['/site/login'],['class' => ['btn btn-success text-decoration-none']]),['class' => ['d-flex']]);

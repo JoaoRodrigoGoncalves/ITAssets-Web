@@ -6,6 +6,7 @@ use frontend\models\ResendVerificationEmailForm;
 use frontend\models\VerifyEmailForm;
 use Yii;
 use yii\base\InvalidArgumentException;
+use yii\helpers\Url;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
@@ -75,7 +76,14 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        if(Yii::$app->user->isGuest)
+        {
+            return $this->render('index');
+        }else
+        {
+            return $this->redirect(Url::to(['dashboard/index']));
+        }
+
     }
 
     /**
@@ -88,10 +96,10 @@ class SiteController extends Controller
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }
-
+        $auth = Yii::$app->authManager;
         $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
+        if ($model->load(Yii::$app->request->post()) && $model->loginUser([$auth->getRole("funcionario")])) {
+            return $this->redirect(Url::to(['dashboard/index']));
         }
 
         $model->password = '';
@@ -119,18 +127,13 @@ class SiteController extends Controller
      *
      * @return mixed
      */
-    public function PedidosReparacao()
-    {
-
-        return $this->redirect('site/PedidosReparacao');
-    }
 
     /**
      * Signs user up.
      *
      * @return mixed
      */
-    public function actionSignup()
+    /*public function actionSignup()
     {
         $model = new SignupForm();
         if ($model->load(Yii::$app->request->post()) && $model->signup()) {
@@ -141,7 +144,7 @@ class SiteController extends Controller
         return $this->render('signup', [
             'model' => $model,
         ]);
-    }
+    }*/
 
     /**
      * Requests password reset.
