@@ -60,24 +60,21 @@ use yii\helpers\Html;
             <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
 
                 <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item">
-                    <i class="fas fa-user"></i> Ver detalhes
+                <div class="dropdown-item">
+                    <a class="btn"><i class="fas fa-user"></i> Ver detalhes</a>
 
-                </a>
+                </div>
                 <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item">
-                    <i class="fa-solid fa-right-from-bracket"></i> Sair
-
-                </a>
+                <div class="dropdown-item">
+                    <?=
+                    Html::beginForm(['/site/logout'], 'post')?>
+                    <button type="submit" class="btn"><i class="fa-solid fa-right-from-bracket"></i> Sair</button>
+                    <?=Html::endForm();
+                    ?>
+                </div>
 
             </div>
         </li>
     </ul>
-    <?=
-        Html::beginForm(['/site/logout'], 'post', ['class' => 'btn btn-info d-flex'])
-        . Html::submitButton(Yii::$app->user->identity->username ,
-            ['class' => 'btn btn-link text-light']
-        )
-        . Html::endForm();
-        ?>
+
 </nav>
