@@ -3,7 +3,7 @@ use yii\helpers\Html;
 ?>
 <div class="card">
     <div class="card-body login-card-body">
-        <p class="login-box-msg">Sign in to start your session</p>
+        <p class="login-box-msg">Inicie sessão para continuar</p>
 
         <?php $form = \yii\bootstrap4\ActiveForm::begin(['id' => 'login-form']) ?>
 
@@ -26,7 +26,7 @@ use yii\helpers\Html;
             ->passwordInput(['placeholder' => $model->getAttributeLabel('password')]) ?>
 
         <div class="row">
-            <div class="col-8">
+            <div class="col-7">
                 <?= $form->field($model, 'rememberMe')->checkbox([
                     'template' => '<div class="icheck-primary">{input}{label}</div>',
                     'labelOptions' => [
@@ -35,15 +35,15 @@ use yii\helpers\Html;
                     'uncheck' => null
                 ]) ?>
             </div>
-            <div class="col-4">
-                <?= Html::submitButton('Sign In', ['class' => 'btn btn-primary btn-block']) ?>
+            <div class="col-5">
+                <?= Html::submitButton('Iniciar Sessão', ['class' => 'btn btn-primary btn-block']) ?>
             </div>
         </div>
 
         <?php \yii\bootstrap4\ActiveForm::end(); ?>
 
         <p class="mb-1">
-            <a href="forgot-password.html">I forgot my password</a>
+            <a href="#">Esqueci a palavra-passe</a>
         </p>
     </div>
     <!-- /.login-card-body -->
