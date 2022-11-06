@@ -4,7 +4,6 @@ namespace common\models;
 
 use Yii;
 use yii\base\Model;
-use yii\rbac\Role;
 
 /**
  * Login form
@@ -25,11 +24,23 @@ class LoginForm extends Model
     {
         return [
             // username and password are both required
-            [['email', 'password'], 'required'],
+            [['email', 'password'], 'required', 'message' => 'Campo obrigatório'],
             // email tem de ser do tipo email
             ['email', 'email'],
             // rememberMe must be a boolean value
             ['rememberMe', 'boolean'],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function attributeLabels()
+    {
+        return [
+            'password' => 'Palavra-Passe',
+            'email' => 'E-Mail',
+            'rememberMe' => "Lembrar-me"
         ];
     }
 
@@ -64,7 +75,7 @@ class LoginForm extends Model
                     }
                     else
                     {
-                        $this->addError("passowrd", "Credenciais incorretas");
+                        $this->addError("password", "Credenciais incorretas");
                     }
                 }
                 else
