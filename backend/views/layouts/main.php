@@ -36,6 +36,21 @@ $this->registerJsFile($publishedRes[1].'/control_sidebar.js', ['depends' => '\ha
     <!-- Main Sidebar Container -->
     <?= $this->render('sidebar', ['assetDir' => $assetDir]) ?>
 
+    <?php if(Yii::$app->session->hasFlash('success')): ?>
+        <script type="application/javascript">
+            window.addEventListener('load', function() {
+                $(document).Toasts('create', {
+                    class: 'bg-success',
+                    title: 'Sucesso',
+                    icon: 'fas fa-check',
+                    body: '<?= Yii::$app->session->getFlash("success") ?>',
+                    autohide: true,
+                    delay: 3000,
+                });
+            })
+        </script>
+    <?php endif; ?>
+
     <!-- Content Wrapper. Contains page content -->
     <?= $this->render('content', ['content' => $content, 'assetDir' => $assetDir]) ?>
     <!-- /.content-wrapper -->
