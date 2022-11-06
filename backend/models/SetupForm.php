@@ -75,6 +75,7 @@ class SetupForm extends Model
         $user->username = $this->username;
         $user->email = $this->email;
         $user->status = $preAtivar ? User::STATUS_ACTIVE : User::STATUS_INACTIVE;
+        $user->setPassword($this->password);
         $user->generateAuthKey();
 
         if($user->save())

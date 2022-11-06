@@ -36,13 +36,13 @@
             echo \hail812\adminlte\widgets\Menu::widget([
                 'items' => [
                     ['label' => 'Empresa', 'icon' => 'building', 'url' => '/empresa/index'],
+                    ['label' => 'Operador Logistico', 'icon' => 'person', 'url' => '../operador/index'],
                     [
-                        'label' => 'Starter Pages',
+                        'label' => 'Operador Logistico',
                         'icon' => 'tachometer-alt',
-                        'badge' => '<span class="right badge badge-info">2</span>',
                         'items' => [
-                            ['label' => 'Active Page', 'url' => ['site/index'], 'iconStyle' => 'far'],
-                            ['label' => 'Inactive Page', 'iconStyle' => 'far'],
+                            ['label' => 'Operadores registados', 'url' => ['../web/operador/index'], 'iconStyle' => 'fa people'],
+                            ['label' => 'Criar Operador','url' => ['../web/operador/create'], 'iconStyle' => 'far'],
                         ]
                     ],
                     ['label' => 'Simple Link', 'icon' => 'th', 'badge' => '<span class="right badge badge-danger">New</span>'],
