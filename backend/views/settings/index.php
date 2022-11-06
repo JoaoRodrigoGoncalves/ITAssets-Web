@@ -54,7 +54,8 @@ $this->title = "Definições";
                         <?= $form->field($user,'username', [
                             'options' => ['class' => 'form-group has-feedback'],
                             'inputTemplate' => '<div class="col-sm-10">{input}</div>',
-                            'template' => '{beginWrapper}{label}{input}{error}{endWrapper}',
+                            'template' => '{beginWrapper}{label}{input}<div class="col-sm-2"></div>{error}{endWrapper}',
+                            'errorOptions' => ['class' => 'invalid-feedback d-block col-sm-10'],
                             'labelOptions' => ['class' => 'col-sm-2 col-form-label'],
                             'wrapperOptions' => ['class' => 'form-group row']
                         ])
@@ -63,7 +64,8 @@ $this->title = "Definições";
                         <?= $form->field($user,'email', [
                             'options' => ['class' => 'form-group has-feedback'],
                             'inputTemplate' => '<div class="col-sm-10">{input}</div>',
-                            'template' => '{beginWrapper}{label}{input}{error}{endWrapper}',
+                            'template' => '{beginWrapper}{label}{input}<div class="col-sm-2"></div>{error}{endWrapper}',
+                            'errorOptions' => ['class' => 'invalid-feedback d-block col-sm-10'],
                             'labelOptions' => ['class' => 'col-sm-2 col-form-label'],
                             'wrapperOptions' => ['class' => 'form-group row']
                         ])
@@ -79,20 +81,37 @@ $this->title = "Definições";
                         <h3>Alterar Palavra-passe</h3>
 
 
-                        <?php ActiveForm::begin(['action' => '/settings/update', 'class' => 'form-group' ]) ?>
-                            <div class="form-group row">
-                                <label class="col-sm-2 col-form-label">Palavra-passe atual</label>
-                                <div class="col-sm-10">
-                                    <input type="password" class="form-control" id="old_password" placeholder="Palavra-passe atual">
-                                </div>
-                            </div>
+                        <?php $passwordForm = ActiveForm::begin(['action' => '/settings/password', 'class' => 'form-group' ]) ?>
 
-                            <div class="form-group row">
-                                <label class="col-sm-2 col-form-label">Nova palavra-passe</label>
-                                <div class="col-sm-10">
-                                    <input type="password" class="form-control" id="new_password" placeholder="Nova palavra-passe">
-                                </div>
-                            </div>
+                            <?= $passwordForm->field($password,'old_password', [
+                                'options' => ['class' => 'form-group has-feedback'],
+                                'inputTemplate' => '<div class="col-sm-10">{input}</div>',
+                                'template' => '{beginWrapper}{label}{input}<div class="col-sm-2"></div>{error}{endWrapper}',
+                                'errorOptions' => ['class' => 'invalid-feedback d-block col-sm-10'],
+                                'labelOptions' => ['class' => 'col-sm-2 col-form-label'],
+                                'wrapperOptions' => ['class' => 'form-group row']
+                            ])
+                                ->passwordInput(['placeholder' => $password->getAttributeLabel('old_password')]) ?>
+
+                            <?= $passwordForm->field($password,'new_password', [
+                                'options' => ['class' => 'form-group has-feedback'],
+                                'inputTemplate' => '<div class="col-sm-10">{input}</div>',
+                                'template' => '{beginWrapper}{label}{input}<div class="col-sm-2"></div>{error}{endWrapper}',
+                                'errorOptions' => ['class' => 'invalid-feedback d-block col-sm-10'],
+                                'labelOptions' => ['class' => 'col-sm-2 col-form-label'],
+                                'wrapperOptions' => ['class' => 'form-group row']
+                            ])
+                                ->passwordInput(['placeholder' => $password->getAttributeLabel('new_password')]) ?>
+
+                            <?= $passwordForm->field($password,'repeat_password', [
+                                'options' => ['class' => 'form-group has-feedback'],
+                                'inputTemplate' => '<div class="col-sm-10">{input}</div>',
+                                'template' => '{beginWrapper}{label}{input}<div class="col-sm-2"></div>{error}{endWrapper}',
+                                'errorOptions' => ['class' => 'invalid-feedback d-block col-sm-10'],
+                                'labelOptions' => ['class' => 'col-sm-2 col-form-label'],
+                                'wrapperOptions' => ['class' => 'form-group row']
+                            ])
+                                ->passwordInput(['placeholder' => $password->getAttributeLabel('repeat_password')]) ?>
 
                             <div class="form-group row">
                                 <div class="offset-sm-2 col-sm-10">

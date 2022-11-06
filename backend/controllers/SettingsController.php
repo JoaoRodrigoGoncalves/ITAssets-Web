@@ -2,6 +2,8 @@
 
 namespace backend\controllers;
 
+use backend\models\ChangePasswordForm;
+use Cassandra\Set;
 use common\models\User;
 use Yii;
 use yii\filters\AccessControl;
@@ -21,7 +23,7 @@ class SettingsController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['index', 'save', 'update'],
+                        'actions' => ['index', 'save', 'password'],
                         'allow' => true,
                         'roles' => ['administrador', 'operadorLogistico']
                     ],
@@ -31,7 +33,7 @@ class SettingsController extends Controller
                 'class' => VerbFilter::class,
                 'actions' => [
                     'save' => ['post'],
-                    'update' => ['post'],
+                    'password' => ['post'],
                 ],
             ],
         ];
@@ -65,7 +67,13 @@ class SettingsController extends Controller
     {
         $this->layout = "main";
         $user = User::findOne(['id' => Yii::$app->user->id]);
-        return $this->render('index', ['user' => $user]);
+
+        $password = new ChangePasswordForm();
+
+        if(Yii::$app->session->hasFlash('error_old_password'))
+            $password->addError('old_password', Yii::$app->session->getFlash('error_old_password'));
+
+        return $this->render('index', ['user' => $user, 'password' => $password]);
     }
 
     public function actionSave()
@@ -77,11 +85,12 @@ class SettingsController extends Controller
             if($user->validate())
             {
                 $user->save();
+                Yii::$app->session->setFlash('success', 'Dados atualizados com sucesso');
                 $this->redirect(Url::to(['settings/index']));
             }
             else
             {
-                // TODO: Erro validação falhou? Como passar para lá devolta?
+                // TODO: Erro validação falhou. Como passar para lá devolta?
                 // Talvez usar o addError ao $user e renderizar a index mesmo no /save
             }
         }
@@ -91,30 +100,15 @@ class SettingsController extends Controller
         }
     }
 
-    public function actionUpdate()
+    public function actionPassword()
     {
         if($this->request->isPost)
         {
-            dd($this->request);
-            $user = User::findOne(['id' => Yii::$app->user->id]);
-            if($user->validatePassword($this->request->old_password))
-            {
-                //TODO: Validar password (termos de comprimento e segurança) antes de a trocar
-                $user->setPassword($this->request->new_password);
-                $user->save();
-                $this->redirect(Url::to(['settings/index']));
-            }
-            else
-            {
-                //TODO: Old_password não é igual à atual. Como passar erro
-                //$user->addError(); mayhaps?
-                echo "DEBUG: Password errada";
-            }
+            $settings = new ChangePasswordForm();
+            $settings->load($this->request->post());
+            $settings->updatePassword(); // Não é necessário confirmar se foi possível atualizar porque a prórpia função já guarda um flash para isso
         }
-        else
-        {
-            $this->redirect(Url::to(['settings/index']));
-        }
+        $this->redirect(Url::to(['settings/index']));
     }
 
 }

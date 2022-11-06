@@ -75,7 +75,7 @@ class LoginForm extends Model
                     }
                     else
                     {
-                        $this->addError("passowrd", "Credenciais incorretas");
+                        $this->addError("password", "Credenciais incorretas");
                     }
                 }
                 else
