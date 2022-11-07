@@ -9,12 +9,13 @@ use yii\grid\GridView;
 /** @var yii\web\View $this */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 ?>
+<a href="<?=Url::to(['empresa/update', 'id' => $empresa->id]) ?>">Editar Dados</a>
 <div class="container mt-5">
     <div class="row d-flex justify-content-center">
         <div class="col-md-7">
             <div class="card p-3 py-4">
                 <div class="text-center">
-                    <img src="../../assets/img/empresa2.jpg" width="200" class="rounded-circle">
+                    <?= Html::img('@web/img/empresa2.jpg', ['alt'=>'some', 'class'=>'rounded-circle','width'=>'200']);?>
                 </div>
                 <div class="text-center mt-3">
                     <h3 class="mt-2 mb-0"><?=$empresa->nome?></h3>
