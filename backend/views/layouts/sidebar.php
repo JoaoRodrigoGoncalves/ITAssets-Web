@@ -40,7 +40,7 @@ use yii\helpers\Url;
             <?php
             echo \hail812\adminlte\widgets\Menu::widget([
                 'items' => [
-                    ['label' => 'Empresa', 'icon' => 'building', 'url' => '/empresa/index'],
+                    ['label' => 'Empresa', 'icon' => 'building', 'url' => '../empresa/index'],
                     [
                         'label' => 'Starter Pages',
                         'icon' => 'tachometer-alt',
