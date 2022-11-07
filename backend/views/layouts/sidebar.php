@@ -42,11 +42,9 @@ use yii\helpers\Url;
                 'items' => [
 
                     ['label' => 'Empresa', 'icon' => 'building', 'url' => '../empresa/index'],
-                    ['label' => 'Operador Logistico', 'icon' => 'person', 'url' => '../operador/index'],
-
                     [
                         'label' => 'Operador Logistico',
-                        'icon' => 'tachometer-alt',
+                        'icon' => 'users',
                         'items' => [
                             ['label' => 'Operadores registados', 'url' => ['../web/operador/index'], 'iconStyle' => 'fa people'],
                             ['label' => 'Criar Operador','url' => ['../web/operador/create'], 'iconStyle' => 'far'],

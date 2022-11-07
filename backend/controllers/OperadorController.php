@@ -6,9 +6,11 @@ namespace backend\controllers;
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
+use yii\helpers\Url;
 use yii\web\Controller;
 use common\models\User;
 use backend\models\SetupForm;
+use function PHPUnit\Framework\directoryExists;
 
 class OperadorController extends Controller
 {
@@ -39,31 +41,39 @@ class OperadorController extends Controller
     }
     public function actionIndex()
     {
+        if (!Yii::$app->user->isGuest) {
+            return $this->render('index');
+        }else{
+            return $this->redirect(Url::to(['login/index']));
+        }
 
-        return $this->render('index');
     }
 
     public function actionCreate()
     {
-        $model = new SetupForm();
+        if (!Yii::$app->user->isGuest) {
+            $model = new SetupForm();
+            $roles = null; //TODO: verificar
+            foreach (Yii::$app->authManager->getRoles() as $role)
+                $roles[$role->name] = $role->name; //TODO: Trocar nome apresentado
 
-        if ($this->request->isPost) {
-            $model->load(Yii::$app->request->post());
-            if ($model->createUser(false)) {
-                return $this->redirect(['view', 'id' => $model->id]);
+            if ($this->request->isPost) {
+                $model->load($this->request->post());
+                $model->role = $this->request->post()['SetupForm']['role']; //TODO: ver disto
+
+                if ($model->createUser(false)) {
+                    return $this->redirect('index');
+                }
+            } else {
+                return $this->render('create', [
+                    'model' => $model,
+                    'roles' => $roles,
+                ]);
             }
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
         }
-
-        /*if($this->request->isPost){
-
-            if($model){
-                return $this->redirect(Url::to(['login/index']));
-            }
-        }*/
+        else {
+            return $this->redirect(Url::to(['login/index']));
+        }
 
     }
 

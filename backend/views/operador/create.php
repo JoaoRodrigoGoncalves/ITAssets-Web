@@ -14,5 +14,6 @@ $this->params['breadcrumbs'][] = ['label' => 'Operador', 'url' => ['index']];
 
     <?= $this->render('_form', [
         'model' => $model,
+        'roles' => $roles,
     ]) ?>
 </div>

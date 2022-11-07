@@ -3,9 +3,7 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
-/** @var yii\web\View $this */
-/** @var common\models\User $model */
-/** @var yii\widgets\ActiveForm $form */
+
 ?>
 
 <div class="operador-form">
@@ -17,6 +15,11 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model,'password')->label(false)->passwordInput(['placeholder' => $model->getAttributeLabel('password'), 'required' => true]) ?>
+
+    <?=  $form->field($model,'role')->dropDownList($roles)?>
+
+
+
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
