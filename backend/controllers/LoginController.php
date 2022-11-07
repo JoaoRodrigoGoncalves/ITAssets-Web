@@ -3,9 +3,7 @@
 namespace backend\controllers;
 
 use common\models\LoginForm;
-use common\models\User;
 use backend\models\SetupForm;
-use PHPUnit\TextUI\XmlConfiguration\UpdateSchemaLocationTo93;
 use Yii;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
