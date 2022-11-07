@@ -38,22 +38,10 @@ class EmpresaController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Empresa::find(),
-            /*
-            'pagination' => [
-                'pageSize' => 50
-            ],
-            'sort' => [
-                'defaultOrder' => [
-                    'id' => SORT_DESC,
-                ]
-            ],
-            */
-        ]);
+        $empresa = Empresa::findOne(1);
 
         return $this->render('index', [
-            'dataProvider' => $dataProvider,
+            'empresa' => $empresa,
         ]);
     }
 
