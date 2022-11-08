@@ -11,10 +11,19 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="empresa-create">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <div class="container">
+        <h1><?= Html::encode($this->title) ?></h1>
+        <br>
+        <div class="card">
+            <div class="card-body">
+                <?= $this->render('_form', [
+                    'model' => $model,
+                ]) ?>
+            </div>
+        </div>
+    </div>
 
-    <?= $this->render('_form', [
-        'model' => $model,
-    ]) ?>
+
+
 
 </div>

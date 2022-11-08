@@ -15,7 +15,7 @@ use yii\grid\GridView;
     <br>
     <div class="card">
         <div class="card-header">
-            <?= Html::a('Registar', ['create'], ['class' => 'btn btn-primary']) ?>
+            <?= Html::a('Registar', ['create'], ['class' => 'btn btn-primary  float-right']) ?>
         </div>
         <div class="card-body">
             <table class="table table-striped">
@@ -40,6 +40,10 @@ use yii\grid\GridView;
                                 echo "<span class='badge badge-dark'>" . ucfirst($role->name) . "</span>";
                             }
                             ?>
+                        </td>
+                        <td>
+                            <a href="" class="btn btn-success"><i class="fas fa-user-edit"></i></a>
+                            <a href="" class="btn btn-danger"><i class="fas fa-trash-alt"></i></a>
                         </td>
                     </tr>
                     <?php } ?>

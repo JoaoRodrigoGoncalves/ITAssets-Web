@@ -9,11 +9,12 @@ use yii\grid\GridView;
 /** @var yii\web\View $this */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 ?>
-<a href="<?=Url::to(['empresa/update', 'id' => $empresa->id]) ?>">Editar Dados</a>
+
 <div class="container mt-5">
     <div class="row d-flex justify-content-center">
         <div class="col-md-7">
             <div class="card p-3 py-4">
+
                 <div class="text-center">
                     <?= Html::img('@web/img/empresa2.jpg', ['alt'=>'some', 'class'=>'rounded-circle','width'=>'200']);?>
                 </div>
@@ -33,6 +34,8 @@ use yii\grid\GridView;
                                 <h6 class="text-muted f-w-400"><?=$empresa->rua?>, <?=$empresa->codigoPostal?>,<br><?=$empresa->localidade?></h6>
                             </div>
                         </div>
+                        <br>
+                        <a href="<?=Url::to(['empresa/update', 'id' => $empresa->id]) ?>" class="btn btn-secondary">Editar Dados</a>
                     </div>
                 </div>
             </div>
