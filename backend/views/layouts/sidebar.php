@@ -42,6 +42,7 @@ use yii\helpers\Url;
                 'items' => [
 
                     ['label' => 'Empresa', 'icon' => 'building', 'url' => '../empresa/index'],
+                    ['label' => 'Utilizadores', 'icon' => 'users', 'url' => '../operador/index'],
                     [
                         'label' => 'Operador Logistico',
                         'icon' => 'users',

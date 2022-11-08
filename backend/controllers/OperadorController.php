@@ -42,7 +42,9 @@ class OperadorController extends Controller
     public function actionIndex()
     {
         if (!Yii::$app->user->isGuest) {
-            return $this->render('index');
+            $utilizador = User::find()->all();
+
+            return $this->render('index', ['utilizador' => $utilizador]);
         }else{
             return $this->redirect(Url::to(['login/index']));
         }
