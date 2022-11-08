@@ -14,16 +14,16 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
 
+
+    <h6><b>Password</b></h6>
+
     <?= $form->field($model,'password')->label(false)->passwordInput(['placeholder' => $model->getAttributeLabel('password'), 'required' => true]) ?>
 
     <?=  $form->field($model,'role')->dropDownList($roles)?>
 
 
+    <?= Html::submitButton('Registar', ['class' => 'btn btn-success btn-lg btn-block']) ?>
 
-
-    <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
-    </div>
 
     <?php ActiveForm::end(); ?>
 
