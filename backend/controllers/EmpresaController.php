@@ -4,6 +4,7 @@ namespace backend\controllers;
 
 use common\models\Empresa;
 use yii\data\ActiveDataProvider;
+use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -24,7 +25,7 @@ class EmpresaController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['index','update'],
+                        'actions' => ['index','create', 'update'],
                         'allow' => true,
                         'roles' => ['administrador']
                     ],
@@ -42,28 +43,22 @@ class EmpresaController extends Controller
     /**
      * Lists all Empresa models.
      *
-     * @return string
+     * @return string|\yii\web\Response
      */
     public function actionIndex()
     {
-        $empresa = Empresa::findOne(1);
+        $empresa = Empresa::findOne(['id' => 1]);
 
-        return $this->render('index', [
-            'empresa' => $empresa,
-        ]);
-    }
-
-    /**
-     * Displays a single Empresa model.
-     * @param int $id ID
-     * @return string
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+        if($empresa)
+        {
+            return $this->render('index', [
+                'empresa' => $empresa,
+            ]);
+        }
+        else
+        {
+            return $this->redirect(Url::to(['empresa/create']));
+        }
     }
 
     /**
@@ -77,7 +72,7 @@ class EmpresaController extends Controller
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+                return $this->redirect(Url::to(['empresa/index']));
             }
         } else {
             $model->loadDefaultValues();
@@ -95,47 +90,16 @@ class EmpresaController extends Controller
      * @return string|\yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate($id)
+    public function actionUpdate()
     {
-
-        $model = $this->findModel($id);
+        $model = Empresa::findOne(['id' => 1]);
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect('index');
+            return $this->redirect(Url::to(['empresa/index']));
         }
 
         return $this->render('update', [
             'model' => $model,
         ]);
-    }
-
-    /**
-     * Deletes an existing Empresa model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $id ID
-     * @return \yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionDelete($id)
-    {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
-    }
-
-    /**
-     * Finds the Empresa model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $id ID
-     * @return Empresa the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel($id)
-    {
-        if (($model = Empresa::findOne(['id' => $id])) !== null) {
-            return $model;
-        }
-
-        throw new NotFoundHttpException('The requested page does not exist.');
     }
 }

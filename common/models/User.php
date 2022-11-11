@@ -75,6 +75,24 @@ class User extends ActiveRecord implements IdentityInterface
         ];
     }
 
+    public function getStatusLabel()
+    {
+        switch ($this->status)
+        {
+            case self::STATUS_ACTIVE:
+                return '<span class="badge badge-success">Ativo</span>';
+
+            case self::STATUS_DELETED:
+                return '<span class="badge badge-danger">Removido</span>';
+
+            case self::STATUS_INACTIVE:
+                return '<span class="badge badge-warning">Desativado</span>';
+
+            default:
+                return '<span class="badge badge-info">' . $status . '</span>';
+        }
+    }
+
     /**
      * {@inheritdoc}
      */

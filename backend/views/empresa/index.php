@@ -14,7 +14,6 @@ use yii\grid\GridView;
     <div class="row d-flex justify-content-center">
         <div class="col-md-7">
             <div class="card p-3 py-4">
-
                 <div class="text-center">
                     <?= Html::img('@web/img/empresa2.jpg', ['alt'=>'some', 'class'=>'rounded-circle','width'=>'200']);?>
                 </div>
@@ -35,7 +34,7 @@ use yii\grid\GridView;
                             </div>
                         </div>
                         <br>
-                        <a href="<?=Url::to(['empresa/update', 'id' => $empresa->id]) ?>" class="btn btn-secondary">Editar Dados</a>
+                        <a href="<?=Url::to(['empresa/update']) ?>" class="btn btn-secondary">Editar Dados</a>
                     </div>
                 </div>
             </div>

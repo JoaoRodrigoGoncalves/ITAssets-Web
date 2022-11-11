@@ -41,7 +41,7 @@ use yii\helpers\Url;
             echo \hail812\adminlte\widgets\Menu::widget([
                 'items' => [
                     ['label' => 'Empresa', 'icon' => 'building', 'url' => '../empresa/index'],
-                    ['label' => 'Utilizadores', 'icon' => 'users', 'url' => '../operador/index'],
+                    ['label' => 'Utilizadores', 'icon' => 'users', 'url' => '../utilizador/index'],
 
                     ['label' => 'Simple Link', 'icon' => 'th', 'badge' => '<span class="right badge badge-danger">New</span>'],
                     ['label' => 'MULTI LEVEL EXAMPLE', 'header' => true],

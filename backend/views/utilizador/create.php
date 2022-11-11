@@ -4,9 +4,9 @@ use yii\helpers\Html;
 
 /** @var yii\web\View $this */
 /** @var common\models\User $model */
+/** @var yii\rbac\Role[] $roles */
 
-$this->params['breadcrumbs'][] = ['label' => 'Operador', 'url' => ['index']];
-
+$this->params['breadcrumbs'][] = ['label' => 'Utilizadores', 'url' => ['index']];
 ?>
 <div class="container">
     <h2>Registo de Utilizadores</h2>

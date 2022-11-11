@@ -6,7 +6,7 @@ use yii\helpers\Html;
 /** @var common\models\User $model */
 
 $this->title = 'Atualizar dados: ' . $model->username;
-$this->params['breadcrumbs'][] = ['label' => 'Operador', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Utilizadores', 'url' => ['index']];
 
 $this->params['breadcrumbs'][] = 'Update';
 ?>
