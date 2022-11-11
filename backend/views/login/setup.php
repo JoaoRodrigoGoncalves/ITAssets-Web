@@ -2,6 +2,7 @@
 use yii\helpers\Html;
 
 $this->title = 'Registar conta de administração';
+/** @var \backend\models\Utilizador $model */
 ?>
 <div class="card">
     <div class="card-body login-card-body">
@@ -35,6 +36,15 @@ $this->title = 'Registar conta de administração';
         ])
             ->label(false)
             ->passwordInput(['placeholder' => $model->getAttributeLabel('password'), 'required' => true]) ?>
+
+        <?= $form->field($model,'repeat_password', [
+            'options' => ['class' => 'form-group has-feedback'],
+            'inputTemplate' => '{input}<div class="input-group-append"><div class="input-group-text"><span class="fas fa-lock"></span></div></div>',
+            'template' => '{beginWrapper}{input}{error}{endWrapper}',
+            'wrapperOptions' => ['class' => 'input-group mb-3']
+        ])
+            ->label(false)
+            ->passwordInput(['placeholder' => $model->getAttributeLabel('repeat_password'), 'required' => true]) ?>
 
             <div class="col-4">
                 <?= Html::submitButton('Registar', ['class' => 'btn btn-primary btn-block']) ?>

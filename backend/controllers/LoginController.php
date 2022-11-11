@@ -3,7 +3,7 @@
 namespace backend\controllers;
 
 use common\models\LoginForm;
-use backend\models\SetupForm;
+use backend\models\Utilizador;
 use Yii;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
@@ -119,7 +119,7 @@ class LoginController extends Controller
             return $this->goHome();
         }
 
-        $model = new SetupForm();
+        $model = new Utilizador();
 
         if($this->request->isPost){
             $model->load(Yii::$app->request->post());

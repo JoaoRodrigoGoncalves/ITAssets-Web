@@ -40,16 +40,9 @@ use yii\helpers\Url;
             <?php
             echo \hail812\adminlte\widgets\Menu::widget([
                 'items' => [
-                    ['label' => 'Empresa', 'icon' => 'building', 'url' => '/empresa/index'],
-                    [
-                        'label' => 'Starter Pages',
-                        'icon' => 'tachometer-alt',
-                        'badge' => '<span class="right badge badge-info">2</span>',
-                        'items' => [
-                            ['label' => 'Active Page', 'url' => ['site/index'], 'iconStyle' => 'far'],
-                            ['label' => 'Inactive Page', 'iconStyle' => 'far'],
-                        ]
-                    ],
+                    ['label' => 'Empresa', 'icon' => 'building', 'url' => '../empresa/index'],
+                    ['label' => 'Utilizadores', 'icon' => 'users', 'url' => '../utilizador/index'],
+
                     ['label' => 'Simple Link', 'icon' => 'th', 'badge' => '<span class="right badge badge-danger">New</span>'],
                     ['label' => 'MULTI LEVEL EXAMPLE', 'header' => true],
                     ['label' => 'Level1'],
