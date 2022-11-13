@@ -2,10 +2,13 @@
 
 namespace backend\modules\api;
 
+use Yii;
+use yii\base\Module;
+
 /**
  * api module definition class
  */
-class ModuleAPI extends \yii\base\Module
+class ModuleAPI extends Module
 {
     /**
      * {@inheritdoc}
@@ -19,6 +22,8 @@ class ModuleAPI extends \yii\base\Module
     {
         parent::init();
 
-        // custom initialization code goes here
+        //https://www.yiiframework.com/doc/guide/2.0/en/rest-authentication
+        Yii::$app->user->enableSession = false;
+        Yii::$app->user->loginUrl = null;
     }
 }

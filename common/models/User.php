@@ -89,7 +89,7 @@ class User extends ActiveRecord implements IdentityInterface
                 return '<span class="badge badge-warning">Desativado</span>';
 
             default:
-                return '<span class="badge badge-info">' . $status . '</span>';
+                return '<span class="badge badge-info">' . $this->status . '</span>';
         }
     }
 
@@ -106,7 +106,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
+        return static::findOne(['auth_key' => $token, 'status' => self::STATUS_ACTIVE]);
     }
 
     /**
@@ -243,15 +243,5 @@ class User extends ActiveRecord implements IdentityInterface
     public function removePasswordResetToken()
     {
         $this->password_reset_token = null;
-    }
-
-    /*
-     * Read Value to populate the input field mandatory
-     */
-    public function getPassword()
-    {
-
-        return '';
-
     }
 }

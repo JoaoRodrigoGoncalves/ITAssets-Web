@@ -1,4 +1,7 @@
 <?php
+
+use yii\log\FileTarget;
+
 $params = array_merge(
     require __DIR__ . '/../../common/config/params.php',
     require __DIR__ . '/../../common/config/params-local.php',
@@ -37,7 +40,7 @@ return [
             'traceLevel' => YII_DEBUG ? 3 : 0,
             'targets' => [
                 [
-                    'class' => \yii\log\FileTarget::class,
+                    'class' => FileTarget::class,
                     'levels' => ['error', 'warning'],
                 ],
             ],
@@ -51,6 +54,7 @@ return [
             'rules' => [
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'api/sysinfo'],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'api/login'],
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'api/user']
             ],
         ],
     ],
