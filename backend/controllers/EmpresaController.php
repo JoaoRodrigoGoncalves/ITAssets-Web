@@ -4,7 +4,6 @@ namespace backend\controllers;
 
 use common\models\Empresa;
 use yii\data\ActiveDataProvider;
-use yii\db\ActiveRecord;
 use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -69,26 +68,20 @@ class EmpresaController extends Controller
      */
     public function actionCreate()
     {
-        if(Empresa::find()->orderBy(1)->count() == 0)
-        {
+        if(Empresa::find()->orderBy(1)->count() == 0) {
             $model = new Empresa();
 
             if ($this->request->isPost) {
                 if ($model->load($this->request->post()) && $model->save()) {
                     return $this->redirect(Url::to(['empresa/index']));
                 }
-            } else {
-                $model->loadDefaultValues();
-            }
 
-            return $this->render('create', [
-                'model' => $model,
-            ]);
+                return $this->render('create', [
+                    'model' => $model,
+                ]);
+            }
         }
-        else
-        {
-            return $this->redirect(Url::to(['empresa/index']));
-        }
+        return $this->redirect(Url::to(['empresa/index']));
     }
 
     /**
