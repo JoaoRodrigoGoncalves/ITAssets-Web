@@ -3,6 +3,7 @@
 namespace backend\modules\api\controllers;
 
 use common\models\Empresa;
+use Yii;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
 
@@ -27,17 +28,16 @@ class SysinfoController extends Controller
         if($empresa)
         {
             $data = [
-                'status' => 'ok',
-                'data' => [
-                    'companyName' => $empresa->nome,
-                    'companyNIF' => $empresa->NIF,
-                ],
+                'status' => '200',
+                'companyName' => $empresa->nome,
+                'companyNIF' => $empresa->NIF,
             ];
         }
         else
         {
+            Yii::$app->response->statusCode = 500;
             $data = [
-                'status' => 'error',
+                'status' => '500',
                 'message' => "Servidor não configurado",
             ];
         }
