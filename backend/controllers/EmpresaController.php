@@ -68,19 +68,20 @@ class EmpresaController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Empresa();
+        if(Empresa::find()->orderBy(1)->count() == 0) {
+            $model = new Empresa();
 
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(Url::to(['empresa/index']));
+            if ($this->request->isPost) {
+                if ($model->load($this->request->post()) && $model->save()) {
+                    return $this->redirect(Url::to(['empresa/index']));
+                }
+
+                return $this->render('create', [
+                    'model' => $model,
+                ]);
             }
-        } else {
-            $model->loadDefaultValues();
         }
-
-        return $this->render('create', [
-            'model' => $model,
-        ]);
+        return $this->redirect(Url::to(['empresa/index']));
     }
 
     /**

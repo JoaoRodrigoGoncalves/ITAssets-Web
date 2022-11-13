@@ -123,5 +123,4 @@ class Utilizador extends Model
         return false;
     }
 
-
 }

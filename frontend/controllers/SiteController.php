@@ -6,16 +6,18 @@ use frontend\models\ResendVerificationEmailForm;
 use frontend\models\VerifyEmailForm;
 use Yii;
 use yii\base\InvalidArgumentException;
+use yii\captcha\CaptchaAction;
 use yii\helpers\Url;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
-use common\models\LoginForm;
+use common\models\Login;
 use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
 use frontend\models\ContactForm;
+use yii\web\ErrorAction;
 
 /**
  * Site controller
@@ -60,10 +62,10 @@ class SiteController extends Controller
     {
         return [
             'error' => [
-                'class' => \yii\web\ErrorAction::class,
+                'class' => ErrorAction::class,
             ],
             'captcha' => [
-                'class' => \yii\captcha\CaptchaAction::class,
+                'class' => CaptchaAction::class,
                 'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
             ],
         ];
@@ -97,7 +99,7 @@ class SiteController extends Controller
             return $this->goHome();
         }
         $auth = Yii::$app->authManager;
-        $model = new LoginForm();
+        $model = new Login();
         if ($model->load(Yii::$app->request->post()) && $model->loginUser([$auth->getRole("funcionario")])) {
             return $this->redirect(Url::to(['dashboard/index']));
         }

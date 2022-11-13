@@ -32,8 +32,8 @@ class LoginCest
     protected function formParams($login, $password)
     {
         return [
-            'LoginForm[username]' => $login,
-            'LoginForm[password]' => $password,
+            'Login[username]' => $login,
+            'Login[password]' => $password,
         ];
     }
 

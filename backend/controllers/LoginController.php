@@ -2,13 +2,14 @@
 
 namespace backend\controllers;
 
-use common\models\LoginForm;
+use common\models\Login;
 use backend\models\Utilizador;
 use Yii;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use yii\helpers\Url;
 use yii\web\Controller;
+use yii\web\ErrorAction;
 use yii\web\Response;
 
 /**
@@ -52,7 +53,7 @@ class LoginController extends Controller
     {
         return [
             'error' => [
-                'class' => \yii\web\ErrorAction::class,
+                'class' => ErrorAction::class,
             ],
         ];
     }
@@ -75,7 +76,7 @@ class LoginController extends Controller
         {
             $this->layout = 'main-login';
 
-            $model = new LoginForm();
+            $model = new Login();
             if($this->request->isPost)
             {
                 $model->load(Yii::$app->request->post());

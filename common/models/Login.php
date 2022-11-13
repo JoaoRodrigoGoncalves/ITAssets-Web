@@ -8,7 +8,7 @@ use yii\base\Model;
 /**
  * Login form
  */
-class LoginForm extends Model
+class Login extends Model
 {
     public $email;
     public $password;
@@ -90,8 +90,39 @@ class LoginForm extends Model
         }
         else
         {
-            $this->addError("password", "Uhhh campos?");
+            $this->addError("password", "Validação falhou");
         }
+        return false;
+    }
+
+    /**
+     * Realiza as devidas verificações e devolve o token de autenticação
+     * do utilizador quando as credenciais corretas são indicadas.
+     * @return false|string false se existir algum erro, string com o token caso contrário
+     */
+    public function APILogin()
+    {
+        if($this->validate())
+        {
+            $user = $this->getUser();
+            if($user)
+            {
+                if($user->validatePassword($this->password))
+                {
+                    if(!$user->auth_key)
+                    {
+                        $user->generateAuthKey();
+                        $user->save();
+                    }
+                    return $user->auth_key;
+                }
+            }
+            // Tanto a falha na validação de email como a de password passam aqui.
+            // Para não indicar explicitamente se a autenticação falhou por a conta
+            // não existir ou pela palavra-passe estar errada, aplicamos o erro só no atributo password
+            $this->addError("password", "Credenciais incorretas");
+        }
+        // Quando a validação falha, erros já são adicionados pela validação
         return false;
     }
 
