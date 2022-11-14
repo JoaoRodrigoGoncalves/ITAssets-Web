@@ -18,23 +18,22 @@ use yii\helpers\Html;
         <!-- Google Font: Source Sans Pro -->
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
         <!-- Theme style -->
-        <link rel="stylesheet" href="../../web/css/adminlte.css">
+        <link rel="stylesheet" href="/css/adminlte.css">
         <!-- Font Awesome -->
 
 
         <!-- SweetAlert2 -->
-        <link rel="stylesheet" href="../../web/css/sweetalert2.min.css">
+        <link rel="stylesheet" href="/css/sweetalert2.min.css">
         <!-- Toastr -->
-        <link rel="stylesheet" href="../../web/css/toastr.min.css">
+        <link rel="stylesheet" href="/css/toastr.min.css">
 
         <script src="https://kit.fontawesome.com/79a649e6a6.js" crossorigin="anonymous"></script>
-        <script src="../../web/assets/6fbba6df/jquery.min.js"></script>
+        <script src="assets/6fbba6df/jquery.min.js"></script>
         <!-- Bootstrap 4 -->
-        <script src="../../web/assets/6fbba6df/bootstrap.bundle.min.js"></script>
+        <script src="/assets/6fbba6df/bootstrap.bundle.min.js"></script>
         <!-- AdminLTE App -->
-        <script src="../../web/assets/6fbba6df/adminlte.min.js"></script>
-        <!-- AdminLTE for demo purposes -->
-        <script src="../../web/assets/6fbba6df/demo.js"></script>
+        <script src="/assets/6fbba6df/adminlte.min.js"></script>
+
         <?php $this->registerCsrfMetaTags() ?>
         <title><?= Html::encode($this->title) ?> | IT Assets</title>
         <?php $this->head() ?>
