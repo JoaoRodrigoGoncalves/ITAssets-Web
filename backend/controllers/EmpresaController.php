@@ -75,11 +75,11 @@ class EmpresaController extends Controller
                 if ($model->load($this->request->post()) && $model->save()) {
                     return $this->redirect(Url::to(['empresa/index']));
                 }
-
-                return $this->render('create', [
-                    'model' => $model,
-                ]);
             }
+
+            return $this->render('create', [
+                'model' => $model,
+            ]);
         }
         return $this->redirect(Url::to(['empresa/index']));
     }
