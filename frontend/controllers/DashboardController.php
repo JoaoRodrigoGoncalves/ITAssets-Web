@@ -49,6 +49,7 @@ class DashboardController extends \yii\web\Controller
 
     public function actionIndex(){
         $this->layout="main-frontofficie";
+
         return $this->render('index');
     }
     /**
