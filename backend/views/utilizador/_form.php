@@ -16,6 +16,8 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model,'password')->passwordInput(['required' => true]) ?>
 
+    <?= $form->field($model,'repeat_password')->passwordInput(['required' => true]) ?>
+
     <?=  $form->field($model,'role')->dropDownList($roles)?>
 
 

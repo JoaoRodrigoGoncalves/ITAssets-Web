@@ -42,30 +42,10 @@ use yii\helpers\Url;
                 'items' => [
                     ['label' => 'Empresa', 'icon' => 'building', 'url' => '../empresa/index'],
                     ['label' => 'Utilizadores', 'icon' => 'users', 'url' => '../utilizador/index'],
-
-                    ['label' => 'Simple Link', 'icon' => 'th', 'badge' => '<span class="right badge badge-danger">New</span>'],
-                    ['label' => 'MULTI LEVEL EXAMPLE', 'header' => true],
-                    ['label' => 'Level1'],
-                    [
-                        'label' => 'Level1',
-                        'items' => [
-                            ['label' => 'Level2', 'iconStyle' => 'far'],
-                            [
-                                'label' => 'Level2',
-                                'iconStyle' => 'far',
-                                'items' => [
-                                    ['label' => 'Level3', 'iconStyle' => 'far', 'icon' => 'dot-circle'],
-                                    ['label' => 'Level3', 'iconStyle' => 'far', 'icon' => 'dot-circle'],
-                                    ['label' => 'Level3', 'iconStyle' => 'far', 'icon' => 'dot-circle']
-                                ]
-                            ],
-                            ['label' => 'Level2', 'iconStyle' => 'far']
-                        ]
-                    ],
-                    ['label' => 'Level1'],
-                    ['label' => 'Yii2 PROVIDED', 'header' => true],
-                    ['label' => 'Gii',  'icon' => 'file-code', 'url' => ['/gii'], 'target' => '_blank'],
-                    ['label' => 'Debug', 'icon' => 'bug', 'url' => ['/debug'], 'target' => '_blank'],
+                    ['label' => 'Itens', 'icon' => 'box', 'url' => '#'],
+                    ['label' => 'Grupos Itens', 'icon' => 'box', 'url' => '#'],
+                    ['label' => 'Pedidos Itens', 'icon' => 'clipboard', 'url' => '#'],
+                    ['label' => 'Pedidos Reparação', 'icon' => 'wrench', 'url' => '#'],
                 ],
             ]);
             ?>
