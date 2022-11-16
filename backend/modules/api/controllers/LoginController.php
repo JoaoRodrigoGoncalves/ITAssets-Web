@@ -25,7 +25,7 @@ class LoginController extends Controller
         $behaviors['verbs'] = [
             'class' => VerbFilter::class,
             'actions' => [
-                'index' => ['post'],
+                'index' => ['get'],
             ],
         ];
 
@@ -34,23 +34,30 @@ class LoginController extends Controller
 
     public function actionIndex()
     {
-        if($this->request->post('email') == null || $this->request->post('password') == null)
-            $forcedStatus = 400; // Apenas para que a resposta devolvida cumpra convenção de estados HTTP.
+        $headers = Yii::$app->request->headers;
 
-        $loginModel = new Login();
-        $loginModel->email = $this->request->post('email');
-        $loginModel->password = $this->request->post('password');
-        $loginModel->rememberMe = false;
-
-        $token = $loginModel->APILogin();
-        if($token)
+        if($headers->has('Authorization'))
         {
-            return $this->asJson(['status' => 200, 'token' => $token]);
+            $loginModel = new Login();
+            $loginModel->email = Yii::$app->request->authCredentials[0];
+            $loginModel->password = Yii::$app->request->authCredentials[1];
+            $loginModel->rememberMe = false;
+
+            $token = $loginModel->APILogin();
+            if($token)
+            {
+                return $this->asJson(['status' => 200, 'token' => $token]);
+            }
+            else
+            {
+                Yii::$app->response->statusCode = 403;
+                return $this->asJson(['status' => 403, 'errors' => $loginModel->errors]);
+            }
         }
         else
         {
-            Yii::$app->response->statusCode = $forcedStatus ?? 403;
-            return $this->asJson(['status' => $forcedStatus ?? 403, 'errors' => $loginModel->errors]);
+            Yii::$app->response->statusCode = 400;
+            return $this->asJson(['status' => 400, 'errors' => 'Credenciais em falta']);
         }
     }
 }
