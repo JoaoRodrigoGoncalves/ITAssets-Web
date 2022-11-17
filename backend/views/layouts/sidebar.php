@@ -43,7 +43,7 @@ use yii\helpers\Url;
                     ['label' => 'Empresa', 'icon' => 'building', 'url' => '../empresa/index'],
                     ['label' => 'Utilizadores', 'icon' => 'users', 'url' => '../utilizador/index'],
                     ['label' => 'Itens', 'icon' => 'box', 'url' => '../item/index'],
-                    ['label' => 'Grupos Itens', 'icon' => 'box', 'url' => '#'],
+                    ['label' => 'Grupos Itens', 'icon' => 'boxes', 'url' => '#'],
                     ['label' => 'Pedidos Itens', 'icon' => 'clipboard', 'url' => '#'],
                     ['label' => 'Pedidos Reparação', 'icon' => 'wrench', 'url' => '#'],
                 ],

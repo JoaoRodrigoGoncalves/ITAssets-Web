@@ -1,22 +1,37 @@
 <?php
 
 use yii\helpers\Html;
+use yii\widgets\ActiveForm;
 
 /** @var yii\web\View $this */
-/** @var common\models\User $model */
+/** @var common\models\Item $item */
 
-$this->title = 'Atualizar dados: ' . $model->username;
-$this->params['breadcrumbs'][] = ['label' => 'Utilizadores', 'url' => ['index']];
+$this->title = 'Edição de Item';
+$this->params['breadcrumbs'][] = ['label' => 'Item', 'url' => ['index']];
 
 $this->params['breadcrumbs'][] = 'Update';
+
 ?>
-<div class="operador-update">
 
-        <?= dd($model);?>
+<div class="container mt-2">
+    <h2>Edição de Itens</h2>
+    <br>
+    <div class="card">
+        <div class="card-body">
+            <?php
+            $form = ActiveForm::begin([
+                'id' => 'login-form',
+                'options' => ['class' => 'form-horizontal'],
+            ])
+            ?>
+                <?= $form->field($item, 'nome')->textInput()->label('Name') ?>
+                <?= $form->field($item, 'serialNumber')->textInput()->label('Número de Série')?>
+                <?= $form->field($item, 'notas')->textArea()->label('Observação')?>
 
-<!--    --><?//= $this->render('_form', [
-//        'model' => $model,
-//        'roles' => $roles,
-//    ]) ?>
-
+                <div class="form-group float-right">
+                        <?= Html::submitButton('Guardar', ['class' => 'btn btn-primary']) ?>
+                </div>
+            <?php ActiveForm::end() ?>
+        </div>
+    </div>
 </div>

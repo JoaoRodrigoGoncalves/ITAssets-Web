@@ -5,6 +5,7 @@ namespace backend\controllers;
 use common\models\Item;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
+use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -96,14 +97,14 @@ class ItemController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
+        $item = $this->findModel($id);
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($this->request->isPost && $item->load($this->request->post()) && $item->save()) {
+            return $this->redirect(Url::to(['item/index']));
         }
 
         return $this->render('update', [
-            'model' => $model,
+            'item' => $item,
         ]);
     }
 

@@ -11,7 +11,7 @@ use yii\grid\GridView;
 ?>
 
 <div class="container mt-5">
-    <h2>Gestão de Items</h2>
+    <h2>Gestão de Itens</h2>
     <br>
     <div class="card">
         <div class="card-header">
@@ -23,7 +23,6 @@ use yii\grid\GridView;
                 <tr>
                     <th scope="col">Nome</th>
                     <th scope="col">SerialNumber</th>
-                    <th scope="col">Notas</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -31,9 +30,9 @@ use yii\grid\GridView;
                     <tr>
                         <td><?=$item->nome?></td>
                         <td><?=$item->serialNumber?></td>
-                        <td><?=$item->notas?></td>
                         <td>
-                            <a href="" class="btn btn-success"><i class="fas fa-user-edit"></i></a>
+                            <a href="" class="btn btn-primary"><i class="fas fa-info-circle"></i></a>
+                            <a href="<?=Url::to(['item/update/', 'id' => $item->id]) ?>" class="btn btn-success"><i class="fas fa-pencil-alt"></i></a>
                             <a href="" class="btn btn-danger"><i class="fas fa-trash-alt"></i></a>
                         </td>
                     </tr>
