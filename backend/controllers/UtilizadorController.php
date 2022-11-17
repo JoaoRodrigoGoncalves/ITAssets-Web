@@ -22,18 +22,50 @@ class UtilizadorController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['index', 'create', 'update'],
+                        'actions' => ['index', 'view'],
                         'allow' => true,
-                        'roles' => ['administrador'],
+                        'roles' => ['VerDetalhesUtilizador']
+                    ],
+                    [
+                        'actions' => ['create'],
+                        'allow' => true,
+                        'roles' => ['RegistarUtilizador'],
+                    ],
+                    [
+                        'actions' => ['update'],
+                        'allow' => true,
+                        'roles' => ['EditarUtilizador'],
                     ],
                 ],
             ],
         ];
     }
+
     public function actionIndex()
     {
         $utilizadores = User::find()->all();
         return $this->render('index', ['utilizadores' => $utilizadores]);
+    }
+
+    public function actionView($id)
+    {
+        if(in_array(Yii::$app->authManager->getRole("administrador"), Yii::$app->authManager->getRolesByUser(Yii::$app->user->id)))
+        {
+            $user = User::findOne(['id' => $id]);
+        }
+        else
+        {
+            $user = User::findOne(['id' => $id, 'status' => 10]);
+        }
+
+        if($user != null)
+        {
+            return $this->render('view', ['utilizador' => $user]);
+        }
+        else
+        {
+            throw new NotFoundHttpException();
+        }
     }
 
     public function actionCreate()
