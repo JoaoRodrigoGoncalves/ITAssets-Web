@@ -52,6 +52,9 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                ['pattern' => '<controller:\w+>/<id:\d+>', 'route' => '<controller>/view'],
+                ['pattern' => '<controller:\w+>/<action:\w+>/<id:\d+>', 'route' => '<controller>/<action>'],
+                ['pattern' => '<controller:\w+>/<action:\w+>', 'route' => '<controller>/<action>'],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'api/sysinfo'],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'api/login'],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'api/user'],

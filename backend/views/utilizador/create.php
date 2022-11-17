@@ -6,6 +6,7 @@ use yii\helpers\Html;
 /** @var common\models\User $model */
 /** @var yii\rbac\Role[] $roles */
 
+$this->title = "Criar Utilizador";
 $this->params['breadcrumbs'][] = ['label' => 'Utilizadores', 'url' => ['index']];
 ?>
 <div class="container">
