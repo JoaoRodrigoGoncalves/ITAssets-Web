@@ -9,7 +9,7 @@ use yii\helpers\Html;
 $this->params['breadcrumbs'][] = ['label' => 'Item', 'url' => ['index']];
 ?>
 <div class="container">
-    <h2>Registo de Utilizadores</h2>
+    <h2>Registo de Itens</h2>
     <br>
     <div class="card">
         <div class="card-body">

@@ -3,9 +3,9 @@
 use yii\db\Migration;
 
 /**
- * Class m221115_124149_create_table_item
+ * Class m221117_140648_create_table_item
  */
-class m221115_124149_create_table_item extends Migration
+class m221117_140648_create_table_item extends Migration
 {
     public function up()
     {
@@ -13,8 +13,11 @@ class m221115_124149_create_table_item extends Migration
             'id' => $this->primaryKey(),
             'nome' => $this->string(),
             'serialNumber' => $this->string(),
+            'categoria_id' => $this->integer(),
             'notas' => $this->string(),
         ]);
+
+        $this->addForeignKey('fk-categoria', 'item', 'categoria_id', 'categoria', 'id');
     }
 
     public function down()
