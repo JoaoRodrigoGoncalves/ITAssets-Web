@@ -26,14 +26,28 @@ class UtilizadorController extends Controller
                         'allow' => true,
                         'roles' => ['administrador'],
                     ],
+                    // Operador logistica tem permissão para VER detalhes do utilizador,
+                    // porém, não deve poder alterar os dados desse utilizador
+                    [
+                        'actions' => ['view'],
+                        'allow' => true,
+                        'roles' => ['administrador', 'operadorLogistica']
+                    ]
                 ],
             ],
         ];
     }
+
     public function actionIndex()
     {
         $utilizadores = User::find()->all();
         return $this->render('index', ['utilizadores' => $utilizadores]);
+    }
+
+    public function actionView($id)
+    {
+        $user = User::findOne(['id' => $id]);
+        return $this->render('view', ['utilizador' => $user]);
     }
 
     public function actionCreate()

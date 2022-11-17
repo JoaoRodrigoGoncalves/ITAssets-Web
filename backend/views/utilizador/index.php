@@ -3,6 +3,7 @@
 
 use backend\models\Utilizador;
 use yii\helpers\Html;
+use yii\helpers\Url;
 
 /** @var yii\web\View $this */
 /** @var \common\models\User[] $utilizadores */
@@ -41,6 +42,7 @@ use yii\helpers\Html;
                                 <?= $utilizador->getStatusLabel() ?>
                             </td>
                             <td>
+                                <a href="<?= Url::to(['utilizador/view', 'id' => $utilizador->id]) ?>" class="btn btn-primary"><i class="fas fa-info-circle"></i></a>
                                 <a href="" class="btn btn-success"><i class="fas fa-user-edit"></i></a>
                                 <a href="" class="btn btn-danger"><i class="fas fa-trash-alt"></i></a>
                             </td>
