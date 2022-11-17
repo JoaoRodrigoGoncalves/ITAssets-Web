@@ -26,12 +26,6 @@ class DashboardController extends \yii\web\Controller
                     ],
                 ],
             ],
-//            'verbs' => [
-//                'class' => VerbFilter::class,
-//                'actions' => [
-//                    'logout' => ['post'],
-//                ],
-//            ],
         ];
     }
 

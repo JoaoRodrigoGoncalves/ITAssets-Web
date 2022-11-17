@@ -26,8 +26,7 @@ class SiteController extends Controller
                 'rules' => [
                     [
                         'actions' => ['error'],
-                        'allow' => true,
-                        'roles' => ['?']
+                        'allow' => true
                     ],
                 ],
             ],
