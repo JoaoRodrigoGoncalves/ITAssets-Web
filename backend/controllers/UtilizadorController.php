@@ -22,17 +22,20 @@ class UtilizadorController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['index', 'create', 'update'],
+                        'actions' => ['index', 'view'],
                         'allow' => true,
-                        'roles' => ['administrador'],
+                        'roles' => ['VerDetalhesUtilizador']
                     ],
-                    // Operador logistica tem permissão para VER detalhes do utilizador,
-                    // porém, não deve poder alterar os dados desse utilizador
                     [
-                        'actions' => ['view'],
+                        'actions' => ['create'],
                         'allow' => true,
-                        'roles' => ['administrador', 'operadorLogistica']
-                    ]
+                        'roles' => ['RegistarUtilizador'],
+                    ],
+                    [
+                        'actions' => ['update'],
+                        'allow' => true,
+                        'roles' => ['EditarUtilizador'],
+                    ],
                 ],
             ],
         ];
@@ -46,8 +49,23 @@ class UtilizadorController extends Controller
 
     public function actionView($id)
     {
-        $user = User::findOne(['id' => $id]);
-        return $this->render('view', ['utilizador' => $user]);
+        if(in_array(Yii::$app->authManager->getRole("administrador"), Yii::$app->authManager->getRolesByUser(Yii::$app->user->id)))
+        {
+            $user = User::findOne(['id' => $id]);
+        }
+        else
+        {
+            $user = User::findOne(['id' => $id, 'status' => 10]);
+        }
+
+        if($user != null)
+        {
+            return $this->render('view', ['utilizador' => $user]);
+        }
+        else
+        {
+            throw new NotFoundHttpException();
+        }
     }
 
     public function actionCreate()

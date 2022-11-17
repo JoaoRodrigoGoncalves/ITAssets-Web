@@ -7,6 +7,8 @@ use yii\helpers\Url;
 
 /** @var yii\web\View $this */
 /** @var \common\models\User[] $utilizadores */
+
+$this->title = "Gestão de Utilizadores";
 ?>
 <div class="container mt-5">
     <h2>Gestão de Utilizadores</h2>
@@ -43,7 +45,7 @@ use yii\helpers\Url;
                             </td>
                             <td>
                                 <a href="<?= Url::to(['utilizador/view', 'id' => $utilizador->id]) ?>" class="btn btn-primary"><i class="fas fa-info-circle"></i></a>
-                                <a href="" class="btn btn-success"><i class="fas fa-user-edit"></i></a>
+                                <a href="" class="btn btn-warning"><i class="fas fa-pencil-alt text-white"></i></a>
                                 <a href="" class="btn btn-danger"><i class="fas fa-trash-alt"></i></a>
                             </td>
                         </tr>

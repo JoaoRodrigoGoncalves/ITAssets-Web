@@ -22,11 +22,17 @@ class SettingsController extends Controller
             'access' => [
                 'class' => AccessControl::class,
                 'rules' => [
+                    //TODO: bloquear utilizador padrão de entrar aqui
                     [
-                        'actions' => ['index', 'save', 'password'],
+                        'actions' => ['index'],
                         'allow' => true,
-                        'roles' => ['administrador', 'operadorLogistico']
+                        'roles' => ['ConsultarPropriaConta']
                     ],
+                    [
+                        'actions' => ['save', 'password'],
+                        'allow' => true,
+                        'roles' => ['EditarPropriaConta']
+                    ]
                 ],
             ],
             'verbs' => [

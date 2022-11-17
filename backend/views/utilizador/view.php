@@ -1,5 +1,5 @@
 <?php
-/** @var \backend\models\Utilizador $utilizador */
+/** @var \common\models\User $utilizador */
 
 use yii\bootstrap4\ActiveForm;
 use yii\helpers\Html;
@@ -31,6 +31,9 @@ $this->title = "Detalhes de " . $utilizador->username;
 
                         <ul class="list-group list-group-unbordered mb-3 mt-2">
                             <li class="list-group-item">
+                                <b>Estado</b> <a class="float-right"><?= $utilizador->getStatusLabel() ?></a>
+                            </li>
+                            <li class="list-group-item">
                                 <b>Itens</b> <a class="float-right">1,322</a>
                             </li>
                             <li class="list-group-item">
@@ -41,11 +44,13 @@ $this->title = "Detalhes de " . $utilizador->username;
                             </li>
                         </ul>
 
-                        <?php
-
-
-
-                        ?>
+                        <?php if(in_array(Yii::$app->authManager->getRole("administrador"), Yii::$app->authManager->getRolesByUser(Yii::$app->user->id))): ?>
+                            <div class="btn-toolbar d-flex justify-content-center" role="toolbar">
+                                <?= Html::a('<i class="fas fa-key"></i>', ['utilizador/resetPassword/', 'id' => $utilizador->id], ['class' => 'btn btn-primary m-1']) ?>
+                                <?= Html::a('<i class="fas fa-pencil-alt text-white"></i>', ['utilizador/update/', 'id' => $utilizador->id], ['class' => 'btn btn-warning m-1']) ?>
+                                <?= Html::a('<i class="fas fa-trash-alt"></i>', ['utilizador/delete/', 'id' => $utilizador->id], ['class' => 'btn btn-danger m-1']) ?>
+                            </div>
+                        <?php endif; ?>
 
                     </div>
                     <!-- /.card-body -->
@@ -56,21 +61,33 @@ $this->title = "Detalhes de " . $utilizador->username;
             <div class="col-md-9">
                 <div class="card">
                     <div class="card-body">
-                        <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <ul class="nav nav-tabs" id="userProfileTab" role="tablist">
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="home-tab" data-toggle="tab" data-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Home</button>
+                                <button class="nav-link active" id="itens-tab" data-toggle="tab" data-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Itens Associados</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="profile-tab" data-toggle="tab" data-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Profile</button>
+                                <button class="nav-link" id="alocacao-tab" data-toggle="tab" data-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Pedidos de Alocação</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="contact-tab" data-toggle="tab" data-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">Contact</button>
+                                <button class="nav-link" id="reparacao-tab" data-toggle="tab" data-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">Pedidos de Reparação</button>
                             </li>
                         </ul>
-                        <div class="tab-content" id="myTabContent">
-                            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">...</div>
-                            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">...</div>
-                            <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
+                        <div class="tab-content" id="userProfileTabContent">
+                            <div class="tab-pane fade show active" id="itens" role="tabpanel" aria-labelledby="itens-tab">
+                                ...<br>
+                                Tabela de itens associados<br>
+                                ...
+                            </div>
+                            <div class="tab-pane fade" id="alocacao" role="tabpanel" aria-labelledby="alocacao-tab">
+                                ...<br>
+                                Tabela de pedidos de itens<br>
+                                ...
+                            </div>
+                            <div class="tab-pane fade" id="reparacao" role="tabpanel" aria-labelledby="reparacao-tab">
+                                ...<br>
+                                Tabela de pedidos de reparação de itens<br>
+                                ...
+                            </div>
                         </div>
 
                     </div><!-- /.card-body -->
