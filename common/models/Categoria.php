@@ -9,11 +9,15 @@ use Yii;
  *
  * @property int $id
  * @property string|null $nome
+ * @property int|null $status
  *
  * @property Item[] $items
  */
 class Categoria extends \yii\db\ActiveRecord
 {
+    const STATUS_DELETED = 0;
+    const STATUS_ACTIVE = 10;
+
     /**
      * {@inheritdoc}
      */
@@ -28,6 +32,8 @@ class Categoria extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['status'], 'integer'],
+            ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
             [['nome'], 'string', 'max' => 255],
         ];
     }
@@ -40,6 +46,7 @@ class Categoria extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'nome' => 'Nome',
+            'status' => 'Estado',
         ];
     }
 

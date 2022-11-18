@@ -27,18 +27,24 @@ use yii\grid\GridView;
                 </tr>
                 </thead>
                 <tbody>
-                <?php foreach ($itens as $item){ ?>
+                <?php if(count($itens) > 0): ?>
+                    <?php foreach ($itens as $item): ?>
+                        <tr>
+                            <td><?=$item->nome?></td>
+                            <td><?=$item->serialNumber?></td>
+                            <td><?=$item->categoria->nome?></td>
+                            <td>
+                                <a href="<?=Url::to(['item/view/', 'id' => $item->id]) ?>" class="btn btn-primary"><i class="fas fa-info-circle"></i></a>
+                                <a href="<?=Url::to(['item/update/', 'id' => $item->id]) ?>" class="btn btn-warning text-white"><i class="fas fa-pencil-alt"></i></a>
+                                <a href="<?=Url::to(['item/delete/', 'id' => $item->id]) ?>" class="btn btn-danger"><i class="fas fa-trash-alt"></i></a>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
                     <tr>
-                        <td><?=$item->nome?></td>
-                        <td><?=$item->serialNumber?></td>
-                        <td><?=$item->categoria->nome?></td>
-                        <td>
-                            <a href="" class="btn btn-primary"><i class="fas fa-info-circle"></i></a>
-                            <a href="<?=Url::to(['item/update/', 'id' => $item->id]) ?>" class="btn btn-success"><i class="fas fa-pencil-alt"></i></a>
-                            <a href="" class="btn btn-danger"><i class="fas fa-trash-alt"></i></a>
-                        </td>
+                        <td colspan="4">Sem dados a mostrar</td>
                     </tr>
-                <?php } ?>
+                <?php endif; ?>
                 </tbody>
             </table>
         </div>

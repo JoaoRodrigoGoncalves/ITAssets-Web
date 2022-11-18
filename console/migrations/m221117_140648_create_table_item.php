@@ -15,6 +15,7 @@ class m221117_140648_create_table_item extends Migration
             'serialNumber' => $this->string(),
             'categoria_id' => $this->integer(),
             'notas' => $this->string(),
+            'status' => $this->integer()
         ]);
 
         $this->addForeignKey('fk-categoria', 'item', 'categoria_id', 'categoria', 'id');

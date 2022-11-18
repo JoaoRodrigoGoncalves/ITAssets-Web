@@ -26,7 +26,7 @@ class ItemController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['index','create', 'update'],
+                        'actions' => ['index','create', 'view', 'update', 'delete'],
                         'allow' => true,
                         'roles' => ['administrador', 'operadorLogistico']
                     ],
@@ -49,10 +49,13 @@ class ItemController extends Controller
      */
     public function actionIndex()
     {
-        $categoria=Categoria::find()->all();
+        $categoria = Categoria::find()->all();
+
         if ($categoria != null)
         {
-            $itens= Item::find()->all();
+            $itens= Item::find()
+                ->where(['status' => 10])
+                ->all();;
 
             return $this->render('index',['itens'=>$itens]);
         }
@@ -61,7 +64,6 @@ class ItemController extends Controller
             Yii::$app->session->setFlash('success', 'Tens de criar primeiro categoria');
             return $this->redirect(['categoria/create']);
         }
-
     }
 
     /**
@@ -73,7 +75,7 @@ class ItemController extends Controller
     public function actionView($id)
     {
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'item' => $this->findModel($id),
         ]);
     }
 
@@ -84,26 +86,23 @@ class ItemController extends Controller
      */
     public function actionCreate()
     {
-        $categoria=Categoria::find()->all();
-        if ($categoria != null)
-        {
-            $model = new Item();
+        $categoria = Categoria::find()->all();
+        if ($categoria != null) {
+            $item = new Item();
 
             if ($this->request->isPost) {
-                if ($model->load($this->request->post()) && $model->save()) {
-                    return $this->redirect(['index']);
+                $item->load($this->request->post());
+                $item->status=10;
+                if($item->save()) {
+                    return $this->redirect(['view', 'id' => $item->id]);
                 }
             } else {
-                $model->loadDefaultValues();
+                $item->loadDefaultValues();
             }
 
             return $this->render('create', [
-                'model' => $model,
+                'item' => $item,
             ]);
-            }
-        else
-        {
-            return $this->redirect(['categoria/create']);
         }
     }
 
@@ -136,8 +135,9 @@ class ItemController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-
+        $item=Item::findOne($id);
+        $item->status=0;
+        $item->save();
         return $this->redirect(['index']);
     }
 

@@ -66,7 +66,7 @@ class CategoriaController extends Controller
     public function actionView($id)
     {
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'categoria' => $this->findModel($id),
         ]);
     }
 
@@ -80,8 +80,10 @@ class CategoriaController extends Controller
         $model = new Categoria();
 
         if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['index']);
+            $model->load($this->request->post());
+            $model->status=10;
+            if($model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
             }
         } else {
             $model->loadDefaultValues();

@@ -3,7 +3,7 @@
 use yii\helpers\Html;
 
 /** @var yii\web\View $this */
-/** @var common\models\User $model */
+/** @var common\models\User $item */
 
 
 $this->params['breadcrumbs'][] = ['label' => 'Item', 'url' => ['index']];
@@ -14,7 +14,7 @@ $this->params['breadcrumbs'][] = ['label' => 'Item', 'url' => ['index']];
     <div class="card">
         <div class="card-body">
             <?= $this->render('_form', [
-                'model' => $model,
+                'model' => $item,
             ]) ?>
         </div>
     </div>

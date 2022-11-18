@@ -40,10 +40,10 @@ use yii\helpers\Url;
             <?php
             echo \hail812\adminlte\widgets\Menu::widget([
                 'items' => [
-                    ['label' => 'Empresa', 'icon' => 'building', 'url' => '../empresa/index'],
-                    ['label' => 'Utilizadores', 'icon' => 'users', 'url' => '../utilizador/index'],
-                    ['label' => 'Itens', 'icon' => 'box', 'url' => '../item/index'],
-                    ['label' => 'Categorias', 'icon' => 'stream', 'url' => '../categoria/index'],
+                    ['label' => 'Empresa', 'icon' => 'building', 'url' => '/empresa/index'],
+                    ['label' => 'Utilizadores', 'icon' => 'users', 'url' => '/utilizador/index'],
+                    ['label' => 'Itens', 'icon' => 'box', 'url' => '/item/index'],
+                    ['label' => 'Categorias', 'icon' => 'stream', 'url' => '/categoria/index'],
                     ['label' => 'Grupos Itens', 'icon' => 'boxes', 'url' => '#'],
                     ['label' => 'Pedidos Itens', 'icon' => 'clipboard', 'url' => '#'],
                     ['label' => 'Pedidos Reparação', 'icon' => 'wrench', 'url' => '#'],

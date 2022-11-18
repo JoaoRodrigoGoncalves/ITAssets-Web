@@ -13,6 +13,7 @@ class m221117_130612_create_table_categoria extends Migration
         $this->createTable('categoria', [
             'id' => $this->primaryKey(),
             'nome' => $this->string(),
+            'status' => $this->integer()
         ]);
     }
 
