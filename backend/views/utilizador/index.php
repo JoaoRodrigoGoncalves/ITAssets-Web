@@ -44,9 +44,11 @@ $this->title = "Gestão de Utilizadores";
                                 <?= $utilizador->getStatusLabel() ?>
                             </td>
                             <td>
-                                <a href="<?= Url::to(['utilizador/view', 'id' => $utilizador->id]) ?>" class="btn btn-primary"><i class="fas fa-info-circle"></i></a>
-                                <a href="" class="btn btn-warning"><i class="fas fa-pencil-alt text-white"></i></a>
-                                <a href="" class="btn btn-danger"><i class="fas fa-trash-alt"></i></a>
+                                <div class="d-flex justify-content-center">
+                                    <?= Html::a('<i class="fas fa-info-circle"></i>', ['utilizador/view', 'id' => $utilizador->id], ['class' => 'btn btn-primary me-4']) ?>
+                                    <a href="" class="btn btn-warning ms-1"><i class="fas fa-pencil-alt text-white"></i></a>
+                                    <a href="" class="btn btn-danger ms-1"><i class="fas fa-trash-alt"></i></a>
+                                </div>
                             </td>
                         </tr>
                     <?php } ?>
