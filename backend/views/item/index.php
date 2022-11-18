@@ -7,7 +7,7 @@ use yii\grid\ActionColumn;
 use yii\grid\GridView;
 
 /** @var yii\web\View $this */
-/** @var yii\data\ActiveDataProvider $dataProvider */
+/** @var common\models\Item[] $itens*/
 ?>
 
 <div class="container mt-5">
@@ -23,6 +23,7 @@ use yii\grid\GridView;
                 <tr>
                     <th scope="col">Nome</th>
                     <th scope="col">SerialNumber</th>
+                    <th scope="col">Categoria</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -30,6 +31,7 @@ use yii\grid\GridView;
                     <tr>
                         <td><?=$item->nome?></td>
                         <td><?=$item->serialNumber?></td>
+                        <td><?=$item->categoria->nome?></td>
                         <td>
                             <a href="" class="btn btn-primary"><i class="fas fa-info-circle"></i></a>
                             <a href="<?=Url::to(['item/update/', 'id' => $item->id]) ?>" class="btn btn-success"><i class="fas fa-pencil-alt"></i></a>

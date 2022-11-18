@@ -1,5 +1,7 @@
 <?php
 
+use common\models\Categoria;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -27,6 +29,8 @@ $this->params['breadcrumbs'][] = 'Update';
                 <?= $form->field($item, 'nome')->textInput()->label('Name') ?>
                 <?= $form->field($item, 'serialNumber')->textInput()->label('Número de Série')?>
                 <?= $form->field($item, 'notas')->textArea()->label('Observação')?>
+                <?= $form->field($item, 'categoria_id')->dropDownList(ArrayHelper::map(Categoria::find()->all(), 'id', 'nome'));
+                ?>
 
                 <div class="form-group float-right">
                         <?= Html::submitButton('Guardar', ['class' => 'btn btn-primary']) ?>

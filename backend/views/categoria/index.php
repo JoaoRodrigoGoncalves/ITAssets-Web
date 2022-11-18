@@ -1,6 +1,6 @@
 <?php
 
-use app\models\Item;
+use common\models\Categoria;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\grid\ActionColumn;
@@ -9,15 +9,15 @@ use yii\grid\GridView;
 /** @var yii\web\View $this */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Items';
+$this->title = 'Categorias';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="item-index">
+<div class="categoria-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Create Item', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Create Categoria', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
 
@@ -28,11 +28,9 @@ $this->params['breadcrumbs'][] = $this->title;
 
             'id',
             'nome',
-            'serialNumber',
-            'notas',
             [
                 'class' => ActionColumn::className(),
-                'urlCreator' => function ($action, Item $model, $key, $index, $column) {
+                'urlCreator' => function ($action, Categoria $model, $key, $index, $column) {
                     return Url::toRoute([$action, 'id' => $model->id]);
                  }
             ],
