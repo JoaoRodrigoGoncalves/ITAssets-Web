@@ -3,6 +3,7 @@
 namespace backend\controllers;
 
 use common\models\Item;
+use common\models\Categoria;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\helpers\Url;
@@ -48,9 +49,19 @@ class ItemController extends Controller
      */
     public function actionIndex()
     {
-        $itens= Item::find()->all();
+        $categoria=Categoria::find()->all();
+        if ($categoria != null)
+        {
+            $itens= Item::find()->all();
 
-        return $this->render('index',['itens'=>$itens]);
+            return $this->render('index',['itens'=>$itens]);
+        }
+        else
+        {
+            Yii::$app->session->setFlash('success', 'Tens de criar primeiro categoria');
+            return $this->redirect(['categoria/create']);
+        }
+
     }
 
     /**
@@ -73,19 +84,27 @@ class ItemController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Item();
+        $categoria=Categoria::find()->all();
+        if ($categoria != null)
+        {
+            $model = new Item();
 
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['index']);
+            if ($this->request->isPost) {
+                if ($model->load($this->request->post()) && $model->save()) {
+                    return $this->redirect(['index']);
+                }
+            } else {
+                $model->loadDefaultValues();
             }
-        } else {
-            $model->loadDefaultValues();
-        }
 
-        return $this->render('create', [
-            'model' => $model,
-        ]);
+            return $this->render('create', [
+                'model' => $model,
+            ]);
+            }
+        else
+        {
+            return $this->redirect(['categoria/create']);
+        }
     }
 
     /**
