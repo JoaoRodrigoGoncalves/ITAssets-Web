@@ -4,6 +4,7 @@ namespace backend\controllers;
 
 
 use Yii;
+use yii\base\Model;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\helpers\Url;
@@ -35,6 +36,11 @@ class UtilizadorController extends Controller
                         'actions' => ['update'],
                         'allow' => true,
                         'roles' => ['EditarUtilizador'],
+                    ],
+                    [
+                        'actions' => ['delete','activar'],
+                        'allow' => true,
+                        'roles' => ['EliminarUtilizador'],
                     ],
                 ],
             ],
@@ -88,5 +94,41 @@ class UtilizadorController extends Controller
                 'roles' => $roles,
             ]);
         }
+    }
+
+    public function actionActivar($id)
+    {
+
+        $model=$this->findModel($id);
+        if ($model->status ==10)
+        {
+            $model->status =9;
+            $model->save();
+
+
+        }
+        else if($model->status==9)
+        {
+            $model->status=10;
+            $model->save();
+
+        }
+        return $this->redirect(['index']);
+    }
+    public function actionDelete($id)
+    {
+        $model=$this->findModel($id);
+        $model->status = 0;
+        $model->save();
+        return $this->redirect(['index']);
+    }
+
+    protected function findModel($id)
+    {
+        if (($model = User::findOne(['id' => $id])) !== null) {
+            return $model;
+        }
+
+        throw new NotFoundHttpException('The requested page does not exist.');
     }
 }

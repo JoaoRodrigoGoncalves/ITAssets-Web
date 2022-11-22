@@ -4,6 +4,7 @@ namespace backend\controllers;
 
 use common\models\Item;
 use common\models\Categoria;
+use Yii;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\helpers\Url;
