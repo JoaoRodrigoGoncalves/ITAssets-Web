@@ -85,7 +85,7 @@ class EmpresaController extends Controller
      * @return string|\yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate()
+    public function actionActivar()
     {
         $model = Empresa::findOne(['id' => 1]);
 

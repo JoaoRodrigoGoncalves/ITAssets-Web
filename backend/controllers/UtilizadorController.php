@@ -38,7 +38,10 @@ class UtilizadorController extends Controller
                         'roles' => ['EditarUtilizador'],
                     ],
                     [
+
                         'actions' => ['delete','activar'],
+
+
                         'allow' => true,
                         'roles' => ['EliminarUtilizador'],
                     ],
@@ -96,8 +99,10 @@ class UtilizadorController extends Controller
         }
     }
 
+
     public function actionActivar($id)
     {
+
 
         $model=$this->findModel($id);
         if ($model->status ==10)
@@ -115,6 +120,7 @@ class UtilizadorController extends Controller
         }
         return $this->redirect(['index']);
     }
+
     public function actionDelete($id)
     {
         $model=$this->findModel($id);
@@ -122,6 +128,7 @@ class UtilizadorController extends Controller
         $model->save();
         return $this->redirect(['index']);
     }
+
 
     protected function findModel($id)
     {
