@@ -10,30 +10,48 @@ use yii\grid\GridView;
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
 $this->title = 'Categorias';
-$this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="categoria-index">
+<div class="container mt-3">
+    <h2><?= Html::encode($this->title) ?></h2>
+    <br>
+    <div class="card">
+        <div class="card-header">
+            <div class="float-right">
+                <?= Html::a('<i class="fas fa-stream"></i> Registar', ['create'], ['class' => 'btn btn-primary']) ?>
+            </div>
+        </div>
+        <div class="card-body">
+            <?= GridView::widget(['dataProvider' => $dataProvider,
+                'columns' => [['class' => 'yii\grid\SerialColumn'],
+                    'nome',
+                    [
+                        'format' => 'raw',
+                        'value' => function($model, $key, $index, $column) {
+                            $data = Html::a('<i class="fas fa-pencil-alt"></i>', Url::to(['categoria/update', 'id' => $model->id]),
+                                [
+                                    'id'=>'grid-custom-button',
+                                    'data-pjax'=>true,
+                                    'action'=>Url::to(['categoria/update', 'id' => $model->id]),
+                                    'class'=>'button btn btn-warning text-white mr-2',
+                                ]
+                            );
 
-    <h1><?= Html::encode($this->title) ?></h1>
+                            $data .= Html::a('<i class="fas fa-trash-alt"></i>', Url::to(['categoria/delete', 'id' => $model->id]),
+                                [
+                                    'id'=>'grid-custom-button',
+                                    'data-pjax'=>true,
+                                    'action'=>Url::to(['categoria/delete', 'id' => $model->id]),
+                                    'class'=>'button btn btn-danger',
 
-    <p>
-        <?= Html::a('Create Categoria', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
+                                ]
 
+                            );
 
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-            'nome',
-            [
-                'class' => ActionColumn::className(),
-                'urlCreator' => function ($action, Categoria $model, $key, $index, $column) {
-                    return Url::toRoute([$action, 'id' => $model->id]);
-                 }
-            ],
-        ],
-    ]); ?>
-
-
+                            return $data;
+                        },
+                    ],
+                ],
+            ]); ?>
+        </div>
+    </div>
 </div>

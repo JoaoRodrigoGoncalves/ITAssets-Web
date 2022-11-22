@@ -8,10 +8,10 @@ use yii\grid\GridView;
 
 /** @var yii\web\View $this */
 /** @var common\models\Item[] $itens*/
+$this->title = 'Itens';
 ?>
-
-<div class="container mt-5">
-    <h2>Gestão de Itens</h2>
+<div class="container mt-3">
+    <h2><?= Html::encode($this->title) ?></h2>
     <br>
     <div class="card">
         <div class="card-header">

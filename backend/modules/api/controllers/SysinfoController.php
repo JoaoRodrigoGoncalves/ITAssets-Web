@@ -28,7 +28,6 @@ class SysinfoController extends Controller
         if($empresa)
         {
             $data = [
-                'status' => '200',
                 'companyName' => $empresa->nome,
                 'companyNIF' => $empresa->NIF,
             ];
@@ -37,7 +36,6 @@ class SysinfoController extends Controller
         {
             Yii::$app->response->statusCode = 500;
             $data = [
-                'status' => '500',
                 'message' => "Servidor não configurado",
             ];
         }

@@ -65,6 +65,7 @@ class CategoriaController extends Controller
      */
     public function actionView($id)
     {
+        //TODO: Aparecer as categorias com status 10
         return $this->render('view', [
             'categoria' => $this->findModel($id),
         ]);
@@ -83,7 +84,7 @@ class CategoriaController extends Controller
             $model->load($this->request->post());
             $model->status=10;
             if($model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+                return $this->redirect(['index']);
             }
         } else {
             $model->loadDefaultValues();
@@ -123,8 +124,13 @@ class CategoriaController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        /*$this->findModel($id)->delete();
 
+        return $this->redirect(['index']);*/
+
+        $item=Categoria::findOne($id);
+        $item->status=0;
+        $item->save();
         return $this->redirect(['index']);
     }
 

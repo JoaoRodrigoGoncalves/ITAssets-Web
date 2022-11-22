@@ -8,10 +8,10 @@ use yii\helpers\Url;
 /** @var yii\web\View $this */
 /** @var \common\models\User[] $utilizadores */
 
-$this->title = "Gestão de Utilizadores";
+$this->title = 'Utilizadores';
 ?>
-<div class="container mt-5">
-    <h2>Gestão de Utilizadores</h2>
+<div class="container mt-3">
+    <h2><?= Html::encode($this->title) ?></h2>
     <br>
     <div class="card">
         <div class="card-header">
@@ -45,9 +45,9 @@ $this->title = "Gestão de Utilizadores";
                             </td>
                             <td>
                                 <div class="d-flex justify-content-center">
-                                    <?= Html::a('<i class="fas fa-info-circle"></i>', ['utilizador/view', 'id' => $utilizador->id], ['class' => 'btn btn-primary me-4']) ?>
-                                    <a href="" class="btn btn-warning ms-1"><i class="fas fa-pencil-alt text-white"></i></a>
-                                    <a href="" class="btn btn-danger ms-1"><i class="fas fa-trash-alt"></i></a>
+                                    <?= Html::a('<i class="fas fa-info-circle"></i>', ['utilizador/view', 'id' => $utilizador->id], ['class' => 'btn btn-primary mr-2']) ?>
+                                    <a href="" class="btn btn-warning mr-2"><i class="fas fa-pencil-alt text-white"></i></a>
+                                    <a href="" class="btn btn-danger"><i class="fas fa-trash-alt"></i></a>
                                 </div>
                             </td>
                         </tr>
