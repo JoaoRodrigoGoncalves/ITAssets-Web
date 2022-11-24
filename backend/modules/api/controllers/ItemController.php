@@ -2,6 +2,8 @@
 
 namespace backend\modules\api\controllers;
 
+use common\models\Item;
+use Yii;
 use yii\filters\auth\HttpBearerAuth;
 use yii\rest\ActiveController;
 use yii\web\Response;
@@ -27,6 +29,4 @@ class ItemController extends ActiveController
 
         return $behaviors;
     }
-
-
 }

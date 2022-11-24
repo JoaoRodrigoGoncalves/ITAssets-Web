@@ -5,6 +5,7 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
+use yii\widgets\ListView;
 
 /** @var yii\web\View $this */
 /** @var yii\data\ActiveDataProvider $dataProvider */
@@ -21,7 +22,7 @@ $this->title = 'Categorias';
             </div>
         </div>
         <div class="card-body">
-            <?= GridView::widget(['dataProvider' => $dataProvider,
+            <?=GridView::widget(['dataProvider' => $dataProvider,
                 'columns' => [['class' => 'yii\grid\SerialColumn'],
                     'nome',
                     [

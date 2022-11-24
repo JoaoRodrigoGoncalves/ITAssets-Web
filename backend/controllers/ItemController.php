@@ -55,7 +55,7 @@ class ItemController extends Controller
         {
             $itens= Item::find()
                 ->where(['status' => 10])
-                ->all();;
+                ->all();
 
             return $this->render('index',['itens'=>$itens]);
         }
