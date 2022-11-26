@@ -5,6 +5,7 @@ namespace backend\models;
 use Yii;
 use yii\base\Model;
 use common\models\User;
+use yii\web\NotFoundHttpException;
 
 /**
  * Signup form
@@ -122,5 +123,39 @@ class Utilizador extends Model
         }
         return false;
     }
+
+    /**
+     * @throws \Exception
+     */
+    public function updateUser($id)
+    {
+        $user = User::findOne(['id' => $id]);
+        $user->username = $this->username;
+        $user->email = $this->email;
+
+        if ($user->save())
+        {
+            $role=$this->role;
+
+            $auth = Yii::$app->authManager;
+            $auth->revokeAll($id);
+            $auth->assign(($auth->getRole($this->role)),$id);
+            return true;
+        }
+        return false;
+    }
+
+    public static function getRole($id)
+    {
+
+        $getRolesByUser = Yii::$app->authManager->getRolesByUser($id);
+
+        $role = array_keys($getRolesByUser)[0];
+
+        return $role;
+    }
+
+
+
 
 }

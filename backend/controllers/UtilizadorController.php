@@ -8,6 +8,7 @@ use yii\base\Model;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\helpers\Url;
+use yii\rbac\Role;
 use yii\web\Controller;
 use common\models\User;
 use backend\models\Utilizador;
@@ -99,6 +100,42 @@ class UtilizadorController extends Controller
         }
     }
 
+    public function actionUpdate($id)
+    {
+
+        //vai buscar os dados do utilizador
+        $user= User::findOne($id);
+        //cria uma nova variavel do utilizador
+        $model = new Utilizador();
+        //passa os valores da variavel user para a model
+        $model->setAttributes($user->attributes);
+        //vai buscar a role
+        $model->role=$model->getRole($id);
+
+
+        $roles = null; //TODO: verificar
+
+        foreach (Yii::$app->authManager->getRoles() as $role) {
+            $roles[$role->name] = Utilizador::getRoleLabel($role->name);
+        }
+
+        if ($this->request->isPost) {
+
+            $model->load($this->request->post());
+
+            if ($model->updateUser($id)) {
+                return $this->redirect('../index');
+            }
+        } else {
+
+            return $this->render('update', [
+                'model' => $model,
+                'roles' => $roles,
+            ]);
+        }
+
+    }
+
 
     public function actionActivar($id)
     {
@@ -130,12 +167,6 @@ class UtilizadorController extends Controller
     }
 
 
-    protected function findModel($id)
-    {
-        if (($model = User::findOne(['id' => $id])) !== null) {
-            return $model;
-        }
 
-        throw new NotFoundHttpException('The requested page does not exist.');
-    }
+
 }

@@ -54,24 +54,24 @@ $this->title = "Gestão de Utilizadores";
                                 </div>
                             </td>
                             <td class="row">
-                                <div class="btn-group col-sm-12">
+                                <div class="btn-group">
                                 <?php
                                 foreach(Yii::$app->authManager->getRolesByUser($utilizador->id) as $role)
                                 {
                                     if($role->name=="administrador"){
                                         //butao par aos admins?>
 
-                                        <button class="btn btn-danger btn-block" disabled>Desativar</button>
+                                        <?= Html::button('Desativar', ['class' => 'btn btn-danger','style'=>'width:100px;','disabled'=>'disabled']);?>
                                     <?php }else{?>
                                         <div>
                                             <?php
                                             if($utilizador->status == 10) {
                                                 //desativar
-                                                echo Html::a('Desativar', ['utilizador/activar', 'id' => $utilizador->id], ['class' => 'btn btn-danger']);
+                                                echo Html::a('Desativar', ['utilizador/activar', 'id' => $utilizador->id], ['class' => 'btn btn-danger','style'=>'width:100px;']);
 
                                             }else if($utilizador->status == 9) {
                                                 //ativar
-                                                echo Html::a(' Ativar ', ['utilizador/activar', 'id' => $utilizador->id], ['class' => 'btn btn-success w-100 d-block']);
+                                                echo Html::a(' Ativar ', ['utilizador/activar', 'id' => $utilizador->id], ['class' => 'btn btn-success','style'=>'width:100px;']);
                                             }
                                             ?>
                                         </div>
