@@ -22,12 +22,7 @@ $this->title = "Detalhes de " . $utilizador->username;
                         <p class="text-muted text-center"><?= $utilizador->email ?></p>
 
                         <div class="text-center">
-                            <?php
-                            foreach(Yii::$app->authManager->getRolesByUser($utilizador->id) as $role)
-                            {
-                                echo "<span class='badge badge-info'>" . ucfirst($role->name) . "</span>";
-                            }
-                            ?>
+                            <?= "<span class='badge badge-info'>" . ucfirst($utilizador->getRole()->name) . "</span>" ?>
                         </div>
 
                         <ul class="list-group list-group-unbordered mb-3 mt-2">
@@ -45,7 +40,7 @@ $this->title = "Detalhes de " . $utilizador->username;
                             </li>
                         </ul>
 
-                        <?php if(in_array(Yii::$app->authManager->getRole("administrador"), Yii::$app->authManager->getRolesByUser(Yii::$app->user->id))): ?>
+                        <?php if(Yii::$app->user->can('writeUtilizador')): ?>
                             <div class="btn-toolbar d-flex justify-content-center" role="toolbar">
                                 <?= Html::a('<i class="fas fa-key"></i>', ['utilizador/resetpassword/', 'id' => $utilizador->id], ['class' => 'btn btn-primary m-1']) ?>
                                 <?= Html::a('<i class="fas fa-pencil-alt text-white"></i>', ['utilizador/update/', 'id' => $utilizador->id], ['class' => 'btn btn-warning m-1']) ?>

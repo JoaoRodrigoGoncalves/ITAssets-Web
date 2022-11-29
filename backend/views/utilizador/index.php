@@ -36,53 +36,34 @@ $this->title = "Gestão de Utilizadores";
                             <td><?=$utilizador->username?></td>
                             <td><?=$utilizador->email?></td>
                             <td>
-                                <?php
-                                    foreach(Yii::$app->authManager->getRolesByUser($utilizador->id) as $role)
-                                    {
-                                        echo "<span class='badge badge-info'>" . Utilizador::getRoleLabel($role->name) . "</span>";
-                                    }
-                                ?>
+                                <?= "<span class='badge badge-info'>" . Utilizador::getRoleLabel($utilizador->getRole()->name) . "</span>" ?>
                             </td>
                             <td>
                                 <?= $utilizador->getStatusLabel() ?>
                             </td>
-                            <td>
-                                <div class="justify-content-center btn-group">
-                                    <?= Html::a('<i class="fas fa-user"></i>', ['utilizador/view', 'id' => $utilizador->id], ['class' => 'btn btn-primary mr-2']) ?>
-                                    <?= Html::a('<i class="fas fa-pencil-alt text-white"></i>', ['utilizador/update/', 'id' => $utilizador->id], ['class' => 'btn btn-warning mr-2']) ?>
-
-
-                                </div>
-                            </td>
-                            <td class="row">
-                                <div class="btn-group">
-                                <?php
-                                foreach(Yii::$app->authManager->getRolesByUser($utilizador->id) as $role)
-                                {
-                                    if($role->name=="administrador"){
-                                        //butao par aos admins?>
-
-                                        <?= Html::button('Desativar', ['class' => 'btn btn-danger','style'=>'width:100px;','disabled'=>'disabled']);?>
-                                    <?php }else{?>
-                                        <div>
-                                            <?php
-                                            if($utilizador->status == 10) {
-                                                //desativar
-                                                echo Html::a('Desativar', ['utilizador/activar', 'id' => $utilizador->id], ['class' => 'btn btn-danger','style'=>'width:100px;']);
-
-                                            }else if($utilizador->status == 9) {
-                                                //ativar
-                                                echo Html::a(' Ativar ', ['utilizador/activar', 'id' => $utilizador->id], ['class' => 'btn btn-success','style'=>'width:100px;']);
+                            <td class="justify-content-center btn-group">
+                                <?= Html::a('<i class="fas fa-user"></i>', ['utilizador/view', 'id' => $utilizador->id], ['class' => 'btn btn-primary mr-1']) ?>
+                                <?php if(Yii::$app->user->can('writeUtilizador')): ?>
+                                    <?= Html::a('<i class="fas fa-pencil-alt text-white"></i>', ['utilizador/update/', 'id' => $utilizador->id], ['class' => 'btn btn-warning mr-1']) ?>
+                                    <?php
+                                        if($utilizador->id == Yii::$app->user->id)
+                                        {
+                                            echo Html::button("<span class='material-symbols-outlined' style='font-variation-settings: \"FILL\" 1, \"wght\" 400, \"GRAD\" 200, \"opsz\" 20; padding-bottom: 0;'>toggle_off</span>", ['class' => 'btn btn-danger pb-0', 'disabled' => 'disabled']);
+                                        }
+                                        else
+                                        {
+                                            if($utilizador->status == 10)
+                                            {
+                                                echo Html::a("<span class='material-symbols-outlined' style='font-variation-settings: \"FILL\" 1, \"wght\" 400, \"GRAD\" 200, \"opsz\" 20; padding-bottom: 0;'>toggle_off</span>", ['utilizador/activar', 'id' => $utilizador->id], ['class' => 'btn  btn-danger pb-0']);
                                             }
-                                            ?>
-                                        </div>
-                                    <?php }
-                                }
-                                ?>
-
-                                </div>
+                                            else
+                                            {
+                                                echo Html::a("<span class='material-symbols-outlined' style='font-variation-settings: \"FILL\" 1, \"wght\" 400, \"GRAD\" 200, \"opsz\" 20; padding-bottom: 0;'>toggle_on</span>", ['utilizador/activar', 'id' => $utilizador->id], ['class' => 'btn  btn-success pb-0']);
+                                            }
+                                        }
+                                    ?>
+                                <?php endif; ?>
                             </td>
-
                         </tr>
                     <?php } ?>
                 </tbody>

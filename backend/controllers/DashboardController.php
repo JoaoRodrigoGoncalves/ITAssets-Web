@@ -24,7 +24,7 @@ class DashboardController extends Controller
                     [
                         'actions' => ['index'],
                         'allow' => true,
-                        'roles' => ['administrador', 'operadorLogistico']
+                        'roles' => ['administrador', 'operadorLogistica']
                     ],
                 ],
             ],
