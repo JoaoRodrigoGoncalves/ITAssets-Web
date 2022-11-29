@@ -163,6 +163,7 @@ class UtilizadorController extends Controller
     {
         $user = $this->findModel($id);
         $user->setPassword("password123");
+        $user->generateAuthKey();
         $user->save();
         $this->redirect(['utilizador/view', 'id' => $id]);
     }

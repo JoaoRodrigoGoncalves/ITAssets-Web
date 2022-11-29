@@ -60,6 +60,7 @@ return [
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'api/user'],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'api/item'],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'api/categoria'],
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'api/verifytoken'],
             ],
         ],
     ],
