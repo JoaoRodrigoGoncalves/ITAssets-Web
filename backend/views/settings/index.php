@@ -4,6 +4,8 @@ use yii\bootstrap4\ActiveForm;
 use yii\helpers\Html;
 
 $this->title = "Definições";
+/** @var \common\models\User $user */
+/** @var \backend\models\ChangePasswordForm $password */
 ?>
 <!-- Main content -->
 <section class="content">
@@ -30,7 +32,7 @@ $this->title = "Definições";
 
                         <ul class="list-group list-group-unbordered mb-3 mt-2">
                             <li class="list-group-item">
-                                <b>Itens</b> <a class="float-right">1,322</a>
+                                <b>Itens Alocados</b> <a class="float-right">1,322</a>
                             </li>
                             <li class="list-group-item">
                                 <b>Pedidos Alocação</b> <a class="float-right">543</a>

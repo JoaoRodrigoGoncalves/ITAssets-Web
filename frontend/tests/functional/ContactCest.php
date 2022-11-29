@@ -2,9 +2,10 @@
 
 namespace frontend\tests\functional;
 
+use Codeception\Scenario;
 use frontend\tests\FunctionalTester;
 
-/* @var $scenario \Codeception\Scenario */
+/* @var $scenario Scenario */
 
 class ContactCest
 {

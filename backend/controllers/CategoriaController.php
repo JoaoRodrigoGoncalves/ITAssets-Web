@@ -3,10 +3,13 @@
 namespace backend\controllers;
 
 use common\models\Categoria;
+use Yii;
 use yii\data\ActiveDataProvider;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
 
 /**
  * CategoriaController implements the CRUD actions for Categoria model.
@@ -21,6 +24,21 @@ class CategoriaController extends Controller
         return array_merge(
             parent::behaviors(),
             [
+                'access' => [
+                    'class' => AccessControl::class,
+                    'rules' => [
+                        [
+                            'actions' => ['index', 'view'],
+                            'allow' => true,
+                            'roles' => ['readCategoria']
+                        ],
+                        [
+                            'actions' => ['create', 'update', 'delete'],
+                            'allow' => true,
+                            'roles' => ['writeCategoria']
+                        ]
+                    ],
+                ],
                 'verbs' => [
                     'class' => VerbFilter::className(),
                     'actions' => [
@@ -64,7 +82,7 @@ class CategoriaController extends Controller
     /**
      * Creates a new Categoria model.
      * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return string|\yii\web\Response
+     * @return string|Response
      */
     public function actionCreate()
     {
@@ -89,7 +107,7 @@ class CategoriaController extends Controller
      * Updates an existing Categoria model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param int $id ID
-     * @return string|\yii\web\Response
+     * @return string|Response
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionUpdate($id)
@@ -97,7 +115,7 @@ class CategoriaController extends Controller
         $model = $this->findModel($id);
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['categoria/index']);
         }
 
         return $this->render('update', [
@@ -109,18 +127,21 @@ class CategoriaController extends Controller
      * Deletes an existing Categoria model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param int $id ID
-     * @return \yii\web\Response
+     * @return Response
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionDelete($id)
     {
-        /*$this->findModel($id)->delete();
-
-        return $this->redirect(['index']);*/
-
-        $item=Categoria::findOne($id);
-        $item->status=0;
-        $item->save();
+        $categoria = $this->findModel($id);
+        if(count($categoria->items) == 0)
+        {
+            $categoria->status = 0;
+            $categoria->save();
+        }
+        else
+        {
+            Yii::$app->session->setFlash('error', 'Não foi possível apagar a categoria porque esta está em uso por itens');
+        }
         return $this->redirect(['index']);
     }
 

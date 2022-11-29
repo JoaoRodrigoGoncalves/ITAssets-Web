@@ -10,6 +10,7 @@ use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\helpers\Url;
 use yii\web\Controller;
+use yii\web\ErrorAction;
 
 class SettingsController extends Controller
 {
@@ -22,17 +23,14 @@ class SettingsController extends Controller
             'access' => [
                 'class' => AccessControl::class,
                 'rules' => [
-                    //TODO: bloquear utilizador padrão de entrar aqui
                     [
-                        'actions' => ['index'],
+                        'actions' => ['index', 'save', 'password'],
                         'allow' => true,
-                        'roles' => ['ConsultarPropriaConta']
+                        // Fazemos filtragem por role visto que queremos
+                        // que só os utilizadores com acesso ao backoffice
+                        // consigam fazer a edição das suas contas no backoffice
+                        'roles' => ['administrador', 'operadorLogistica']
                     ],
-                    [
-                        'actions' => ['save', 'password'],
-                        'allow' => true,
-                        'roles' => ['EditarPropriaConta']
-                    ]
                 ],
             ],
             'verbs' => [
@@ -52,7 +50,7 @@ class SettingsController extends Controller
     {
         return [
             'error' => [
-                'class' => \yii\web\ErrorAction::class,
+                'class' => ErrorAction::class,
             ],
         ];
     }

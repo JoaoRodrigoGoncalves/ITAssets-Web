@@ -1,12 +1,15 @@
 <?php
 
-/* @var $this \yii\web\View */
+/* @var $this View */
 /* @var $content string */
 
+use hail812\adminlte3\assets\AdminLteAsset;
+use hail812\adminlte3\assets\FontAwesomeAsset;
 use yii\helpers\Html;
+use yii\web\View;
 
-\hail812\adminlte3\assets\FontAwesomeAsset::register($this);
-\hail812\adminlte3\assets\AdminLteAsset::register($this);
+FontAwesomeAsset::register($this);
+AdminLteAsset::register($this);
 $this->registerCssFile('https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback');
 
 $assetDir = Yii::$app->assetManager->getPublishedUrl('@vendor/almasaeed2010/adminlte/dist');
@@ -44,6 +47,20 @@ $this->registerJsFile($publishedRes[1].'/control_sidebar.js', ['depends' => '\ha
                     title: 'Sucesso',
                     icon: 'fas fa-check',
                     body: '<?= Yii::$app->session->getFlash("success") ?>',
+                    autohide: true,
+                    delay: 3000,
+                });
+            })
+        </script>
+    <?php endif; ?>
+    <?php if(Yii::$app->session->hasFlash('error')): ?>
+        <script type="application/javascript">
+            window.addEventListener('load', function() {
+                $(document).Toasts('create', {
+                    class: 'bg-danger',
+                    title: 'Atenção!',
+                    icon: 'fas fa-check',
+                    body: '<?= Yii::$app->session->getFlash("error") ?>',
                     autohide: true,
                     delay: 3000,
                 });

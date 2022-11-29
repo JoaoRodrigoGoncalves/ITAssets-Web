@@ -4,12 +4,14 @@ namespace backend\controllers;
 
 use common\models\Item;
 use common\models\Categoria;
+use Yii;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
 
 /**
  * ItemController implements the CRUD actions for Item model.
@@ -26,18 +28,17 @@ class ItemController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['index','create', 'view', 'update', 'delete'],
+                        'actions' => ['index', 'view'],
                         'allow' => true,
-                        'roles' => ['administrador', 'operadorLogistico']
+                        'roles' => ['readItem']
                     ],
+                    [
+                        'actions' => ['create', 'update', 'delete'],
+                        'allow' => true,
+                        'roles' => ['writeItem']
+                    ]
                 ],
             ],
-//            'verbs' => [
-//                'class' => VerbFilter::class,
-//                'actions' => [
-//                    'logout' => ['post'],
-//                ],
-//            ],
         ];
 
     }
@@ -61,7 +62,7 @@ class ItemController extends Controller
         }
         else
         {
-            Yii::$app->session->setFlash('success', 'Tens de criar primeiro categoria');
+            Yii::$app->session->setFlash('error', 'É necessário criar uma categoria primeiro!');
             return $this->redirect(['categoria/create']);
         }
     }
@@ -82,7 +83,7 @@ class ItemController extends Controller
     /**
      * Creates a new Item model.
      * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return string|\yii\web\Response
+     * @return string|Response
      */
     public function actionCreate()
     {
@@ -110,7 +111,7 @@ class ItemController extends Controller
      * Updates an existing Item model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param int $id ID
-     * @return string|\yii\web\Response
+     * @return string|Response
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionUpdate($id)
@@ -130,7 +131,7 @@ class ItemController extends Controller
      * Deletes an existing Item model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param int $id ID
-     * @return \yii\web\Response
+     * @return Response
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionDelete($id)

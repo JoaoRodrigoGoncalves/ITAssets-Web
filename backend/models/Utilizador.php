@@ -2,9 +2,11 @@
 
 namespace backend\models;
 
+use Exception;
 use Yii;
 use yii\base\Model;
 use common\models\User;
+use yii\web\NotFoundHttpException;
 
 /**
  * Signup form
@@ -13,10 +15,7 @@ class Utilizador extends Model
 {
     public $username;
     public $email;
-    public $password;
-    public $repeat_password;
     public $role;
-
 
     /**
      * {@inheritdoc}
@@ -30,16 +29,9 @@ class Utilizador extends Model
 
             ['email', 'trim'],
             ['email', 'required', 'message' => 'Campo obrigatório'],
-            ['email', 'email'],
+            ['email', 'email', 'message' => 'Não é um endereço de email válido'],
             ['email', 'string', 'max' => 255],
             ['email', 'unique', 'targetClass' => '\common\models\User', 'message' => 'O E-Mail indicado já está em utilização.'],
-
-            ['password', 'required', 'message' => 'Campo obrigatório'],
-            ['password', 'string', 'min' => Yii::$app->params['user.passwordMinLength'], 'tooShort' => 'A palavra-passe deve conter pelo menos ' . Yii::$app->params['user.passwordMinLength'] . ' caracteres'],
-
-            ['repeat_password', 'required', 'message' => 'Campo obrigatório'],
-            ['repeat_password', 'string', 'min' => Yii::$app->params['user.passwordMinLength'], 'tooShort' => 'Deve conter pelo menos ' . Yii::$app->params['user.passwordMinLength'] . ' caracteres'],
-            [['repeat_password'], 'compare', 'compareAttribute' => 'password', 'message' => 'A palavra-passe e a confirmação da nova palavra-passe devem ser iguais'],
 
             ['role', 'string'], // Isto ao ser mencionado obriga a que o campo seja carregado para o model ($this->load())
         ];
@@ -50,13 +42,11 @@ class Utilizador extends Model
         return [
             'username' => 'Nome de utilizador',
             'email' => "E-Mail",
-            'password' => 'Palavra-passe',
-            'repeat_password' => 'Confirmar palavra-passe',
             'role' => 'Cargo',
         ];
     }
 
-    public static function getRoleLabel($role)
+    public static function getRoleLabel($role): string
     {
         switch($role)
         {
@@ -74,36 +64,12 @@ class Utilizador extends Model
         }
     }
 
-    /**
-     * Regista o primeiro utilizador administrativo
-     * @return bool whether the creating new account was successful
-     */
-    public function setupFirstAdmin()
-    {
-        if (!$this->validate()) {
-            return null;
-        }
-
-        $user = new User();
-        $user->username = $this->username;
-        $user->email = $this->email;
-        $user->status = User::STATUS_ACTIVE; //Pre ativar
-        $user->setPassword($this->password);
-        $user->generateAuthKey();
-
-        if($user->save()){
-            $auth = Yii::$app->authManager;
-            $auth->assign($auth->getRole("administrador"), $user->id);
-            return true;
-        }
-        return false;
-    }
-
-    public function createUser(bool $preAtivar = false)
+    public function createUser(bool $preAtivar = false): bool
     {
         if(!$this->validate())
         {
-            return null;
+            Yii::$app->session->setFlash("error", "Validação falhou");
+            return false;
         }
 
         $user = new User();
@@ -111,7 +77,7 @@ class Utilizador extends Model
         $user->email = $this->email;
 
         $user->status = $preAtivar ? User::STATUS_ACTIVE : User::STATUS_INACTIVE;
-        $user->setPassword($this->password);
+        $user->setPassword("password123");
         $user->generateAuthKey();
 
         if($user->save())
@@ -123,4 +89,30 @@ class Utilizador extends Model
         return false;
     }
 
+    /**
+     * @throws Exception
+     */
+    public function updateUser($id): bool
+    {
+        if(!$this->validate())
+        {
+            Yii::$app->session->setFlash("error", "Validação falhou");
+            return false;
+        }
+
+        $user = User::findOne(['id' => $id]);
+        $user->username = $this->username;
+        $user->email = $this->email;
+
+        if ($user->save())
+        {
+            $auth = Yii::$app->authManager;
+            // Dar revoke aos roles atuais do utilizador para
+            // depois atualizar com os novos
+            $auth->revokeAll($id);
+            $auth->assign(($auth->getRole($this->role)),$id);
+            return true;
+        }
+        return false;
+    }
 }

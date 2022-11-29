@@ -4,20 +4,18 @@ namespace backend\modules\api\controllers;
 
 use Yii;
 use yii\filters\auth\HttpBearerAuth;
-use yii\filters\VerbFilter;
 use yii\rest\ActiveController;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
-class ItemController extends ActiveController
+class CategoriaController extends ActiveController
 {
-    public $modelClass = 'common\models\Item';
+    public $modelClass = 'common\models\Categoria';
 
     public function behaviors()
     {
         $behaviors = parent::behaviors();
-
         $behaviors['formats'] = [
             'class' => 'yii\filters\ContentNegotiator',
             'formats' => [
@@ -26,19 +24,8 @@ class ItemController extends ActiveController
         ];
 
         $behaviors['authenticator'] = [
-            'class' => HttpBearerAuth::class,
+            'class' => HttpBearerAuth::class
         ];
-
-//        $behaviors['verbs'] = [
-//            'class' => VerbFilter::class,
-//            'actions' => [
-//                'index' => ['get'],
-//                'view' => ['get'],
-//                'create' => ['post'],
-//                'update' => ['put'],
-//                'delete' => ['delete']
-//            ],
-//        ];
 
         return $behaviors;
     }
@@ -50,23 +37,23 @@ class ItemController extends ActiveController
         {
             case "index":
             case "view":
-                if(!Yii::$app->user->can('readItem'))
+                if(!Yii::$app->user->can('readCategoria'))
                 {
                     throw new ForbiddenHttpException();
                 }
-                break;
+            break;
 
             case "create":
             case "update":
             case "delete":
-                if(!Yii::$app->user->can('writeItem'))
+                if(!Yii::$app->user->can('writeCategoria'))
                 {
                     throw new ForbiddenHttpException();
                 }
-                break;
+            break;
 
             default:
-                throw new NotFoundHttpException();
+                throw new NotFoundHttpException($action . " desconhecido");
         }
     }
 }

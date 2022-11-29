@@ -6,6 +6,7 @@ use Yii;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
+use yii\rbac\Role;
 use yii\web\IdentityInterface;
 
 /**
@@ -75,6 +76,10 @@ class User extends ActiveRecord implements IdentityInterface
         ];
     }
 
+    /**
+     * Devikve uma span com o HTML indicado para apresentação da role
+     * @return string
+     */
     public function getStatusLabel()
     {
         switch ($this->status)
@@ -91,6 +96,15 @@ class User extends ActiveRecord implements IdentityInterface
             default:
                 return '<span class="badge badge-info">' . $this->status . '</span>';
         }
+    }
+
+    /**
+     * Devolve a role do utilizador
+     * @return mixed|Role
+     */
+    public function getRole()
+    {
+        return Yii::$app->authManager->getRolesByUser($this->id)[0];
     }
 
     /**

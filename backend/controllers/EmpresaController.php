@@ -9,6 +9,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use yii\web\Response;
 
 /**
  * EmpresaController implements the CRUD actions for Empresa model.
@@ -25,9 +26,12 @@ class EmpresaController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
+                        // Não separamos as ações e permissões porque estas páginas só devem
+                        // ser vistas por quem tem permissões para criar/editar os dados da
+                        // empresa
                         'actions' => ['index','create', 'update'],
                         'allow' => true,
-                        'roles' => ['administrador']
+                        'roles' => ['writeEmpresa']
                     ],
                 ],
             ],
@@ -37,7 +41,7 @@ class EmpresaController extends Controller
     /**
      * Lists all Empresa models.
      *
-     * @return string|\yii\web\Response
+     * @return string|Response
      */
     public function actionIndex()
     {
@@ -58,7 +62,7 @@ class EmpresaController extends Controller
     /**
      * Creates a new Empresa model.
      * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return string|\yii\web\Response
+     * @return string|Response
      */
     public function actionCreate()
     {
@@ -82,7 +86,7 @@ class EmpresaController extends Controller
      * Updates an existing Empresa model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param int $id ID
-     * @return string|\yii\web\Response
+     * @return string|Response
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionUpdate()

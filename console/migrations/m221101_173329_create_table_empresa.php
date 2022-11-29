@@ -11,11 +11,11 @@ class m221101_173329_create_table_empresa extends Migration
     {
         $this->createTable('empresa', [
             'id' => $this->primaryKey(),
-            'nome' => $this->string(),
-            'NIF' => $this->char(9),
-            'rua' => $this->string(),
-            'codigoPostal' => $this->char(8),
-            'localidade' => $this->string()
+            'nome' => $this->string()->notNull(),
+            'NIF' => $this->char(9)->notNull(),
+            'rua' => $this->string()->notNull(),
+            'codigoPostal' => $this->char(8)->notNull(),
+            'localidade' => $this->string()->notNull()
         ]);
     }
 

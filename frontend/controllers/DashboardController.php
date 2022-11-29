@@ -6,8 +6,9 @@ use yii\base\Action;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
+use yii\web\ErrorAction;
 
-class DashboardController extends \yii\web\Controller
+class DashboardController extends Controller
 {
 
     /**
@@ -42,7 +43,7 @@ class DashboardController extends \yii\web\Controller
     {
         return [
             'error' => [
-                'class' => \yii\web\ErrorAction::class,
+                'class' => ErrorAction::class,
             ],
         ];
     }

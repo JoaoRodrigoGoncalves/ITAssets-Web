@@ -1,11 +1,15 @@
 <?php
+
+use yii\bootstrap4\ActiveForm;
 use yii\helpers\Html;
+
+/** @var \common\models\Login $model */
 ?>
 <div class="card">
     <div class="card-body login-card-body">
         <p class="login-box-msg">Inicie sessão para continuar</p>
 
-        <?php $form = \yii\bootstrap4\ActiveForm::begin(['id' => 'login-form']) ?>
+        <?php $form = ActiveForm::begin(['id' => 'login-form']) ?>
 
         <?= $form->field($model,'email', [
             'options' => ['class' => 'form-group has-feedback'],
@@ -40,7 +44,7 @@ use yii\helpers\Html;
             </div>
         </div>
 
-        <?php \yii\bootstrap4\ActiveForm::end(); ?>
+        <?php ActiveForm::end(); ?>
 
         <p class="mb-1">
             <a href="#">Esqueci a palavra-passe</a>
