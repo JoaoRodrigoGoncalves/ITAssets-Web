@@ -1,7 +1,9 @@
 <?php
 
+use hail812\adminlte\widgets\Menu;
 use yii\helpers\Url;
 
+/** @var false|string $assetDir */
 ?>
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
@@ -38,7 +40,7 @@ use yii\helpers\Url;
         <!-- Sidebar Menu -->
         <nav class="mt-2">
             <?php
-            echo \hail812\adminlte\widgets\Menu::widget([
+            echo Menu::widget([
                 'items' => [
                     ['label' => 'Empresa', 'icon' => 'building', 'url' => '/empresa/index'],
                     ['label' => 'Utilizadores', 'icon' => 'users', 'url' => '/utilizador/index'],

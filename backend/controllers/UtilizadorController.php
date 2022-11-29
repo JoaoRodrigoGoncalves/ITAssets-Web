@@ -26,25 +26,12 @@ class UtilizadorController extends Controller
                     [
                         'actions' => ['index', 'view'],
                         'allow' => true,
-                        'roles' => ['VerDetalhesUtilizador']
+                        'roles' => ['readUtilizador']
                     ],
                     [
-                        'actions' => ['create'],
+                        'actions' => ['create', 'update', 'delete', 'activar', 'resetpassword'],
                         'allow' => true,
-                        'roles' => ['RegistarUtilizador'],
-                    ],
-                    [
-                        'actions' => ['update'],
-                        'allow' => true,
-                        'roles' => ['EditarUtilizador'],
-                    ],
-                    [
-
-                        'actions' => ['delete','activar'],
-
-
-                        'allow' => true,
-                        'roles' => ['EliminarUtilizador'],
+                        'roles' => ['writeUtilizador'],
                     ],
                 ],
             ],
@@ -59,7 +46,7 @@ class UtilizadorController extends Controller
 
     public function actionView($id)
     {
-        if(in_array(Yii::$app->authManager->getRole("administrador"), Yii::$app->authManager->getRolesByUser(Yii::$app->user->id)))
+        if(Yii::$app->user->can('writeUtilizador'))
         {
             $user = User::findOne(['id' => $id]);
         }
@@ -81,8 +68,8 @@ class UtilizadorController extends Controller
     public function actionCreate()
     {
         $model = new Utilizador();
-        $roles = null; //TODO: verificar
 
+        $roles = array();
         foreach (Yii::$app->authManager->getRoles() as $role)
             $roles[$role->name] = Utilizador::getRoleLabel($role->name);
 
@@ -90,31 +77,28 @@ class UtilizadorController extends Controller
             $model->load($this->request->post());
 
             if ($model->createUser()) {
-                return $this->redirect('index');
+                return $this->redirect(['utilizador/index']);
             }
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-                'roles' => $roles,
-            ]);
         }
+
+        return $this->render('create', [
+            'model' => $model,
+            'roles' => $roles,
+        ]);
     }
 
     public function actionUpdate($id)
     {
-
-        //vai buscar os dados do utilizador
-        $user= User::findOne($id);
-        //cria uma nova variavel do utilizador
+        $user = $this->findModel($id);
         $model = new Utilizador();
-        //passa os valores da variavel user para a model
+
+        // Carregar os valores atuais do utilizador para o modelo
         $model->setAttributes($user->attributes);
-        //vai buscar a role
-        $model->role=$model->getRole($id);
+        // Carregar a role do utilizador, visto que não é um parametro padrão de User
+        $model->role = $user->getRole();
 
 
-        $roles = null; //TODO: verificar
-
+        $roles = array();
         foreach (Yii::$app->authManager->getRoles() as $role) {
             $roles[$role->name] = Utilizador::getRoleLabel($role->name);
         }
@@ -122,51 +106,73 @@ class UtilizadorController extends Controller
         if ($this->request->isPost) {
 
             $model->load($this->request->post());
-
             if ($model->updateUser($id)) {
-                return $this->redirect('../index');
+                return $this->redirect(['utilizador/index']);
             }
-        } else {
-
-            return $this->render('update', [
-                'model' => $model,
-                'roles' => $roles,
-            ]);
         }
-
+        return $this->render('update', [
+            'model' => $model,
+            'roles' => $roles,
+        ]);
     }
-
 
     public function actionActivar($id)
     {
-
-
-        $model=$this->findModel($id);
-        if ($model->status ==10)
+        if ($id != Yii::$app->user->id)
         {
-            $model->status =9;
-            $model->save();
-
-
+            $model = $this->findModel($id);
+            // Garantir que o utilizador em mãos está
+            // ativado ou desativado. Desta forma não é
+            // possível permitir ativar utilizadores eliminados
+            if(in_array($model->status, [10, 9]))
+            {
+                if ($model->status == 10)
+                {
+                    $model->status = 9;
+                }
+                else
+                {
+                    $model->status = 10;
+                }
+                $model->save();
+            }
         }
-        else if($model->status==9)
+        else
         {
-            $model->status=10;
-            $model->save();
-
+            Yii::$app->session->setFlash("error", "Não é possível desativar o utilizador atual");
         }
         return $this->redirect(['index']);
     }
 
     public function actionDelete($id)
     {
-        $model=$this->findModel($id);
-        $model->status = 0;
-        $model->save();
+        if($id != Yii::$app->user->id)
+        {
+            $model=$this->findModel($id);
+            $model->status = 0;
+            $model->save();
+        }
+        else
+        {
+            Yii::$app->session->setFlash("error", "Não é possível apagar o utilizador atual");
+        }
         return $this->redirect(['index']);
     }
 
+    public function actionResetpassword($id)
+    {
+        $user = $this->findModel($id);
+        $user->setPassword("password123");
+        $user->save();
+        $this->redirect(['utilizador/view', 'id' => $id]);
+    }
 
+    protected function findModel($id)
+    {
+        if (($model = User::findOne(['id' => $id])) !== null) {
+            return $model;
+        }
 
-
+        throw new NotFoundHttpException('The requested page does not exist.');
+    }
 }

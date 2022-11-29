@@ -6,7 +6,9 @@ use common\models\Login;
 use Yii;
 use yii\filters\VerbFilter;
 use yii\rest\Controller;
+use yii\web\BadRequestHttpException;
 use yii\web\Response;
+use yii\web\UnauthorizedHttpException;
 
 class LoginController extends Controller
 {
@@ -46,18 +48,16 @@ class LoginController extends Controller
             $token = $loginModel->APILogin();
             if($token)
             {
-                return $this->asJson(['status' => 200, 'token' => $token]);
+                return $this->asJson(['token' => $token]);
             }
             else
             {
-                Yii::$app->response->statusCode = 403;
-                return $this->asJson(['status' => 403, 'errors' => $loginModel->errors]);
+                throw new UnauthorizedHttpException("Credenciais inválidas");
             }
         }
         else
         {
-            Yii::$app->response->statusCode = 400;
-            return $this->asJson(['status' => 400, 'errors' => 'Credenciais em falta']);
+            throw new BadRequestHttpException("Credenciais em falta");
         }
     }
 }

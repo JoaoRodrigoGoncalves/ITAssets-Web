@@ -53,10 +53,10 @@ class ChangePasswordForm extends Model
         }
         else
         {
+            // Feito com sessão aqui ao invés de seterror por causa da forma de
+            // como o flow do pedido está formado. Isto é convertido mais tarde em
+            // erro de atributo
             Yii::$app->session->setFlash('error_old_password', 'Palavra-passe antiga incorreta');
-
-            //TODO: Verificar se é preciso por causa da API
-            $this->addError('old_password', 'Palavra-passe antiga incorreta'); // Manter para API?
         }
         return false;
     }

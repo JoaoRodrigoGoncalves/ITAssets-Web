@@ -2,11 +2,12 @@
 <?php
 
 use backend\models\Utilizador;
+use common\models\User;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
 /** @var yii\web\View $this */
-/** @var \common\models\User[] $utilizadores */
+/** @var User[] $utilizadores */
 
 $this->title = "Gestão de Utilizadores";
 ?>

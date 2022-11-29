@@ -1,14 +1,17 @@
 <?php
+
+use backend\models\Utilizador;
+use yii\bootstrap4\ActiveForm;
 use yii\helpers\Html;
 
 $this->title = 'Registar conta de administração';
-/** @var \backend\models\Utilizador $model */
+/** @var Utilizador $model */
 ?>
 <div class="card">
     <div class="card-body login-card-body">
         <p class="login-box-msg">Registar conta de administração</p>
 
-        <?php $form = \yii\bootstrap4\ActiveForm::begin(['id' => 'signup-form']) ?>
+        <?php $form = ActiveForm::begin(['id' => 'signup-form']) ?>
 
         <?= $form->field($model,'username', [
             'options' => ['class' => 'form-group has-feedback'],
@@ -51,7 +54,7 @@ $this->title = 'Registar conta de administração';
             </div>
         </div>
 
-        <?php \yii\bootstrap4\ActiveForm::end(); ?>
+        <?php ActiveForm::end(); ?>
     </div>
     <!-- /.login-card-body -->
 </div>

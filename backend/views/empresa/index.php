@@ -8,6 +8,7 @@ use yii\grid\GridView;
 
 /** @var yii\web\View $this */
 /** @var yii\data\ActiveDataProvider $dataProvider */
+/** @var Empresa $empresa */
 ?>
 
 <div class="container mt-5">

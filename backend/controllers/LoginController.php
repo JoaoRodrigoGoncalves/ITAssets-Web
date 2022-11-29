@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use backend\models\SetupAdminForm;
 use common\models\Login;
 use backend\models\Utilizador;
 use Yii;
@@ -120,16 +121,17 @@ class LoginController extends Controller
             return $this->goHome();
         }
 
-        $model = new Utilizador();
+        $model = new SetupAdminForm();
 
         if($this->request->isPost){
             $model->load(Yii::$app->request->post());
-            if($model->setupFirstAdmin()){
+            if($model->createUser(true)){
                 return $this->redirect(Url::to(['login/index']));
             }
         }
 
         $model->password = "";
+        $model->repeat_password = "";
         $this->layout = 'main-login';
 
         return $this->render('setup', [

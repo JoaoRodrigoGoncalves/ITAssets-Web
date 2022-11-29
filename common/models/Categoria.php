@@ -3,6 +3,8 @@
 namespace common\models;
 
 use Yii;
+use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "categoria".
@@ -13,7 +15,7 @@ use Yii;
  *
  * @property Item[] $items
  */
-class Categoria extends \yii\db\ActiveRecord
+class Categoria extends ActiveRecord
 {
     const STATUS_DELETED = 0;
     const STATUS_ACTIVE = 10;
@@ -53,7 +55,7 @@ class Categoria extends \yii\db\ActiveRecord
     /**
      * Gets query for [[Items]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getItems()
     {

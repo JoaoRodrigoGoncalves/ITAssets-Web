@@ -31,6 +31,8 @@ class ModuleAPI extends Module
         {
             $response = $event->sender;
             if (in_array($response->statusCode, [200, 201, 204])) {
+                // Se for uma resposta do tipo sucesso, organizar e enviar os dados
+                // acrescentando o código de estado HTTP
                 $response->data = [
                     'status' => $response->statusCode,
                     'data' => $response->data,
@@ -38,6 +40,14 @@ class ModuleAPI extends Module
             }
             else
             {
+                // Reestruturação da resposta caso não esteja no padrão de erro:
+                // {
+                //      "name": "",
+                //      "message": "",
+                //      "code": 0,
+                //      "status": 5xx,
+                //      "type": ""
+                // }
                 $response->data['status'] = $response->statusCode;
 
                 if(!isset($response->data['message']) && isset($response->data['data']['message']))
