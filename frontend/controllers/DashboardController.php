@@ -27,12 +27,6 @@ class DashboardController extends Controller
                     ],
                 ],
             ],
-//            'verbs' => [
-//                'class' => VerbFilter::class,
-//                'actions' => [
-//                    'logout' => ['post'],
-//                ],
-//            ],
         ];
     }
 
@@ -48,19 +42,8 @@ class DashboardController extends Controller
         ];
     }
 
-    public function actionIndex(){
-        $this->layout="main-frontofficie";
-
+    public function actionIndex()
+    {
         return $this->render('index');
     }
-    /**
-     * Displays about page.
-     *
-     * @return mixed
-     */
-    public function actionPedidoReparacao(){
-
-        return $this->render('PedidoReparacao');
-    }
-
 }

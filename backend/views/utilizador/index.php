@@ -43,8 +43,11 @@ $this->title = "Gestão de Utilizadores";
                             </td>
                             <td class="justify-content-center btn-group">
                                 <?= Html::a('<i class="fas fa-user"></i>', ['utilizador/view', 'id' => $utilizador->id], ['class' => 'btn btn-primary mr-1']) ?>
+
                                 <?php if(Yii::$app->user->can('writeUtilizador')): ?>
+
                                     <?= Html::a('<i class="fas fa-pencil-alt text-white"></i>', ['utilizador/update/', 'id' => $utilizador->id], ['class' => 'btn btn-warning mr-1']) ?>
+
                                     <?php
                                         if($utilizador->id == Yii::$app->user->id)
                                         {
@@ -62,6 +65,7 @@ $this->title = "Gestão de Utilizadores";
                                             }
                                         }
                                     ?>
+
                                 <?php endif; ?>
                             </td>
                         </tr>

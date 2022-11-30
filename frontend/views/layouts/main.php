@@ -1,79 +1,49 @@
 <?php
 
-/** @var View $this */
-/** @var string $content */
+/* @var $this View */
+/* @var $content string */
 
-use common\widgets\Alert;
-use frontend\assets\AppAsset;
-use yii\bootstrap5\Breadcrumbs;
-use yii\bootstrap5\Html;
-use yii\bootstrap5\Nav;
-use yii\bootstrap5\NavBar;
+use yii\helpers\Html;
 use yii\web\View;
 
-AppAsset::register($this);
+// Google Font: Source Sans Pro
+$this->registerCssFile("https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback");
+
+$this->registerJsFile("https://code.jquery.com/jquery-3.3.1.slim.min.js", ['integrity' => 'sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo', 'crossorigin' => 'anonymous']);
+$this->registerJsFile("https://cdn.jsdelivr.net/npm/popper.js@1.14.3/dist/umd/popper.min.js", ['integrity' => 'sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49', 'crossorigin' => 'anonymous']);
+$this->registerJsFile("https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js", ['integrity' => 'sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy', 'crossorigin' => 'anonymous']);
+$this->registerJsFile("https://kit.fontawesome.com/79a649e6a6.js");
+
 ?>
 <?php $this->beginPage() ?>
-<!DOCTYPE html>
-<html lang="<?= Yii::$app->language ?>" class="h-100">
-<head>
-    <meta charset="<?= Yii::$app->charset ?>">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <?php $this->registerCsrfMetaTags() ?>
-    <title><?= Html::encode($this->title) ?></title>
-    <?php $this->head() ?>
-</head>
-<body class="d-flex flex-column h-100">
-<?php $this->beginBody() ?>
+    <!DOCTYPE html>
+    <html lang="<?= Yii::$app->language ?>">
+    <head>
+        <meta charset="<?= Yii::$app->charset ?>">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <?php $this->registerCsrfMetaTags() ?>
+        <title><?= Html::encode($this->title) ?> | IT Assets</title>
+        <?=
+        Html::cssFile('@web/css/adminlte.css');
+        Html::cssFile('@web/css/sweetalert2.min.css');
+        Html::jsFile('@web/js/adminlte.min.js');
+        ?>
+        <?php $this->head() ?>
+    </head>
+    <body class="hold-transition sidebar-mini">
+    <?php $this->beginBody() ?>
 
-<header>
+    <div class="wrapper">
+        <!-- Navbar -->
+        <?= $this->render('navbar') ?>
+        <!-- /.navbar -->
 
-    <?php
-       NavBar::begin([
-        'brandLabel' => Yii::$app->name,
-        'brandUrl' => Yii::$app->homeUrl,
-        'options' => [
-            'class' => 'navbar navbar-expand-md navbar-dark bg-dark fixed-top',
-        ],
-    ]);
-
-
-
-    echo Nav::widget([
-        'options' => ['class' => 'navbar-nav me-auto mb-2 mb-md-0'],
-
-    ]);
-    if (Yii::$app->user->isGuest) {
-        echo Html::tag('div',Html::a('Login',['/site/login'],['class' => ['btn btn-success text-decoration-none']]),['class' => ['d-flex']]);
-    } else {
-        echo Html::beginForm(['/site/logout'], 'post', ['class' => 'd-flex'])
-            . Html::submitButton(Yii::$app->user->identity->username ,
-                ['class' => 'btn btn-link logout text-decoration-none']
-            )
-            . Html::endForm();
-    }
-    NavBar::end();
-    ?>
-</header>
-
-<main role="main" class="flex-shrink-0">
-    <div class="container">
-        <?= Breadcrumbs::widget([
-            'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
-        ]) ?>
-        <?= Alert::widget() ?>
-        <?= $content ?>
+        <!-- Main Footer -->
+        <?= $this->render('footer') ?>
     </div>
-</main>
 
-<footer class="footer mt-auto py-3 text-muted">
-    <div class="container">
-        <p class="float-start">&copy; <?= Html::encode(Yii::$app->name) ?> <?= date('Y') ?></p>
-        <p class="float-end"><?= Yii::powered() ?></p>
-    </div>
-</footer>
-
-<?php $this->endBody() ?>
-</body>
-</html>
-<?php $this->endPage();
+    <?php $this->endBody() ?>
+    </body>
+    </html>
+<?php $this->endPage() ?>
