@@ -29,17 +29,6 @@ class ItemController extends ActiveController
             'class' => HttpBearerAuth::class,
         ];
 
-//        $behaviors['verbs'] = [
-//            'class' => VerbFilter::class,
-//            'actions' => [
-//                'index' => ['get'],
-//                'view' => ['get'],
-//                'create' => ['post'],
-//                'update' => ['put'],
-//                'delete' => ['delete']
-//            ],
-//        ];
-
         return $behaviors;
     }
 
