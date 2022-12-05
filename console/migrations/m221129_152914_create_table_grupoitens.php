@@ -29,17 +29,17 @@ class m221129_152914_create_table_grupoitens extends Migration
     // Use up()/down() to run migration code without a transaction.
     public function up()
     {
-        $this->createTable('grupoitens', [
+        $this->createTable('{{%grupoItens}}', [
             'id' => $this->primaryKey(),
             'nome' => $this->string()->notNull(),
-            'notas'=>$this->string(),
-
+            'notas' => $this->text(),
+            'status' => $this->integer()->defaultValue(10),
         ]);
     }
 
     public function down()
     {
-        $this->dropTable('grupoitens');
+        $this->dropTable('{{%grupoItens}}');
     }
 
 }

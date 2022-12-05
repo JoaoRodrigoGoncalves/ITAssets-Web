@@ -20,21 +20,9 @@ $this->params['breadcrumbs'][] = 'Update';
     <br>
     <div class="card">
         <div class="card-body">
-            <?php
-            $form = ActiveForm::begin([
-                'id' => 'login-form',
-                'options' => ['class' => 'form-horizontal'],
-            ])
-            ?>
-                <?= $form->field($item, 'nome')->textInput()->label('Name') ?>
-                <?= $form->field($item, 'serialNumber')->textInput()->label('Número de Série')?>
-                <?= $form->field($item, 'notas')->textArea()->label('Observação')?>
-                <?= $form->field($item, 'categoria_id')->dropDownList(ArrayHelper::map(Categoria::find()->all(), 'id', 'nome')); ?>
-
-                <div class="form-group float-right">
-                        <?= Html::submitButton('Guardar', ['class' => 'btn btn-primary']) ?>
-                </div>
-            <?php ActiveForm::end() ?>
+            <?= $this->render('_form', [
+                'model' => $item,
+            ]) ?>
         </div>
     </div>
 </div>

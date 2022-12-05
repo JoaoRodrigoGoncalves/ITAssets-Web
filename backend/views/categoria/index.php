@@ -11,6 +11,7 @@ use yii\widgets\ListView;
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
 $this->title = 'Categorias';
+$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="container mt-3">
     <h2><?= Html::encode($this->title) ?></h2>
@@ -22,8 +23,10 @@ $this->title = 'Categorias';
             </div>
         </div>
         <div class="card-body">
-            <?=GridView::widget(['dataProvider' => $dataProvider,
-                'columns' => [['class' => 'yii\grid\SerialColumn'],
+            <?=GridView::widget([
+                'dataProvider' => $dataProvider,
+                'layout'=> "{items}\n{summary}\n{pager}",
+                'columns' => [
                     'nome',
                     [
                         'format' => 'raw',

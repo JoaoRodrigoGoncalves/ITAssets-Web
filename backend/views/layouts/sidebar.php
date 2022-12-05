@@ -35,6 +35,7 @@ use yii\helpers\Url;
                     ['label' => 'Pedidos Itens', 'icon' => 'clipboard', 'url' => '#'],
                     ['label' => 'Pedidos Reparação', 'icon' => 'wrench', 'url' => '#'],
                     ['label' => 'Utilizadores', 'icon' => 'users', 'url' => '/utilizador/index'],
+                    ['label' => 'Locais', 'icon' => 'map-marker-alt', 'url' => '/site/index'],
                     ['label' => 'Categorias', 'icon' => 'stream', 'url' => '/categoria/index'],
                     ['label' => 'Empresa', 'icon' => 'building', 'url' => '/empresa/index'],
                 ],

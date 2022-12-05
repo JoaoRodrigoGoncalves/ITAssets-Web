@@ -39,6 +39,10 @@ class m221130_095112_alter_table_item extends Migration
 
     public function down()
     {
-        //$this->dropTable('item');
+        $this->dropForeignKey('fk-grupoitens', 'item');
+        $this->dropForeignKey('fk-site', 'item');
+
+        $this->dropColumn('item', 'grupoitens_id');
+        $this->dropColumn('item', 'site_id');
     }
 }

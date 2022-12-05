@@ -37,10 +37,13 @@ class Item extends ActiveRecord
     public function rules()
     {
         return [
+            [['nome'], 'required'],
             [['categoria_id', 'status'], 'integer'],
             [['nome', 'serialNumber', 'notas'], 'string', 'max' => 255],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
             [['categoria_id'], 'exist', 'skipOnError' => true, 'targetClass' => Categoria::class, 'targetAttribute' => ['categoria_id' => 'id']],
+            [['grupoitens_id'], 'exist', 'skipOnError' => true, 'targetClass' => Grupoitens::class, 'targetAttribute' => ['grupoitens_id' =>'id']],
+            [['site_id'], 'exist', 'skipOnError' => true, 'targetClass' => Site::class, 'targetAttribute' => ['site_id' => 'id']],
         ];
     }
 
@@ -54,6 +57,7 @@ class Item extends ActiveRecord
             'nome' => 'Nome',
             'serialNumber' => 'Número de Série',
             'categoria_id' => 'Categoria',
+            'site_id' => 'Local',
             'notas' => 'Notas',
             'status' => 'Estado',
         ];
@@ -67,6 +71,26 @@ class Item extends ActiveRecord
     public function getCategoria()
     {
         return $this->hasOne(Categoria::class, ['id' => 'categoria_id']);
+    }
+
+    /**
+     * Gets query for [[Grupoitens]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getGrupoitens()
+    {
+        return $this->hasOne(Grupoitens::class, ['id' => 'grupoitens_id']);
+    }
+
+    /**
+     * Gets query for [[Site]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSite()
+    {
+        return $this->hasOne(Site::class, ['id' => 'site_id']);
     }
 
     public function getStatusLabel()

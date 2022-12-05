@@ -73,7 +73,6 @@ class CategoriaController extends Controller
      */
     public function actionView($id)
     {
-        //TODO: Aparecer as categorias com status 10
         return $this->render('view', [
             'categoria' => $this->findModel($id),
         ]);
@@ -154,7 +153,7 @@ class CategoriaController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = Categoria::findOne(['id' => $id])) !== null) {
+        if (($model = Categoria::findOne(['id' => $id, 'status' => 10])) !== null) {
             return $model;
         }
 

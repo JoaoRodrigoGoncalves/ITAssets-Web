@@ -25,7 +25,7 @@ use yii\widgets\DetailView;
                     'serialNumber',
                     [
                         'label' => 'Categoria',
-                        'value' => $item->categoria->nome,
+                        'value' => $item->categoria->nome ?? "N/A",
                     ],
                     'notas',
                 ],

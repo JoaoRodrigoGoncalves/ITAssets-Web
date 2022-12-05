@@ -31,8 +31,8 @@ $this->title = 'Itens';
                     <?php foreach ($itens as $item): ?>
                         <tr>
                             <td><?=$item->nome?></td>
-                            <td><?=$item->serialNumber?></td>
-                            <td><?=$item->categoria->nome?></td>
+                            <td><?=$item->serialNumber ?></td>
+                            <td><?=$item->categoria->nome ?? "N/A" ?></td>
                             <td>
                                 <a href="<?=Url::to(['item/view/', 'id' => $item->id]) ?>" class="btn btn-primary"><i class="fas fa-info-circle"></i></a>
                                 <a href="<?=Url::to(['item/update/', 'id' => $item->id]) ?>" class="btn btn-warning text-white"><i class="fas fa-pencil-alt"></i></a>
