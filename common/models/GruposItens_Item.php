@@ -67,4 +67,6 @@ class GruposItens_Item extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Item::class, ['id' => 'item_id']);
     }
+
+
 }
