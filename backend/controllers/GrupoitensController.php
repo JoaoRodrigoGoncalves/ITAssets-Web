@@ -5,10 +5,13 @@ namespace backend\controllers;
 use common\models\Grupoitens;
 use common\models\GruposItens_Item;
 use common\models\Item;
+use common\models\PedidoAlocacao;
+use Yii;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use function PHPUnit\Framework\isNull;
 
 /**
  * GrupoitensController implements the CRUD actions for Grupoitens model.
@@ -41,12 +44,12 @@ class GrupoitensController extends Controller
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => Grupoitens::find(),
-            /*
+            'query' => Grupoitens::find()->where(['status'=>10]),
+
             'pagination' => [
-                'pageSize' => 50
+                'pageSize' => 10
             ],
-            'sort' => [
+            /*'sort' => [
                 'defaultOrder' => [
                     'id' => SORT_DESC,
                 ]
@@ -153,7 +156,25 @@ class GrupoitensController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+
+        //$this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        $pedidos_alocacao= PedidoAlocacao::find()->where(['grupoItem_id'=>$id])->andWhere('dataFim IS NULL')->all();
+
+        if (!empty($pedidos_alocacao))
+        {
+            //caso o exista pedidos de alocacao
+            Yii::$app->session->setFlash("error", "Não e possivel eliminar o grupo visto que o mesmo esta associado a um Pedido");
+        }
+        else
+        {
+            Yii::$app->session->setFlash("success", "Grupo foi eliminado com sucesso");
+            //caso nao exista pedidos de alocacao
+            $model->status=9;
+            $model->save();
+
+        }
+
 
         return $this->redirect(['index']);
     }

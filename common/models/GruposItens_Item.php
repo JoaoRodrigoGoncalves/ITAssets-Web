@@ -44,7 +44,7 @@ class GruposItens_Item extends \yii\db\ActiveRecord
     {
         return [
             'grupoItens_id' => 'Grupo Itens ID',
-            'item_id' => 'Item ID',
+            'item_id' => 'Item',
         ];
     }
 
