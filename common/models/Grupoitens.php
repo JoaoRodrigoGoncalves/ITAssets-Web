@@ -19,6 +19,9 @@ use Yii;
  */
 class Grupoitens extends \yii\db\ActiveRecord
 {
+    const STATUS_ACTIVE = 10;
+    const STATUS_DELETED = 0;
+
     /**
      * {@inheritdoc}
      */
@@ -91,5 +94,17 @@ class Grupoitens extends \yii\db\ActiveRecord
     public function getPedidoAlocacaos()
     {
         return $this->hasMany(PedidoAlocacao::class, ['grupoItem_id' => 'id']);
+    }
+
+    public function isinActivePedidoAlocacao()
+    {
+        if($this->pedidoAlocacaos != null)
+        {
+            foreach ($this->pedidoAlocacaos as $pedidoAlocacao) {
+                if($pedidoAlocacao->status == 9)
+                    return true;
+            }
+        }
+        return false;
     }
 }

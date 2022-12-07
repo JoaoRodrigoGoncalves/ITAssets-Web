@@ -4,6 +4,7 @@ namespace backend\controllers;
 
 use common\models\Site;
 use common\models\SiteSearch;
+use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -111,8 +112,32 @@ class SiteController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
 
+        if($model->items == null)
+        {
+            $model->delete();
+        }
+        else
+        {
+            $allowRemove = true;
+            foreach ($model->items as $item) {
+                if($item->status == 10)
+                {
+                    $allowRemove = false;
+                    break;
+                }
+            }
+
+            if($allowRemove)
+            {
+                $model->delete();
+            }
+            else
+            {
+                Yii::$app->session->setFlash('errors', 'Não é possível remover o local porque este está em uso num item');
+            }
+        }
         return $this->redirect(['index']);
     }
 

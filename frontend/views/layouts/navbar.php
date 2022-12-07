@@ -1,38 +1,9 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 
 ?>
-<!--<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">ItAssets</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="#">Pedidos Reparação</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Pedido Alocação</a>
-            </li>
-
-        </ul>
-
-        <a href=""></a>
-        <?/*=
-        Html::beginForm(['/site/logout'], 'post', ['class' => 'btn btn-info d-flex'])
-        . Html::submitButton(Yii::$app->user->identity->username ,
-            ['class' => 'btn btn-link text-light']
-        )
-        . Html::endForm();
-        */?>
-    </div>
-</nav>-->
-
-
-
 <nav class="navbar navbar-expand navbar-dark navbar-dark">
     <!-- Left navbar links -->
     <ul class="navbar-nav">
@@ -45,7 +16,7 @@ use yii\helpers\Html;
             <a class="nav-link" href="#">Pedidos Reparação</span></a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#">Pedido Alocação</a>
+            <a class="nav-link" href="<?= Url::to(['pedidoalocacao/index']) ?>">Pedido Alocação</a>
         </li>
     </ul>
 
@@ -62,7 +33,6 @@ use yii\helpers\Html;
                 <div class="dropdown-divider"></div>
                 <div class="dropdown-item">
                     <a class="btn"><i class="fas fa-user"></i> Ver detalhes</a>
-
                 </div>
                 <div class="dropdown-divider"></div>
                 <div class="dropdown-item">

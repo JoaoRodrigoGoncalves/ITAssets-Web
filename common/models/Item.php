@@ -3,22 +3,27 @@
 namespace common\models;
 
 use Yii;
-use yii\db\ActiveQuery;
-use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "item".
  *
  * @property int $id
- * @property string|null $nome
+ * @property string $nome
  * @property string|null $serialNumber
  * @property int|null $categoria_id
  * @property string|null $notas
  * @property int|null $status
+ * @property int|null $grupoitens_id
+ * @property int|null $site_id
  *
  * @property Categoria $categoria
+ * @property Grupoitens[] $grupoItens
+ * @property Grupoitens $grupoitens
+ * @property GruposItens_Item[] $grupositensitems
+ * @property PedidoAlocacao[] $pedidoAlocacaos
+ * @property Site $site
  */
-class Item extends ActiveRecord
+class Item extends \yii\db\ActiveRecord
 {
     const STATUS_DELETED = 0;
     const STATUS_ACTIVE = 10;
@@ -38,11 +43,10 @@ class Item extends ActiveRecord
     {
         return [
             [['nome'], 'required'],
-            [['categoria_id', 'status'], 'integer'],
+            [['categoria_id', 'status', 'grupoitens_id', 'site_id'], 'integer'],
             [['nome', 'serialNumber', 'notas'], 'string', 'max' => 255],
-            ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
             [['categoria_id'], 'exist', 'skipOnError' => true, 'targetClass' => Categoria::class, 'targetAttribute' => ['categoria_id' => 'id']],
-            [['grupoitens_id'], 'exist', 'skipOnError' => true, 'targetClass' => Grupoitens::class, 'targetAttribute' => ['grupoitens_id' =>'id']],
+            [['grupoitens_id'], 'exist', 'skipOnError' => true, 'targetClass' => Grupoitens::class, 'targetAttribute' => ['grupoitens_id' => 'id']],
             [['site_id'], 'exist', 'skipOnError' => true, 'targetClass' => Site::class, 'targetAttribute' => ['site_id' => 'id']],
         ];
     }
@@ -57,16 +61,17 @@ class Item extends ActiveRecord
             'nome' => 'Nome',
             'serialNumber' => 'Número de Série',
             'categoria_id' => 'Categoria',
-            'site_id' => 'Local',
             'notas' => 'Notas',
-            'status' => 'Estado',
+            'status' => 'Status',
+            'grupoitens_id' => 'Grupoitens ID',
+            'site_id' => 'Local',
         ];
     }
 
     /**
      * Gets query for [[Categoria]].
      *
-     * @return ActiveQuery
+     * @return \yii\db\ActiveQuery
      */
     public function getCategoria()
     {
@@ -74,13 +79,55 @@ class Item extends ActiveRecord
     }
 
     /**
+     * Gets query for [[GrupoItens]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getGrupoItens()
+    {
+        return $this->hasMany(Grupoitens::class, ['id' => 'grupoItens_id'])->viaTable('grupositensitem', ['item_id' => 'id']);
+    }
+
+    /**
      * Gets query for [[Grupoitens]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getGrupoitens()
+//    public function getGrupoitens()
+//    {
+//        return $this->hasOne(Grupoitens::class, ['id' => 'grupoitens_id']);
+//    }
+
+    /**
+     * Gets query for [[Grupositensitems]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getGrupositensitems()
     {
-        return $this->hasOne(Grupoitens::class, ['id' => 'grupoitens_id']);
+        return $this->hasMany(GruposItens_Item::class, ['item_id' => 'id']);
+    }
+
+    /**
+     * Gets query for [[PedidoAlocacaos]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPedidoAlocacaos()
+    {
+        return $this->hasMany(PedidoAlocacao::class, ['item_id' => 'id']);
+    }
+
+    public function isInActivePedidoAlocacao()
+    {
+        if($this->pedidoAlocacaos != null)
+        {
+            foreach ($this->pedidoAlocacaos as $pedidoAlocacao) {
+                if($pedidoAlocacao->status == 9)
+                    return true;
+            }
+        }
+        return false;
     }
 
     /**

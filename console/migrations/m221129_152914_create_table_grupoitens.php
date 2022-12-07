@@ -7,29 +7,9 @@ use yii\db\Migration;
  */
 class m221129_152914_create_table_grupoitens extends Migration
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function safeUp()
-    {
-
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function safeDown()
-    {
-        echo "m221129_152914_create_table_grupoitens cannot be reverted.\n";
-
-        return false;
-    }
-
-
-    // Use up()/down() to run migration code without a transaction.
     public function up()
     {
-        $this->createTable('{{%grupoItens}}', [
+        $this->createTable('grupoItens', [
             'id' => $this->primaryKey(),
             'nome' => $this->string()->notNull(),
             'notas' => $this->text(),
@@ -39,7 +19,7 @@ class m221129_152914_create_table_grupoitens extends Migration
 
     public function down()
     {
-        $this->dropTable('{{%grupoItens}}');
+        $this->dropTable('grupoItens');
     }
 
 }
