@@ -27,22 +27,14 @@ class m221130_095112_alter_table_item extends Migration
 
     public function up()
     {
-        //adicona os campos a tabela item
-        $this->addColumn('item', 'grupoitens_id', $this->integer());
         $this->addColumn('item', 'site_id', $this->integer());
-
-        //define os campos adicionados anteriormente como fk
-        $this->addForeignKey('fk-grupoitens', 'item', 'grupoitens_id', 'grupoitens', 'id');
         $this->addForeignKey('fk-site', 'item', 'site_id', 'site', 'id');
     }
 
 
     public function down()
     {
-        $this->dropForeignKey('fk-grupoitens', 'item');
         $this->dropForeignKey('fk-site', 'item');
-
-        $this->dropColumn('item', 'grupoitens_id');
         $this->dropColumn('item', 'site_id');
     }
 }

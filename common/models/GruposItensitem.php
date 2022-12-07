@@ -13,7 +13,7 @@ use Yii;
  * @property Grupoitens $grupoItens
  * @property Item $item
  */
-class GruposItens_Item extends \yii\db\ActiveRecord
+class GruposItensitem extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}

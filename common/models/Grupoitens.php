@@ -12,13 +12,16 @@ use Yii;
  * @property string|null $notas
  * @property int|null $status
  *
- * @property GruposItens_Item[] $grupositensitems
+ * @property GruposItensitem[] $grupositensitems
  * @property Item[] $items
  * @property Item[] $items0
  * @property PedidoAlocacao[] $pedidoAlocacaos
  */
 class Grupoitens extends \yii\db\ActiveRecord
 {
+    const STATUS_ACTIVE = 10;
+    const STATUS_DELETED = 0;
+
     /**
      * {@inheritdoc}
      */
@@ -60,7 +63,7 @@ class Grupoitens extends \yii\db\ActiveRecord
      */
     public function getGrupositensitems()
     {
-        return $this->hasMany(GruposItens_Item::class, ['grupoItens_id' => 'id']);
+        return $this->hasMany(GruposItensitem::class, ['grupoItens_id' => 'id']);
     }
 
     /**
@@ -91,5 +94,17 @@ class Grupoitens extends \yii\db\ActiveRecord
     public function getPedidoAlocacaos()
     {
         return $this->hasMany(PedidoAlocacao::class, ['grupoItem_id' => 'id']);
+    }
+
+    public function isinActivePedidoAlocacao()
+    {
+        if($this->pedidoAlocacaos != null)
+        {
+            foreach ($this->pedidoAlocacaos as $pedidoAlocacao) {
+                if($pedidoAlocacao->status == 9)
+                    return true;
+            }
+        }
+        return false;
     }
 }
