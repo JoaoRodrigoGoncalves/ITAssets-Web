@@ -1,5 +1,6 @@
 <?php
 
+use common\models\PedidoAlocacao;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 
@@ -7,7 +8,7 @@ use yii\widgets\DetailView;
 /** @var common\models\PedidoAlocacao $model */
 
 $this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Pedido Alocacaos', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Pedido Alocação', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
@@ -16,11 +17,12 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Devolver ao inventário', ['idk', 'id' => $model->id], ['class' => 'btn btn-warning']) ?>
-        <?php if($model->status == 10): ?>
-            <?= Html::a('Aprovar', ['approve', 'id' => $model->id], ['class' => 'btn btn-success']) ?>
-            <?= Html::a('Negar', ['negate', 'id' => $model->id], ['class' => 'btn btn-danger', 'data-method' => 'post']) ?>
+        <?php if($model->status == PedidoAlocacao::STATUS_APROVADO): ?>
+            <?= Html::a('Devolver ao inventário', ['return', 'id' => $model->id], ['class' => 'btn btn-warning']) ?>
+        <?php endif; ?>
+
+        <?php if($model->status == PedidoAlocacao::STATUS_ABERTO): ?>
+            <?= Html::a('<i class="fas fa-thumbs-up"></i>', ['update', 'id' => $model->id], ['class' => 'btn btn-secondary']) ?>
         <?php endif; ?>
     </p>
 

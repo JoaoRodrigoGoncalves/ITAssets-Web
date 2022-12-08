@@ -31,6 +31,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <?= GridView::widget([
                 'dataProvider' => $dataProvider,
                 'layout'=> "{items}\n{summary}\n{pager}",
+                'emptyText' => "Sem dados a mostrar.",
                 'columns' => [
                     'nome',
                     [

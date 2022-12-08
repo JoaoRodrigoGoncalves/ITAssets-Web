@@ -101,7 +101,7 @@ class Grupoitens extends \yii\db\ActiveRecord
         if($this->pedidoAlocacaos != null)
         {
             foreach ($this->pedidoAlocacaos as $pedidoAlocacao) {
-                if($pedidoAlocacao->status == 9)
+                if($pedidoAlocacao->status == PedidoAlocacao::STATUS_DEVOLVIDO)
                     return true;
             }
         }

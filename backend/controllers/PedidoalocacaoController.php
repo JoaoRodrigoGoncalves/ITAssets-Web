@@ -43,14 +43,9 @@ class PedidoalocacaoController extends Controller
                             'roles' => ['createPedidoAlocacao']
                         ],
                         [
-                            'actions' => ['update'],
+                            'actions' => ['update', 'return'],
                             'allow' => true,
                             'roles' => ['editPedidoAlocacao']
-                        ],
-                        [
-                        'actions' => ['delete'],
-                            'allow' => true,
-                            'roles' => ['cancelPedidoAlocacao']
                         ]
                     ],
                 ],
@@ -105,13 +100,13 @@ class PedidoalocacaoController extends Controller
         $model = new PedidoAlocacao();
         // Por padrão, o utilizador ao qual o item vai ser associado, é ao utilizador que está a fazer o pedido
         $model->requerente_id = Yii::$app->user->id;
-        $itens = Item::findAll(['status' => 10]);
-        $grupos = Grupoitens::findAll(['status' => 10]);
+        $itens = Item::findAll(['status' => Item::STATUS_ACTIVE]);
+        $grupos = Grupoitens::findAll(['status' => Grupoitens::STATUS_ACTIVE]);
 
         /**
          * --- CustomID ('I_'/'G_' + id
          *  |- Nome
-         *  -- Serial
+         *  |- Serial
          */
 
         $customTableData = array();
@@ -164,8 +159,9 @@ class PedidoalocacaoController extends Controller
 
                 if($model->validate())
                 {
-                    $model->status = 9;
+                    $model->status = PedidoAlocacao::STATUS_APROVADO;
                     $model->aprovador_id = Yii::$app->user->id;
+                    $model->dataInicio = date_format(date_create(), "Y-m-d H:i:s");
 
                     if($model->save()) {
                         $model->cancelarPedidosAlocacaoAbertos();
@@ -194,7 +190,9 @@ class PedidoalocacaoController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+        if ($this->request->isPost && $model->load($this->request->post())) {
+            $model->aprovador_id = Yii::$app->user->id;
+            $model->save();
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -209,7 +207,8 @@ class PedidoalocacaoController extends Controller
 
         if($model->item xor $model->grupoItem)
         {
-            $model->dataFim = date_format(date_create("now"), "yyyy-mm-dd hh:ii:ss");
+            $model->status = PedidoAlocacao::STATUS_DEVOLVIDO;
+            $model->dataFim = date_format(date_create("now"), "Y-m-d h:i:s");
             $model->save();
         }
 

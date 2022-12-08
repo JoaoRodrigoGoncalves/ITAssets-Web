@@ -26,33 +26,23 @@ $this->params['breadcrumbs'][] = $this->title;
             <?=GridView::widget([
                 'dataProvider' => $dataProvider,
                 'layout'=> "{items}\n{summary}\n{pager}",
+                'emptyText' => "Sem dados a mostrar.",
                 'columns' => [
                     'nome',
                     [
-                        'format' => 'raw',
-                        'value' => function($model, $key, $index, $column) {
-                            $data = Html::a('<i class="fas fa-pencil-alt"></i>', Url::to(['categoria/update', 'id' => $model->id]),
-                                [
-                                    'id'=>'grid-custom-button',
-                                    'data-pjax'=>true,
-                                    'action'=>Url::to(['categoria/update', 'id' => $model->id]),
-                                    'class'=>'button btn btn-warning text-white mr-2',
-                                ]
-                            );
-
-                            $data .= Html::a('<i class="fas fa-trash-alt"></i>', Url::to(['categoria/delete', 'id' => $model->id]),
-                                [
-                                    'id'=>'grid-custom-button',
-                                    'data-pjax'=>true,
-                                    'action'=>Url::to(['categoria/delete', 'id' => $model->id]),
-                                    'class'=>'button btn btn-danger',
-
-                                ]
-
-                            );
-
-                            return $data;
-                        },
+                        'class' => ActionColumn::class,
+                        'contentOptions' => ['style' => 'width: 1%; white-space: nowrap;'],
+                        'template' => '{update} {delete}',
+                        'buttons' => [
+                            'update' => function($url, $model)
+                            {
+                                return Html::a('<i class="fas fa-pencil-alt"></i>', ['categoria/update', 'id' => $model->id], ['class' => 'btn btn-warning text-white']);
+                            },
+                            'delete' => function($url, $model)
+                            {
+                                return Html::a('<i class="fas fa-trash-alt"></i>', ['categoria/delete', 'id' => $model->id], ['class' => 'btn btn-danger']);
+                            },
+                        ],
                     ],
                 ],
             ]); ?>

@@ -17,7 +17,7 @@ use yii\widgets\ActiveForm;
     <?php $form = ActiveForm::begin(); ?>
 
     <?php
-    $array_users = ArrayHelper::map(User::find()->where(['status' => 10])->orderBy('username')->all(), 'id', function($userModel)
+    $array_users = ArrayHelper::map(User::find()->where(['status' => User::STATUS_ACTIVE])->orderBy('username')->all(), 'id', function($userModel)
     {
         return $userModel['username'] . " (" . $userModel['email'] . ")";
     });
@@ -50,7 +50,7 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'obs')->textarea(['rows' => 6]) ?>
 
     <div class="form-group">
-        <?= Html::submitButton('Guardar', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton('Alocar', ['class' => 'btn btn-success']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

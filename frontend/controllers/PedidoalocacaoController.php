@@ -42,7 +42,7 @@ class PedidoalocacaoController extends Controller
                             'roles' => ['editPedidoAlocacao']
                         ],
                         [
-                            'actions' => ['delete'],
+                            'actions' => ['cancel'],
                             'allow' => true,
                             'roles' => ['cancelPedidoAlocacao']
                         ]
@@ -107,20 +107,20 @@ class PedidoalocacaoController extends Controller
         $model = new PedidoAlocacao();
         // Por padrão, o utilizador ao qual o item vai ser associado, é ao utilizador que está a fazer o pedido
         $model->requerente_id = Yii::$app->user->id;
-        $itens = Item::findAll(['status' => 10]);
-        $grupos = Grupoitens::findAll(['status' => 10]);
+        $itens = Item::findAll(['status' => Item::STATUS_ACTIVE]);
+        $grupos = Grupoitens::findAll(['status' => Grupoitens::STATUS_ACTIVE]);
 
         /**
          * --- CustomID ('I_'/'G_' + id
          *  |- Nome
-         *  -- Serial
+         *  |- Serial
          */
 
         $customTableData = array();
 
         foreach ($itens as $item)
         {
-            if($item->grupoItens == null)
+            if($item->grupoItens == null && !$item->isInActivePedidoAlocacao())
             {
                 $row = new CustomTableRow("I_" . $item->id, $item->nome, $item->serialNumber);
                 $customTableData[] = $row;
@@ -129,8 +129,11 @@ class PedidoalocacaoController extends Controller
 
         foreach ($grupos as $grupo)
         {
-            $row = new CustomTableRow("G_" . $grupo->id, $grupo->nome, null);
-            $customTableData[] = $row;
+            if(!$grupo->isinActivePedidoAlocacao())
+            {
+                $row = new CustomTableRow("G_" . $grupo->id, $grupo->nome, null);
+                $customTableData[] = $row;
+            }
         }
 
         if ($this->request->isPost) {
@@ -143,21 +146,30 @@ class PedidoalocacaoController extends Controller
                 {
                     case "I":
                         $model->item_id = $row_data[1];
+                        if($model->item->isInActivePedidoAlocacao())
+                        {
+                            $model->addError('item_id', 'Item selecionado já se encontra em uso.');
+                        }
                         break;
 
                     case "G":
                         $model->grupoItem_id = $row_data[1];
+                        if($model->grupoItem->isinActivePedidoAlocacao())
+                        {
+                            $model->addError('grupoItem_id', 'Item selecionado já se encontra em uso.');
+                        }
                         break;
 
                     default:
                         throw new ServerErrorHttpException();
                 }
 
-                if($model->save()) {
-                    return $this->redirect(['view', 'id' => $model->id]);
-                }
-                else{
-                    dd($model->errors);
+                if($model->validate())
+                {
+                    $model->dataInicio = date_format(date_create(), "Y-m-d H:i:s");
+                    if($model->save()) {
+                        return $this->redirect(['view', 'id' => $model->id]);
+                    }
                 }
             }
         } else {
@@ -181,7 +193,7 @@ class PedidoalocacaoController extends Controller
     {
         $model = $this->findModel($id);
 
-        if($model->status == 10 && $model->requerente_id == Yii::$app->user->id)
+        if($model->status == PedidoAlocacao::STATUS_ABERTO && $model->requerente_id == Yii::$app->user->id)
         {
             if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
                 return $this->redirect(['view', 'id' => $model->id]);
@@ -209,7 +221,7 @@ class PedidoalocacaoController extends Controller
 
         if($model->requerente_id == Yii::$app->user->id)
         {
-            $model->status = 0;
+            $model->status = PedidoAlocacao::STATUS_CANCELADO;
             $model->save();
             return $this->redirect(['index']);
         }

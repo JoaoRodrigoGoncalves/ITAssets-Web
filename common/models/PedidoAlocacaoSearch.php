@@ -17,8 +17,8 @@ class PedidoAlocacaoSearch extends PedidoAlocacao
     public function rules()
     {
         return [
-            [['id', 'status', 'item_id', 'grupoItem_id', 'requerente_id', 'aprovador_id'], 'integer'],
-            [['dataPedido', 'dataInicio', 'dataFim', 'obs', 'obsResposta'], 'safe'],
+            [['id', 'status', 'requerente_id', 'aprovador_id'], 'integer'],
+            [['dataPedido'], 'safe'],
         ];
     }
 
@@ -60,17 +60,12 @@ class PedidoAlocacaoSearch extends PedidoAlocacao
         $query->andFilterWhere([
             'id' => $this->id,
             'status' => $this->status,
-            'item_id' => $this->item_id,
-            'grupoItem_id' => $this->grupoItem_id,
             'dataPedido' => $this->dataPedido,
-            'dataInicio' => $this->dataInicio,
-            'dataFim' => $this->dataFim,
             'requerente_id' => $this->requerente_id,
             'aprovador_id' => $this->aprovador_id,
         ]);
 
-        $query->andFilterWhere(['like', 'obs', $this->obs])
-            ->andFilterWhere(['like', 'obsResposta', $this->obsResposta]);
+        //TODO: Arranjar filtro por data
 
         return $dataProvider;
     }

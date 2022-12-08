@@ -1,5 +1,6 @@
 <?php
 
+use common\models\PedidoAlocacao;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 
@@ -17,13 +18,9 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <p>
         <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ]) ?>
+        <?php if($model->status == PedidoAlocacao::STATUS_ABERTO): ?>
+            <?= Html::a('Delete', ['cancel', 'id' => $model->id], ['class' => 'btn btn-danger']) ?>
+        <?php endif; ?>
     </p>
 
     <?= DetailView::widget([

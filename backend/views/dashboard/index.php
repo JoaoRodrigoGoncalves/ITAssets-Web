@@ -1,9 +1,6 @@
 <?php
 
-use hail812\adminlte\widgets\Alert;
-use hail812\adminlte\widgets\Callout;
-use hail812\adminlte\widgets\InfoBox;
-use hail812\adminlte\widgets\Ribbon;
+use common\models\PedidoAlocacao;
 use hail812\adminlte\widgets\SmallBox;
 use yii\helpers\Url;
 
@@ -12,15 +9,18 @@ $this->params['breadcrumbs'] = [['label' => $this->title]];
 ?>
 <div class="container-fluid">
     <!-- TODO: Colocar titulo dinâmico com os valores dos pedidos abertos -->
+    <?php
+        $pedidosAlocacao = PedidoAlocacao::find()->where(['status' => PedidoAlocacao::STATUS_ABERTO])->count();
+    ?>
     <div class="row">
         <div class="col-lg-6 col-md-6 col-sm-6 col-12">
             <?= SmallBox::widget([
-                'title' => '150',
+                'title' => $pedidosAlocacao,
                 'text' => 'Novos Pedidos de Alocação',
                 'icon' => 'fas fa-clipboard',
                 'theme' => 'success',
                 'linkText' => 'Ver Pedidos',
-                'linkUrl' => Url::to(['dashboard/index'])
+                'linkUrl' => Url::to(['pedidoalocacao/index'])
             ]) ?>
         </div>
         <div class="col-lg-6 col-md-6 col-sm-6 col-12">

@@ -30,6 +30,7 @@ class PedidoAlocacao extends \yii\db\ActiveRecord
     const STATUS_ABERTO = 10;
     const STATUS_APROVADO = 9;
     const STATUS_NEGADO = 8;
+    const STATUS_DEVOLVIDO = 7;
     const STATUS_CANCELADO = 0;
 
     /**
@@ -62,7 +63,8 @@ class PedidoAlocacao extends \yii\db\ActiveRecord
                     return ($model->item_id == "");
                 }
             ],
-            [['dataPedido', 'dataInicio', 'dataFim'], 'safe'], // mudar para data?
+            [['status'], 'required'],
+            [['dataPedido', 'dataInicio', 'dataFim'], 'safe'], // TODO: mudar para data?
             [['obs', 'obsResposta'], 'string'],
             [['requerente_id'], 'required'],
             [['aprovador_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['aprovador_id' => 'id']],
@@ -106,6 +108,10 @@ class PedidoAlocacao extends \yii\db\ActiveRecord
 
             case 8:
                 return "<span class='badge badge-danger'>Negado</span>";
+                break;
+
+            case 7:
+                return "<span class='badge badge-info'>Devolvido</span>";
                 break;
 
             case 0:
