@@ -63,7 +63,7 @@ class PedidoAlocacao extends \yii\db\ActiveRecord
                     return ($model->item_id == "");
                 }
             ],
-            [['status'], 'required'],
+//            [['status'], 'required'],
             [['dataPedido', 'dataInicio', 'dataFim'], 'safe'], // TODO: mudar para data?
             [['obs', 'obsResposta'], 'string'],
             [['requerente_id'], 'required'],
