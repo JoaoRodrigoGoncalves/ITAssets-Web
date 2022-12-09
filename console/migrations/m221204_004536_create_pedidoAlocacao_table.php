@@ -27,8 +27,8 @@ class m221204_004536_create_pedidoAlocacao_table extends Migration
             'dataPedido' => $this->dateTime()->notNull()->defaultExpression('NOW()'),
             'dataInicio' => $this->dateTime(),
             'dataFim' => $this->dateTime(),
-            'obs' => $this->text(), // Observação a ser incluída com o pedido
-            'obsResposta' => $this->text(), // Observação a ser incluída com a resposta
+            'obs' => $this->text()->defaultValue(null), // Observação a ser incluída com o pedido
+            'obsResposta' => $this->text()->defaultValue(null), // Observação a ser incluída com a resposta
             'requerente_id' => $this->integer()->notNull(),
             'aprovador_id' => $this->integer(),
         ]);

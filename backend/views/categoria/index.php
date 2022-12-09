@@ -27,6 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'dataProvider' => $dataProvider,
                 'layout'=> "{items}\n{summary}\n{pager}",
                 'emptyText' => "Sem dados a mostrar.",
+                'summary' => "A apresentar de <b>{begin}</b> a <b>{end}</b> de <b>{totalCount}</b> registos.",
                 'columns' => [
                     'nome',
                     [

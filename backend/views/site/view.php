@@ -15,18 +15,19 @@ $this->params['breadcrumbs'][] = $this->title;
     <h2><?= $this->title ?></h2>
     <br>
     <div class="card">
-        <div class="card-body">
-            <p>
-                <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-                <?= Html::a('Delete', ['delete', 'id' => $model->id], [
+        <div class="card-header">
+            <div class="float-right">
+                <?= Html::a('<i class="fas fa-pencil"></i>', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+                <?= Html::a('<i class="fas fa-trash"></i>', ['delete', 'id' => $model->id], [
                     'class' => 'btn btn-danger',
                     'data' => [
                         'confirm' => 'Are you sure you want to delete this item?',
                         'method' => 'post',
                     ],
                 ]) ?>
-            </p>
-
+            </div>
+        </div>
+        <div class="card-body">
             <?= DetailView::widget([
                 'model' => $model,
                 'attributes' => [

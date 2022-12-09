@@ -9,6 +9,7 @@ use yii\grid\GridView;
 /** @var yii\web\View $this */
 /** @var common\models\Item[] $itens*/
 $this->title = 'Itens';
+$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="container mt-3">
     <h2><?= Html::encode($this->title) ?></h2>
@@ -34,7 +35,7 @@ $this->title = 'Itens';
                             <td><?=$item->serialNumber ?></td>
                             <td><?=$item->categoria->nome ?? "N/A" ?></td>
                             <td>
-                                <a href="<?=Url::to(['item/view/', 'id' => $item->id]) ?>" class="btn btn-primary"><i class="fas fa-info-circle"></i></a>
+                                <a href="<?=Url::to(['item/view/', 'id' => $item->id]) ?>" class="btn btn-primary"><i class="fas fa-eye"></i></a>
                                 <a href="<?=Url::to(['item/update/', 'id' => $item->id]) ?>" class="btn btn-warning text-white"><i class="fas fa-pencil-alt"></i></a>
                                 <a href="<?=Url::to(['item/delete/', 'id' => $item->id]) ?>" class="btn btn-danger"><i class="fas fa-trash-alt"></i></a>
                             </td>

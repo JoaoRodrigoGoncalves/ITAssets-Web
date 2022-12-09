@@ -7,39 +7,74 @@ use yii\widgets\DetailView;
 /** @var yii\web\View $this */
 /** @var common\models\PedidoAlocacao $model */
 
-$this->title = $model->id;
+$this->title = 'Pedido de Alocação';
 $this->params['breadcrumbs'][] = ['label' => 'Pedido Alocação', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
-\yii\web\YiiAsset::register($this);
 ?>
-<div class="pedido-alocacao-view">
+<div class="container flex-grow-1 container-p-y mt-3">
+    <div class="card">
+        <div class="card-header bg-info">
+            <h2><?= Html::encode($this->title)?></h2>
+        </div>
+        <div class="card-body">
+            <div class="row no-gutters row-bordered">
+                <div class="d-flex col-md align-items-center">
+                    <div class="card-body d-block text-body">
+                        <h4 class="font-weight-bold mb-0">Requerente: <span class="text-muted font-weight-normal"><?= $model->requerente->username?></span></h4>
+                        <div class="text-muted">Nº de Pedido: <?= $model->id?></div>
+                        <div class="text-muted">Data de Pedido: <?= $model->dataPedido?></div>
+                    </div>
+                </div>
+                <div class="d-flex col-md align-items-center"></div>
+                <div class="d-flex col-md align-items-center">
+                    <div class="card-body d-block text-body">
+                        <h4 class="font-weight-bold mb-0">Aprovador: <span class="text-muted font-weight-normal"><?= $model->aprovador->username?></span></h4>
+                        <div class="text-muted mb-2">Status: <?= $model->getPrettyStatus()?></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <div class="card mb-4">
+        <div class="card-body">
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <td>Data de Início</td>
+                        <td><?= $model->dataInicio?></td>
+                    </tr>
+                    <tr>
+                        <td>Data de Conclusão</td>
+                        <td><?= $model->dataFim ?? "N/A" ?></td>
+                    </tr>
+                    <tr>
+                        <td>Item</td>
+                        <td><?= $model->item->nome ?? $model->grupoItem->nome ?></td>
+                    </tr>
+                    <tr>
+                        <td>Observações</td>
+                        <td><?= $model->obs ?? "N/A"?></td>
+                    </tr>
+                    <?php if($model->obsResposta != null): ?>
+                        <tr>
+                            <td>Resposta</td>
+                            <td><?= $model->obsResposta?></td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer">
+            <div class="float-right">
+                <?php if($model->status == PedidoAlocacao::STATUS_APROVADO): ?>
+                    <?= Html::a('Devolver', ['return', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+                <?php endif; ?>
 
-    <p>
-        <?php if($model->status == PedidoAlocacao::STATUS_APROVADO): ?>
-            <?= Html::a('Devolver ao inventário', ['return', 'id' => $model->id], ['class' => 'btn btn-warning']) ?>
-        <?php endif; ?>
-
-        <?php if($model->status == PedidoAlocacao::STATUS_ABERTO): ?>
-            <?= Html::a('<i class="fas fa-thumbs-up"></i>', ['update', 'id' => $model->id], ['class' => 'btn btn-secondary']) ?>
-        <?php endif; ?>
-    </p>
-
-    <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            'id',
-            'status',
-            'item_id',
-            'grupoItem_id',
-            'dataInicio',
-            'dataFim',
-            'obs:ntext',
-            'obsResposta:ntext',
-            'requerente_id',
-            'aprovador_id',
-        ],
-    ]) ?>
-
+                <?php if($model->status == PedidoAlocacao::STATUS_ABERTO): ?>
+                    <?= Html::a('<i class="fas fa-thumbs-up"></i>', ['update', 'id' => $model->id], ['class' => 'btn btn-secondary']) ?>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
 </div>

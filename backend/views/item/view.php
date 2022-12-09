@@ -1,4 +1,6 @@
 <?php
+
+use chillerlan\QRCode\QRCode;
 use common\models\Empresa;
 use yii\helpers\Html;
 use yii\helpers\Url;
@@ -9,31 +11,35 @@ use yii\widgets\DetailView;
 /** @var yii\web\View $this */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 /** @var common\models\Item $item */
-
+$this->title = "Detalhes";
+$this->params['breadcrumbs'][] = ['label' => 'Itens', 'url' => ['index']];
+$this->params['breadcrumbs'][] = $this->title;
 ?>
 
-<div class="container mt-5">
+<div class="container flex-grow-1 container-p-y mt-3">
     <div class="card">
-        <div class="card-header">
-            <h2>Detalhes de Itens</h2>
+        <div class="card-header bg-info">
+            <h2><?= Html::encode($this->title)?></h2>
         </div>
         <div class="card-body">
-            <?= DetailView::widget([
-                'model' => $item,
-                'attributes' => [
-                    'nome',
-                    'serialNumber',
-                    [
-                        'label' => 'Categoria',
-                        'value' => $item->categoria->nome ?? "N/A",
-                    ],
-                    'notas',
-                ],
-            ]) ?>
-        </div>
-        <div class="card-footer text-right">
-            <a href="<?= Url::to(['item/update', 'id' => $item->id]) ?>" class="btn btn-primary" >Editar</a>
-            <a href="<?= Url::to(['item/delete', 'id' => $item->id]) ?>" class="btn btn-danger">Eliminar</a>
+            <div class="row no-gutters row-bordered">
+                <div class="d-flex col-md align-items-center">
+                    <div class="card-body d-block text-body">
+                        <h5>
+                            <div class="font-weight-bold mb-4">Item: <span class="text-muted font-weight-normal"><?= $item->nome?></span></div>
+                            <div class="font-weight-bold mb-4">Categoria: <span class="text-muted font-weight-normal"> <?= $item->categoria->nome?></span></div>
+                            <div class="font-weight-bold mb-0">Observações: <span class="text-muted font-weight-normal"><?= $item->notas?></span></div>
+                        </h5>
+                    </div>
+                </div>
+                <div class="d-flex col-md align-items-center"></div>
+                <div class="d-flex col-md align-items-center">
+                    <div class="card-body d-block text-body text-center">
+                        <img src="<?= (new QRCode())->render("ITEM_" . $item->id)?>">
+                        <div class="font-weight-bold mb-0">Número de Série: <span class="text-muted font-weight-normal"> <?= $item->serialNumber?></span></div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
