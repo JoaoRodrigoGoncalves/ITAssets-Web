@@ -9,7 +9,7 @@ use yii\helpers\Url;
     <ul class="navbar-nav">
         <div class="container-fluid">
             <a class="navbar-brand" href="<?= Url::to(['dashboard/index']) ?>">
-                <?= Html::img('@web/images/gatocaixabranco.png', ['alt'=>'some', 'class'=>'d-inline-block align-top', 'width'=>'30','height'=>'30']);?>
+                <?= Html::img('@web/img/gatocaixabranco.png', ['alt'=>'Logotipo', 'class'=>'d-inline-block align-top', 'width'=>'30','height'=>'30']);?>
                 ItAssets
             </a>
             <ul class="navbar-nav">

@@ -18,7 +18,8 @@ class PedidoAlocacaoSearch extends PedidoAlocacao
     {
         return [
             [['id', 'status', 'requerente_id', 'aprovador_id'], 'integer'],
-            [['dataPedido'], 'safe'],
+            [['dataPedido'], 'date', 'format' => 'php:Y-m-d'],
+            [['dataPedido'], 'default', 'value' => null],
         ];
     }
 
@@ -56,17 +57,27 @@ class PedidoAlocacaoSearch extends PedidoAlocacao
             return $dataProvider;
         }
 
-        // grid filtering conditions
-        $query->andFilterWhere([
-            'id' => $this->id,
-            'status' => $this->status,
-            'dataPedido' => $this->dataPedido,
-            'requerente_id' => $this->requerente_id,
-            'aprovador_id' => $this->aprovador_id,
-        ]);
-
-        //TODO: Arranjar filtro por data
-
+        // Precisamos desta verificação porque horas são concatenadas à data indicada no filtro
+        if($this->dataPedido != null)
+        {
+            $query->andFilterWhere([
+                'id' => $this->id,
+                'status' => $this->status,
+                'requerente_id' => $this->requerente_id,
+                'aprovador_id' => $this->aprovador_id
+            ]);
+            $query->andFilterWhere(['>=', 'dataPedido', $this->dataPedido . " 00:00:00"]);
+            $query->andFilterWhere(['<=', 'dataPedido', $this->dataPedido . " 23:59:59"]);
+        }
+        else
+        {
+            $query->andFilterWhere([
+                'id' => $this->id,
+                'status' => $this->status,
+                'requerente_id' => $this->requerente_id,
+                'aprovador_id' => $this->aprovador_id,
+            ]);
+        }
         return $dataProvider;
     }
 }

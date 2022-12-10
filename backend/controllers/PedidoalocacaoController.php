@@ -200,6 +200,7 @@ class PedidoalocacaoController extends Controller
 
         if ($this->request->isPost && $model->load($this->request->post())) {
             $model->aprovador_id = Yii::$app->user->id;
+            $model->dataInicio = date_format(date_create(), "Y-m-d H:i:s");
             $model->save();
             return $this->redirect(['view', 'id' => $model->id]);
         }

@@ -164,12 +164,9 @@ class PedidoalocacaoController extends Controller
                         throw new ServerErrorHttpException();
                 }
 
-                if($model->validate())
-                {
-                    $model->dataInicio = date_format(date_create(), "Y-m-d H:i:s");
-                    if($model->save()) {
-                        return $this->redirect(['view', 'id' => $model->id]);
-                    }
+
+                if($model->save()) {
+                    return $this->redirect(['view', 'id' => $model->id]);
                 }
             }
         } else {
