@@ -1,39 +1,91 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\widgets\DetailView;
 
 /** @var yii\web\View $this */
 /** @var common\models\Grupoitens $model */
 
-$this->title = $model->id;
+$this->title = $model->nome;
 $this->params['breadcrumbs'][] = ['label' => 'Grupoitens', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
-\yii\web\YiiAsset::register($this);
+
 ?>
 <div class="grupoitens-view">
 
-    <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>
-        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ]) ?>
-    </p>
+    <div class="container mt-3">
+        <div class="card">
+            <div class="card-header bg-info">
+                <h1>Detalhes do grupo Itens</h1>
+            </div>
+            <div class="card-body">
+                <div>
+                    <h4>Nome do Grupo: <?= $model->nome ?></h4>
+                    <br>
+                    Notas:
+                    <br>
+                    <?= $model->notas ?>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="float-right">
+                    <a href="<?=Url::to(['grupoitens/update/'.$model->id]) ?>" class="btn btn-primary"><i class="fas fa-edit"></i></a>
 
-    <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            'id',
-            'nome',
-            'notas:ntext',
-            'status',
-        ],
-    ]) ?>
+                    <?= Html::a('<i class="fas fa-trash"></i>', ['delete', 'id' => $model->id], [
+                        'class' => 'btn btn-danger',
+                        'data' => [
+                            'confirm' => 'Tens certeza que queres eliminar este grupo?',
+                            'method' => 'post',
+                        ],
+
+                    ]) ?>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <h1>Itens associados</h1>
+                <br>
+                <div>
+                    <table class="table">
+                        <thead class="thead-info">
+                        <tr>
+                            <td>N</td>
+                            <td>Nome do Item</td>
+                            <td>Numero de Serie</td>
+                            <td scope="col">Ações</td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <?php foreach ($itens as $item){ ?>
+                            <tr>
+
+                                <td>1</td>
+                                <td><?= $item->nome; ?></td>
+                                <td><?= $item->serialNumber; ?></td>
+                                <td>
+                                    <a href="<?=Url::to(['item/view/', 'id' => $item->id]) ?>" class="btn btn-primary"><i class="fas fa-info-circle"></i></a>
+                                </td>
+
+                            </tr>
+                        <?php }?>
+                        </tbody>
+                    </table>
+
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+
 
 </div>

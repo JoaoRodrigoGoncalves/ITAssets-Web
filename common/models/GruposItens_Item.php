@@ -55,7 +55,7 @@ class GruposItens_Item extends \yii\db\ActiveRecord
      */
     public function getGrupoItens()
     {
-        return $this->hasOne(Grupoitens::class, ['id' => 'grupoItens_id']);
+        return $this->hasMany(Grupoitens::class, ['id' => 'grupoItens_id']);
     }
 
     /**
@@ -65,7 +65,7 @@ class GruposItens_Item extends \yii\db\ActiveRecord
      */
     public function getItem()
     {
-        return $this->hasOne(Item::class, ['id' => 'item_id']);
+        return $this->hasOne(Item::class, ['id' => 'item_id']) ;
     }
 
 

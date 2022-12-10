@@ -70,8 +70,17 @@ class GrupoitensController extends Controller
      */
     public function actionView($id)
     {
+        $grupoitens=$this->findModel($id);
+
+        //$grupoitens->items0= vai buscar todos os itens associados a um grupo
+
+        $itens=$grupoitens->items0;
+
+
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $grupoitens,
+            'itens' => $itens
+
         ]);
     }
 
@@ -177,6 +186,13 @@ class GrupoitensController extends Controller
 
 
         return $this->redirect(['index']);
+    }
+
+
+    public function actiondeleteitem($id)
+    {
+
+
     }
 
     /**
