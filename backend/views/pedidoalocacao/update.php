@@ -42,7 +42,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
             <?= $form->field($model, 'obsResposta')->textarea() ?>
 
-            <?= Html::submitButton('Guardar', ['class' => 'btn btn-success']) ?>
+            <?= Html::submitButton('Guardar', ['class' => 'btn btn-success btn-lg btn-block']) ?>
             <?php ActiveForm::end(); ?>
         </div>
     </div>

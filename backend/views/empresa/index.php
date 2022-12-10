@@ -11,7 +11,7 @@ use yii\grid\GridView;
 /** @var Empresa $empresa */
 ?>
 
-<div class="container mt-5">
+<div class="container mt-3">
     <div class="row d-flex justify-content-center">
         <div class="col-md-7">
             <div class="card p-3 py-4">

@@ -5,9 +5,8 @@ use yii\helpers\Html;
 /** @var yii\web\View $this */
 /** @var common\models\Empresa $model */
 
-$this->title = 'Edição Empresa ';
+$this->title = 'Edição Empresa';
 $this->params['breadcrumbs'][] = ['label' => 'Empresas', 'url' => ['index']];
-
 $this->params['breadcrumbs'][] = 'Update';
 ?>
 

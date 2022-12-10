@@ -13,20 +13,17 @@ $this->params['breadcrumbs'][] = $this->title;
 
 ?>
 <div class="grupoitens-view">
-
-
     <div class="container mt-3">
         <div class="card">
             <div class="card-header bg-info">
-                <h1>Detalhes do grupo Itens</h1>
+                <h2>Detalhes do Grupo Itens Nº<?=$model->id?></h2>
             </div>
             <div class="card-body">
                 <div>
                     <h4>Nome do Grupo: <?= $model->nome ?></h4>
-                    <br>
                     Notas:
                     <br>
-                    <?= $model->notas ?>
+                    <div style="margin-left:10px"><?= $model->notas ?></div>
                 </div>
             </div>
             <div class="card-footer">
@@ -48,7 +45,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
         <div class="card">
             <div class="card-body">
-                <h1>Itens associados</h1>
+                <h2>Itens associados</h2>
                 <br>
                 <div>
                     <table class="table">

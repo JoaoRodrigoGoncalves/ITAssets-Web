@@ -11,7 +11,7 @@ use yii\helpers\Url;
 
 $this->title = "Gestão de Utilizadores";
 ?>
-<div class="container mt-5">
+<div class="container mt-3">
     <h2>Gestão de Utilizadores</h2>
     <br>
     <div class="card">

@@ -11,21 +11,10 @@ $this->params['breadcrumbs'][] = ['label' => 'Sites', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
-<div class="container">
-    <h2><?= $this->title ?></h2>
-    <br>
+<div class="container flex-grow-1 container-p-y mt-3">
     <div class="card">
-        <div class="card-header">
-            <div class="float-right">
-                <?= Html::a('<i class="fas fa-pencil"></i>', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-                <?= Html::a('<i class="fas fa-trash"></i>', ['delete', 'id' => $model->id], [
-                    'class' => 'btn btn-danger',
-                    'data' => [
-                        'confirm' => 'Are you sure you want to delete this item?',
-                        'method' => 'post',
-                    ],
-                ]) ?>
-            </div>
+        <div class="card-header bg-info">
+            <h2><?= $this->title ?></h2>
         </div>
         <div class="card-body">
             <?= DetailView::widget([
@@ -49,8 +38,23 @@ $this->params['breadcrumbs'][] = $this->title;
                     ],
                 ],
             ]) ?>
-
-            <br><h4>Itens</h4>
+        </div>
+        <div class="card-footer">
+            <div class="float-right">
+                <?= Html::a('<i class="fas fa-pencil"></i>', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+                <?= Html::a('<i class="fas fa-trash"></i>', ['delete', 'id' => $model->id], [
+                    'class' => 'btn btn-danger',
+                    'data' => [
+                        'confirm' => 'Are you sure you want to delete this item?',
+                        'method' => 'post',
+                    ],
+                ]) ?>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <h2>Itens Associados</h2>
 
             <table class="table">
                 <thead>

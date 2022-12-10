@@ -24,8 +24,8 @@ $this->params['breadcrumbs'][] = 'Update';
             ?>
             <?= $form->field($model, 'nome')->textInput()->label('Name') ?>
 
-            <div class="form-group float-right">
-                <?= Html::submitButton('Guardar', ['class' => 'btn btn-primary']) ?>
+            <div class="form-group">
+                <?= Html::submitButton('Guardar', ['class' => 'btn btn-success btn-lg btn-block']) ?>
             </div>
             <?php ActiveForm::end() ?>
         </div>

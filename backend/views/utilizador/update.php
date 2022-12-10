@@ -6,12 +6,12 @@ use yii\helpers\Html;
 /** @var common\models\Utilizador $model */
 /** @var \yii\rbac\Role[] $roles */
 
-$this->title = 'Atualizar ' . $model->username;
+$this->title = 'Edição do Utilizador ' . $model->username;
 $this->params['breadcrumbs'][] = ['label' => 'Utilizadores', 'url' => ['index']];
 $this->params['breadcrumbs'][] = 'Atualizar';
 ?>
 <div class="container">
-    <h2>Atualizador de Utilizadores</h2>
+    <h2><?=$this->title?></h2>
     <br>
     <div class="card">
         <div class="card-body">
