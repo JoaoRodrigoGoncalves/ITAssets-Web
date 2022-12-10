@@ -9,21 +9,13 @@ $this->title = 'Registar Empresa';
 $this->params['breadcrumbs'][] = ['label' => 'Empresas', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="empresa-create">
-
-    <div class="container">
-        <h1><?= Html::encode($this->title) ?></h1>
-        <br>
-        <div class="card">
-            <div class="card-body">
-                <?= $this->render('_form', [
-                    'model' => $model,
-                ]) ?>
-            </div>
+<div class="container mt-3">
+    <h1><?= Html::encode($this->title) ?></h1>
+    <br>
+    <div class="card">
+        <div class="card-body">
+            <?= $this->render('_form', ['model' => $model,
+            ]) ?>
         </div>
     </div>
-
-
-
-
 </div>

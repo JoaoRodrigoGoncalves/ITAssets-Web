@@ -6,11 +6,11 @@ use common\models\CustomTableRow;
 /** @var common\models\PedidoAlocacao $model */
 /** @var CustomTableRow[] $customTableData */
 
-$this->title = 'Alocar Item';
+$this->title = 'Pedido de Alocação de Itens';
 $this->params['breadcrumbs'][] = ['label' => 'Pedidos Alocação', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="container">
+<div class="container mt-3">
     <h2><?= $this->title ?></h2>
     <br>
     <div class="card">

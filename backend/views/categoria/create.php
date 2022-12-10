@@ -9,8 +9,8 @@ $this->title = 'Create Categoria';
 $this->params['breadcrumbs'][] = ['label' => 'Categorias', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="container">
-    <h2>Registo de Categorias</h2>
+<div class="container mt-3">
+    <h2><?=$this->title?></h2>
     <br>
     <div class="card">
         <div class="card-body">
