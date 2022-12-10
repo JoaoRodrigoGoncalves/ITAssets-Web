@@ -18,23 +18,22 @@ $this->params['breadcrumbs'][] = $this->title;
     <br>
     <div class="card">
         <div class="card-header">
-            <div class="row">
-                <div class="col-2">
-                    <?= Html::a('Criar Local', ['create'], ['class' => 'btn btn-success']) ?>
-                </div>
-                <div class="col-10">
-                    <?php echo $this->render('_search', ['model' => $searchModel]); ?>
-                </div>
+            <?= Html::a('<i class="fas fa-location"></i> Registar', ['create'], ['class' => 'btn btn-primary']) ?>
+            <div class="float-right">
+                <?php echo $this->render('_search', ['model' => $searchModel]); ?>
             </div>
         </div>
         <div class="card-body">
             <?= GridView::widget([
                 'dataProvider' => $dataProvider,
                 'layout'=> "{items}\n{summary}\n{pager}",
+                'emptyText' => "Sem dados a mostrar.",
+                'summary' => "A apresentar de <b>{begin}</b> a <b>{end}</b> de <b>{totalCount}</b> registos.",
                 'columns' => [
                     'nome',
                     [
                         'label' => 'Morada',
+                        'format' => 'html',
                         'value' => function($data)
                         {
                             if($data->rua != null)
@@ -43,12 +42,13 @@ $this->params['breadcrumbs'][] = $this->title;
                             }
                             else
                             {
-                                return "N/A";
+                                return "<i>Não Aplicável</i>";
                             }
                         }
                     ],
                     [
                         'label' => 'Coordenadas',
+                        'format' => 'html',
                         'value' => function($data)
                         {
                             if($data->coordenadas != null)
@@ -57,15 +57,28 @@ $this->params['breadcrumbs'][] = $this->title;
                             }
                             else
                             {
-                                return "N/A";
+                                return "<i>Não Aplicável</i>";
                             }
                         }
                     ],
                     [
-                        'class' => ActionColumn::className(),
-                        'urlCreator' => function ($action, Site $model, $key, $index, $column) {
-                            return Url::toRoute([$action, 'id' => $model->id]);
-                         }
+                        'class' => ActionColumn::class,
+                        'contentOptions' => ['style' => 'width: 1%; white-space: nowrap;'],
+                        'template' => '{view} {update} {delete}',
+                        'buttons' => [
+                            'view' => function($url, $model)
+                            {
+                                return Html::a('<i class="fas fa-eye"></i>', ['site/view', 'id' => $model->id], ['class' => 'btn btn-primary']);
+                            },
+                            'update' => function($url, $model)
+                            {
+                                return Html::a('<i class="fas fa-pencil-alt"></i>', ['site/update', 'id' => $model->id], ['class' => 'btn btn-warning text-white']);
+                            },
+                            'delete' => function($url, $model)
+                            {
+                                return Html::a('<i class="fas fa-trash-alt"></i>', ['site/delete', 'id' => $model->id], ['class' => 'btn btn-danger']);
+                            },
+                        ],
                     ],
                 ],
             ]); ?>

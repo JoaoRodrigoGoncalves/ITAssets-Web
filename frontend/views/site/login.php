@@ -11,13 +11,10 @@ use yii\bootstrap5\ActiveForm;
 $this->title = 'Login';
 
 ?>
+<h1 class="d-flex justify-content-center"><?= Html::encode($this->title) ?></h1>
 <div class="mt-lg-5">
-    <h1 class="d-flex justify-content-center"><?= Html::encode($this->title) ?></h1>
-
-
-
     <div class="row">
-        <div class=" d-flex justify-content-center">
+        <div class="d-flex justify-content-center">
             <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
 
                 <?= $form->field($model, 'email')->textInput(['autofocus' => true]) ?>
@@ -25,8 +22,6 @@ $this->title = 'Login';
                 <?= $form->field($model, 'password')->passwordInput() ?>
 
                 <?= $form->field($model, 'rememberMe')->checkbox() ?>
-
-
 
                 <div class="form-group">
                     <?= Html::submitButton('Login', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>

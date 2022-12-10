@@ -3,20 +3,17 @@
 /* @var $this View */
 /* @var $content string */
 
+use backend\assets\AppAsset;
 use hail812\adminlte3\assets\AdminLteAsset;
 use hail812\adminlte3\assets\FontAwesomeAsset;
 use yii\helpers\Html;
 use yii\web\View;
 
-FontAwesomeAsset::register($this);
-AdminLteAsset::register($this);
-$this->registerCssFile('https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback');
-$this->registerCssFile('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
+//FontAwesomeAsset::register($this);
+AppAsset::register($this);
 
+// TODO: Remover isto quando colocar os assets para o logo e imagem de utilizador
 $assetDir = Yii::$app->assetManager->getPublishedUrl('@vendor/almasaeed2010/adminlte/dist');
-
-$publishedRes = Yii::$app->assetManager->publish('@vendor/hail812/yii2-adminlte3/src/web/js');
-$this->registerJsFile($publishedRes[1].'/control_sidebar.js', ['depends' => '\hail812\adminlte3\assets\AdminLteAsset']);
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>

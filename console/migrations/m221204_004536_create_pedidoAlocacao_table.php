@@ -12,7 +12,7 @@ class m221204_004536_create_pedidoAlocacao_table extends Migration
      */
     public function up()
     {
-        $this->createTable('{{%pedido_alocacao}}', [
+        $this->createTable('pedido_alocacao', [
             'id' => $this->primaryKey(),
             /**
              * Valores padrão do estado
@@ -24,10 +24,11 @@ class m221204_004536_create_pedidoAlocacao_table extends Migration
             'status' => $this->integer()->notNull()->defaultValue(10),
             'item_id' => $this->integer()->null()->defaultValue(null),
             'grupoItem_id' => $this->integer()->null()->defaultValue(null),
-            'dataInicio' => $this->dateTime()->notNull()->defaultExpression("NOW()"),
+            'dataPedido' => $this->dateTime()->notNull()->defaultExpression('NOW()'),
+            'dataInicio' => $this->dateTime(),
             'dataFim' => $this->dateTime(),
-            'obs' => $this->text(), // Observação a ser incluída com o pedido
-            'obsResposta' => $this->text(), // Observação a ser incluída com a resposta
+            'obs' => $this->text()->defaultValue(null), // Observação a ser incluída com o pedido
+            'obsResposta' => $this->text()->defaultValue(null), // Observação a ser incluída com a resposta
             'requerente_id' => $this->integer()->notNull(),
             'aprovador_id' => $this->integer(),
         ]);
@@ -43,6 +44,6 @@ class m221204_004536_create_pedidoAlocacao_table extends Migration
      */
     public function down()
     {
-        $this->dropTable('{{%pedido_alocacao}}');
+        $this->dropTable('pedido_alocacao');
     }
 }

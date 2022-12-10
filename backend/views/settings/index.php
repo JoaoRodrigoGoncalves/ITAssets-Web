@@ -1,5 +1,6 @@
 <?php
 
+use common\models\PedidoAlocacao;
 use yii\bootstrap4\ActiveForm;
 use yii\helpers\Html;
 
@@ -32,10 +33,10 @@ $this->title = "Definições";
 
                         <ul class="list-group list-group-unbordered mb-3 mt-2">
                             <li class="list-group-item">
-                                <b>Itens Alocados</b> <a class="float-right">1,322</a>
+                                <b>Itens Alocados</b> <a class="float-right"><?= PedidoAlocacao::find()->where(['requerente_id' => $user->id, 'status' => PedidoAlocacao::STATUS_APROVADO])->count() ?></a>
                             </li>
                             <li class="list-group-item">
-                                <b>Pedidos Alocação</b> <a class="float-right">543</a>
+                                <b>Pedidos Alocação</b> <a class="float-right"><?= count($user->pedidosAlocacaoAsRequester) ?></a>
                             </li>
                             <li class="list-group-item">
                                 <b>Pedidos Reparação</b> <a class="float-right">13,287</a>

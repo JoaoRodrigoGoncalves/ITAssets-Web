@@ -37,6 +37,7 @@ class Site extends \yii\db\ActiveRecord
             [['notas'], 'string'],
             [['nome', 'rua', 'localidade', 'coordenadas'], 'string', 'max' => 255],
             [['codPostal'], 'string', 'max' => 8],
+            [['rua', 'localidade', 'codPostal', 'coordenadas', 'notas'], 'default', 'value' => null],
         ];
     }
 

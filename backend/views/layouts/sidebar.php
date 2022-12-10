@@ -8,7 +8,7 @@ use yii\helpers\Url;
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
     <a href="<?= Url::to(['dashboard/index']) ?>" class="brand-link">
-        <img src="<?=$assetDir?>/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+        <img src="/img/gatocaixabranco.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
         <span class="brand-text font-weight-light">IT Assets</span>
     </a>
 
@@ -31,9 +31,9 @@ use yii\helpers\Url;
             echo Menu::widget([
                 'items' => [
                     ['label' => 'Itens', 'icon' => 'box', 'url' => '/item/index'],
-                    ['label' => 'Grupos Itens', 'icon' => 'boxes', 'url' => '/grupoitens/index'],
-                    ['label' => 'Pedidos Itens', 'icon' => 'clipboard', 'url' => '#'],
-                    ['label' => 'Pedidos Reparação', 'icon' => 'wrench', 'url' => '#'],
+                    ['label' => 'Grupos Itens', 'icon' => 'boxes', 'url' => '#'],
+                    ['label' => 'Pedidos de Alocação', 'icon' => 'clipboard', 'url' => '/pedidoalocacao/index'],
+                    ['label' => 'Pedidos de Reparação', 'icon' => 'wrench', 'url' => '#'],
                     ['label' => 'Utilizadores', 'icon' => 'users', 'url' => '/utilizador/index'],
                     ['label' => 'Locais', 'icon' => 'map-marker-alt', 'url' => '/site/index'],
                     ['label' => 'Categorias', 'icon' => 'stream', 'url' => '/categoria/index'],

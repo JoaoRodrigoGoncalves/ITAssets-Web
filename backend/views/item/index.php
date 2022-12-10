@@ -9,6 +9,7 @@ use yii\grid\GridView;
 /** @var yii\web\View $this */
 /** @var common\models\Item[] $itens*/
 $this->title = 'Itens';
+$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="container mt-3">
     <h2><?= Html::encode($this->title) ?></h2>
@@ -20,22 +21,23 @@ $this->title = 'Itens';
         <div class="card-body">
             <table class="table table-striped">
                 <thead>
-                <tr>
-                    <th scope="col">Nome</th>
-                    <th scope="col">SerialNumber</th>
-                    <th scope="col">Categoria</th>
-                </tr>
+                    <tr>
+                        <th scope="col">Nome</th>
+                        <th scope="col">SerialNumber</th>
+                        <th scope="col">Categoria</th>
+                        <th style="width: 1%; white-space: nowrap;"></th>
+                    </tr>
                 </thead>
                 <tbody>
                 <?php if(count($itens) > 0): ?>
                     <?php foreach ($itens as $item): ?>
                         <tr>
                             <td><?=$item->nome?></td>
-                            <td><?=$item->serialNumber ?></td>
-                            <td><?=$item->categoria->nome ?? "N/A" ?></td>
-                            <td>
-                                <a href="<?=Url::to(['item/view/', 'id' => $item->id]) ?>" class="btn btn-primary"><i class="fas fa-info-circle"></i></a>
-                                <a href="<?=Url::to(['item/update/', 'id' => $item->id]) ?>" class="btn btn-warning text-white"><i class="fas fa-pencil-alt"></i></a>
+                            <td><?=$item->serialNumber ?? "<i>Sem Número de Série</i>"?></td>
+                            <td><?=$item->categoria->nome ?? "<i>Não Aplicável</i>" ?></td>
+                            <td class="btn-group">
+                                <a href="<?=Url::to(['item/view/', 'id' => $item->id]) ?>" class="btn btn-primary mr-1"><i class="fas fa-eye"></i></a>
+                                <a href="<?=Url::to(['item/update/', 'id' => $item->id]) ?>" class="btn btn-warning text-white mr-1"><i class="fas fa-pencil-alt"></i></a>
                                 <a href="<?=Url::to(['item/delete/', 'id' => $item->id]) ?>" class="btn btn-danger"><i class="fas fa-trash-alt"></i></a>
                             </td>
                         </tr>

@@ -3,6 +3,10 @@ IT ASSETS
 
 **Processo de configuração do sistema**
 
+Instalar packages do composer
+
+    composer install
+
 Init do projecto (definir dev ou prod)
 
     php init

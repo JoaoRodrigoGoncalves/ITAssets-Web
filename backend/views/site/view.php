@@ -15,28 +15,38 @@ $this->params['breadcrumbs'][] = $this->title;
     <h2><?= $this->title ?></h2>
     <br>
     <div class="card">
-        <div class="card-body">
-            <p>
-                <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-                <?= Html::a('Delete', ['delete', 'id' => $model->id], [
+        <div class="card-header">
+            <div class="float-right">
+                <?= Html::a('<i class="fas fa-pencil"></i>', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+                <?= Html::a('<i class="fas fa-trash"></i>', ['delete', 'id' => $model->id], [
                     'class' => 'btn btn-danger',
                     'data' => [
                         'confirm' => 'Are you sure you want to delete this item?',
                         'method' => 'post',
                     ],
                 ]) ?>
-            </p>
-
+            </div>
+        </div>
+        <div class="card-body">
             <?= DetailView::widget([
                 'model' => $model,
                 'attributes' => [
                     'nome',
                     [
                         'label' => 'Morada',
-                        'value' => $model->rua == null ? "N/A" : $model->rua . ", " . $model->codPostal . " " . $model->localidade
+                        'format' => 'html',
+                        'value' => $model->rua == null ? "<i>Não Aplicável</i>" : $model->rua . ", " . $model->codPostal . " " . $model->localidade
                     ],
-                    'coordenadas',
-                    'notas',
+                    [
+                        'label' => 'Coordenadas',
+                        'format' => 'html',
+                        'value' => $model->coordenadas ?? "<i>Não Aplicável</i>",
+                    ],
+                    [
+                        'label' => 'Notas',
+                        'format' => 'html',
+                        'value' => $model->notas ?? "<i>Não Aplicável</i>",
+                    ],
                 ],
             ]) ?>
 
@@ -55,7 +65,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?php foreach ($model->items as $item): ?>
                         <tr>
                             <td><?= $item->nome ?></td>
-                            <td><?= $item->categoria->nome ?></td>
+                            <td><?= $item->categoria->nome ?? "<i>Não Aplicável</i>" ?></td>
                             <td>
                                 <?= Html::a('<i class="fas fa-search"></i>', ['item/view', 'id' => $item->id], ['class' => 'btn btn-primary']) ?>
                             </td>

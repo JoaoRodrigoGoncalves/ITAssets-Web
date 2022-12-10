@@ -21,12 +21,13 @@ $this->title = "Gestão de Utilizadores";
         <div class="card-body">
             <table class="table table-striped">
                 <thead>
-                <tr>
-                    <th scope="col">Nome</th>
-                    <th scope="col">Email</th>
-                    <th scope="col">Tipo de Utilizador</th>
-                    <th>Estado</th>
-                </tr>
+                    <tr>
+                        <th scope="col">Nome</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Tipo de Utilizador</th>
+                        <th>Estado</th>
+                        <th style="width: 1%; white-space: nowrap;"></th>
+                    </tr>
                 </thead>
                 <tbody>
                     <?php foreach ($utilizadores as $utilizador)
@@ -41,7 +42,7 @@ $this->title = "Gestão de Utilizadores";
                             <td>
                                 <?= $utilizador->getStatusLabel() ?>
                             </td>
-                            <td class="justify-content-center btn-group">
+                            <td class="btn-group">
                                 <?= Html::a('<i class="fas fa-user"></i>', ['utilizador/view', 'id' => $utilizador->id], ['class' => 'btn btn-primary mr-1']) ?>
                                 <?php if(Yii::$app->user->can('writeUtilizador')): ?>
                                     <?= Html::a('<i class="fas fa-pencil-alt text-white"></i>', ['utilizador/update/', 'id' => $utilizador->id], ['class' => 'btn btn-warning mr-1']) ?>

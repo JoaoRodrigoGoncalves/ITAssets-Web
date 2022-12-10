@@ -23,6 +23,9 @@ use yii\web\IdentityInterface;
  * @property integer $created_at
  * @property integer $updated_at
  * @property string $password write-only password
+ *
+ * @property PedidoAlocacao[] $pedidosAlocacaoAsAprover
+ * @property PedidoAlocacao[] $pedidosAlocacaoAsRequester
  */
 class User extends ActiveRecord implements IdentityInterface
 {
@@ -258,5 +261,25 @@ class User extends ActiveRecord implements IdentityInterface
     public function removePasswordResetToken()
     {
         $this->password_reset_token = null;
+    }
+
+    /**
+     * Gets query for [[PedidoAlocacaos]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPedidosAlocacaoAsAprover()
+    {
+        return $this->hasMany(PedidoAlocacao::class, ['aprovador_id' => 'id']);
+    }
+
+    /**
+     * Gets query for [[PedidoAlocacaos0]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPedidosAlocacaoAsRequester()
+    {
+        return $this->hasMany(PedidoAlocacao::class, ['requerente_id' => 'id']);
     }
 }

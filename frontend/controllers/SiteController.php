@@ -80,6 +80,7 @@ class SiteController extends Controller
     {
         if(Yii::$app->user->isGuest)
         {
+            $this->layout = 'main_guest';
             return $this->render('index');
         }else
         {
@@ -98,14 +99,17 @@ class SiteController extends Controller
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }
+
         $auth = Yii::$app->authManager;
         $model = new Login();
+
         if ($model->load(Yii::$app->request->post()) && $model->loginUser([$auth->getRole("funcionario")])) {
             return $this->redirect(Url::to(['dashboard/index']));
         }
 
         $model->password = '';
 
+        $this->layout = 'main_guest';
         return $this->render('login', [
             'model' => $model,
         ]);
