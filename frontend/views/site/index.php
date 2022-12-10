@@ -24,8 +24,11 @@ $this->title = 'ItAssets';
                 <div class="lc-block mb-3">
                     <div>
                         <p class="lead">
-                            Today's video is sponsored by Raid Shadow Legends, one of the biggest mobile role-playing games of 2019 and it's totally free!  All the champions in the game can be customized with unique gear that changes your strategic buffs and abilities!
-                            The dungeon bosses have some ridiculous skills of their own and figuring out the perfect party and strategy to overtake them's a lot of fun! Currently with over 300,000 reviews, Raid has almost a perfect score on the Play Store! The community is growing fast and the highly anticipated new faction wars feature is now live, you might even find my squad out there in the arena! It's easier to start now than ever with rates program for new players you get a new daily login reward for the first 90 days that you play in the game! So what are you waiting for? Go to the video description
+                            O projeto prático consiste na junção de quatro Unidades Curriculares, Plataformas de Sistema de Informação,
+                            Sistemas e Interoperabilidade de Sistemas, Acesso Móvel a Sistemas de Informação e Projeto de Sistemas de
+                            Informação.
+                            O projeto irá servir essencialmente para gerir itens (computadores portáteis, desktops, adaptadores, etc.…)
+                            de empresas de TI.
                         </p>
                     </div>
                 </div>

@@ -18,7 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <div class="card">
         <div class="card-header">
-            <?= Html::a('Novo pedido de alocação', ['create'], ['class' => 'btn btn-success float-right']) ?>
+            <?= Html::a('<i class="fas fa-plus"></i> Pedido', ['create'], ['class' => 'btn btn-success float-right']) ?>
         </div>
         <div class="card-body">
             <table class="table">
