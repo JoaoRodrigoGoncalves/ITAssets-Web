@@ -46,14 +46,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'format' => 'html',
                         'value' => function($data)
                         {
-                            if($data->requerente != null)
-                            {
-                                return Html::a($data->requerente->username, ['utilizador/view', 'id' => $data->requerente->id]);
-                            }
-                            else
-                            {
-                                return "N/A";
-                            }
+                            return Html::a($data->requerente->username, ['utilizador/view', 'id' => $data->requerente->id]);
                         }
                     ],
                     [
@@ -67,7 +60,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             }
                             else
                             {
-                                return "N/A";
+                                return "<i>Não Aplicável</i>";
                             }
                         }
                     ],

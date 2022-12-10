@@ -63,10 +63,10 @@ class PedidoAlocacao extends \yii\db\ActiveRecord
                     return ($model->item_id == "");
                 }
             ],
-//            [['status'], 'required'],
-            [['dataPedido', 'dataInicio', 'dataFim'], 'safe'], // TODO: mudar para data?
+            [['dataPedido', 'dataInicio', 'dataFim'], 'datetime', 'format' => 'php:Y-m-d H:i:s'],
             [['obs', 'obsResposta'], 'string'],
             [['requerente_id'], 'required'],
+            [['dataInicio', 'dataFim', 'obs', 'obsResposta'], 'default', 'value' => null],
             [['aprovador_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['aprovador_id' => 'id']],
             [['grupoItem_id'], 'exist', 'skipOnError' => true, 'targetClass' => Grupoitens::class, 'targetAttribute' => ['grupoItem_id' => 'id']],
             [['item_id'], 'exist', 'skipOnError' => true, 'targetClass' => Item::class, 'targetAttribute' => ['item_id' => 'id']],

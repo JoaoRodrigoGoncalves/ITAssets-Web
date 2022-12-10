@@ -7,8 +7,8 @@ use yii\widgets\DetailView;
 /** @var yii\web\View $this */
 /** @var common\models\PedidoAlocacao $model */
 
-$this->title = 'Pedido de Alocação';
-$this->params['breadcrumbs'][] = ['label' => 'Pedido Alocação', 'url' => ['index']];
+$this->title = 'Pedido de Alocação Nº' . $model->id;
+$this->params['breadcrumbs'][] = ['label' => 'Pedidos de Alocação', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="container flex-grow-1 container-p-y mt-3">
@@ -28,7 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="d-flex col-md align-items-center"></div>
                 <div class="d-flex col-md align-items-center">
                     <div class="card-body d-block text-body">
-                        <h4 class="font-weight-bold mb-0">Aprovador: <span class="text-muted font-weight-normal"><?= $model->aprovador->username?></span></h4>
+                        <h4 class="font-weight-bold mb-0">Aprovador: <span class="text-muted font-weight-normal"><?= $model->aprovador->username ?? "<i>Não Aplicável</i>"?></span></h4>
                         <div class="text-muted mb-2">Status: <?= $model->getPrettyStatus()?></div>
                     </div>
                 </div>
@@ -42,11 +42,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 <tbody>
                     <tr>
                         <td>Data de Início</td>
-                        <td><?= $model->dataInicio?></td>
+                        <td><?= $model->dataInicio ?? "<i>Não Aplicável</i>"?></td>
                     </tr>
                     <tr>
                         <td>Data de Conclusão</td>
-                        <td><?= $model->dataFim ?? "N/A" ?></td>
+                        <td><?= $model->dataFim ?? "<i>Não Aplicável</i>" ?></td>
                     </tr>
                     <tr>
                         <td>Item</td>
@@ -54,7 +54,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     </tr>
                     <tr>
                         <td>Observações</td>
-                        <td><?= $model->obs ?? "N/A"?></td>
+                        <td><?= $model->obs ?? "<i>Não Aplicável</i>"?></td>
                     </tr>
                     <?php if($model->obsResposta != null): ?>
                         <tr>

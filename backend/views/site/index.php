@@ -33,6 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'nome',
                     [
                         'label' => 'Morada',
+                        'format' => 'html',
                         'value' => function($data)
                         {
                             if($data->rua != null)
@@ -41,12 +42,13 @@ $this->params['breadcrumbs'][] = $this->title;
                             }
                             else
                             {
-                                return "N/A";
+                                return "<i>Não Aplicável</i>";
                             }
                         }
                     ],
                     [
                         'label' => 'Coordenadas',
+                        'format' => 'html',
                         'value' => function($data)
                         {
                             if($data->coordenadas != null)
@@ -55,7 +57,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             }
                             else
                             {
-                                return "N/A";
+                                return "<i>Não Aplicável</i>";
                             }
                         }
                     ],

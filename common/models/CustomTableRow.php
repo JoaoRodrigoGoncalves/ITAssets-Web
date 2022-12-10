@@ -5,7 +5,7 @@ class CustomTableRow
 {
     public string $id;
     public string $nome;
-    public string $serial;
+    public ?string $serial;
 
     public function __construct($id, $nome, $serial)
     {

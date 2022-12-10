@@ -41,7 +41,7 @@ use yii\widgets\ActiveForm;
                 <tr>
                     <td><input type="radio" name="item" value="<?= $row->id ?>" required></td>
                     <td><?= $row->nome ?></td>
-                    <td><?= $row->serial ?></td>
+                    <td><?= $row->serial ?? "<i>Não Aplicável</i>" ?></td>
                 </tr>
             <?php endforeach; ?>
         </tbody>

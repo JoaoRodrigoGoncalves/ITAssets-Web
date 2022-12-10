@@ -34,10 +34,19 @@ $this->params['breadcrumbs'][] = $this->title;
                     'nome',
                     [
                         'label' => 'Morada',
-                        'value' => $model->rua == null ? "N/A" : $model->rua . ", " . $model->codPostal . " " . $model->localidade
+                        'format' => 'html',
+                        'value' => $model->rua == null ? "<i>Não Aplicável</i>" : $model->rua . ", " . $model->codPostal . " " . $model->localidade
                     ],
-                    'coordenadas',
-                    'notas',
+                    [
+                        'label' => 'Coordenadas',
+                        'format' => 'html',
+                        'value' => $model->coordenadas ?? "<i>Não Aplicável</i>",
+                    ],
+                    [
+                        'label' => 'Notas',
+                        'format' => 'html',
+                        'value' => $model->notas ?? "<i>Não Aplicável</i>",
+                    ],
                 ],
             ]) ?>
 
@@ -56,7 +65,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?php foreach ($model->items as $item): ?>
                         <tr>
                             <td><?= $item->nome ?></td>
-                            <td><?= $item->categoria->nome ?></td>
+                            <td><?= $item->categoria->nome ?? "<i>Não Aplicável</i>" ?></td>
                             <td>
                                 <?= Html::a('<i class="fas fa-search"></i>', ['item/view', 'id' => $item->id], ['class' => 'btn btn-primary']) ?>
                             </td>

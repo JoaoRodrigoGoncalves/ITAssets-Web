@@ -1,11 +1,14 @@
 <?php
 /** @var User $utilizador */
 
+use common\models\PedidoAlocacao;
 use common\models\User;
 use yii\bootstrap4\ActiveForm;
 use yii\helpers\Html;
 
-$this->title = "Detalhes de " . $utilizador->username;
+$this->title = $utilizador->username;
+$this->params['breadcrumbs'][] = ['label' => 'Utilizadores', 'url' => ['index']];
+$this->params['breadcrumbs'][] = $this->title;
 ?>
 <!-- Main content -->
 <section class="content">
@@ -30,10 +33,10 @@ $this->title = "Detalhes de " . $utilizador->username;
                                 <b>Estado</b> <a class="float-right"><?= $utilizador->getStatusLabel() ?></a>
                             </li>
                             <li class="list-group-item">
-                                <b>Itens Alocados</b> <a class="float-right">1,322</a>
+                                <b>Itens Alocados</b> <a class="float-right"><?= PedidoAlocacao::find()->where(['requerente_id' => $utilizador->id, 'status' => PedidoAlocacao::STATUS_APROVADO])->count() ?></a>
                             </li>
                             <li class="list-group-item">
-                                <b>Pedidos Alocação</b> <a class="float-right">543</a>
+                                <b>Pedidos Alocação</b> <a class="float-right"><?= count($utilizador->pedidosAlocacaoAsRequester) ?></a>
                             </li>
                             <li class="list-group-item">
                                 <b>Pedidos Reparação</b> <a class="float-right">13,287</a>

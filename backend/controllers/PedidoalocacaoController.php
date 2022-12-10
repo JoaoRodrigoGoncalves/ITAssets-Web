@@ -167,6 +167,14 @@ class PedidoalocacaoController extends Controller
                         $model->cancelarPedidosAlocacaoAbertos();
                         return $this->redirect(['view', 'id' => $model->id]);
                     }
+                    else
+                    {
+                        dd($model->errors);
+                    }
+                }
+                else
+                {
+                    dd($model->errors);
                 }
             }
         } else {
