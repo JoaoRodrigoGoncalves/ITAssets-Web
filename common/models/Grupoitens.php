@@ -3,6 +3,7 @@
 namespace common\models;
 
 use Yii;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "grupoitens".
@@ -14,10 +15,9 @@ use Yii;
  *
  * @property GruposItens_Item[] $grupositensitems
  * @property Item[] $items
- * @property Item[] $items0
  * @property PedidoAlocacao[] $pedidoAlocacaos
  */
-class Grupoitens extends \yii\db\ActiveRecord
+class Grupoitens extends ActiveRecord
 {
     const STATUS_ACTIVE = 10;
     const STATUS_DELETED = 0;
@@ -40,6 +40,7 @@ class Grupoitens extends \yii\db\ActiveRecord
             [['notas'], 'string'],
             [['status'], 'integer'],
             [['nome'], 'string', 'max' => 255],
+            [['notas'], 'default', 'value' => null],
         ];
     }
 
@@ -67,21 +68,11 @@ class Grupoitens extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[Items]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getItems()
-    {
-        return $this->hasMany(Item::class, ['grupoitens_id' => 'id']);
-    }
-
-    /**
      * Gets query for [[Items0]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getItems0()
+    public function getItems()
     {
         return $this->hasMany(Item::class, ['id' => 'item_id'])->viaTable('grupositensitem', ['grupoItens_id' => 'id']);
     }

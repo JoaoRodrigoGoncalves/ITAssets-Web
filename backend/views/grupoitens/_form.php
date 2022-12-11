@@ -1,11 +1,13 @@
 <?php
 
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /** @var yii\web\View $this */
 /** @var common\models\Grupoitens $model */
 /** @var yii\widgets\ActiveForm $form */
+/** @var \common\models\GruposItens_Item $itensGrupo */
 ?>
 
 <div class="grupoitens-form">
@@ -14,13 +16,11 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'nome')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'notas')->textarea(['rows' => 6]) ?>
-
-    <?php if(isset($model_item)){?>
     <div class="card">
-        <?= $form->field($model_item,'item_id',['options' => ['class' => 'list-group-item']])->checkboxList(\yii\helpers\ArrayHelper::map($itens,'id','nome'), ['separator' => '<br>'])->label('Item')?>
+        <?= $form->field(new \common\models\GruposItens_Item(),'item_id',['options' => ['class' => 'list-group-item']])->checkboxList(ArrayHelper::map($itens,'id','nome'), ['separator' => '<br>'])->label('Item')?>
     </div>
-    <?php } ?>
+
+    <?= $form->field($model, 'notas')->textarea(['rows' => 6]) ?>
 
     <div class="form-group">
         <?= Html::submitButton('Guardar', ['class' => 'btn btn-success btn-lg btn-block']) ?>

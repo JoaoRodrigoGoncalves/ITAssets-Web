@@ -31,7 +31,7 @@ use yii\helpers\Url;
             echo Menu::widget([
                 'items' => [
                     ['label' => 'Itens', 'icon' => 'box', 'url' => '/item/index'],
-                    ['label' => 'Grupos Itens', 'icon' => 'boxes', 'url' => '/grupoitens/index'],
+                    ['label' => 'Grupos de Itens', 'icon' => 'boxes', 'url' => '/grupoitens/index'],
                     ['label' => 'Pedidos de Alocação', 'icon' => 'clipboard', 'url' => '/pedidoalocacao/index'],
                     ['label' => 'Pedidos de Reparação', 'icon' => 'wrench', 'url' => '#'],
                     ['label' => 'Utilizadores', 'icon' => 'users', 'url' => '/utilizador/index'],

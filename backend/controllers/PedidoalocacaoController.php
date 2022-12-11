@@ -113,7 +113,7 @@ class PedidoalocacaoController extends Controller
 
         foreach ($itens as $item)
         {
-            if($item->grupoItens == null && !$item->isInActivePedidoAlocacao())
+            if(!$item->isInActiveItemsGroup() && !$item->isInActivePedidoAlocacao())
             {
                 $row = new CustomTableRow("I_" . $item->id, $item->nome, $item->serialNumber);
                 $customTableData[] = $row;
@@ -188,8 +188,7 @@ class PedidoalocacaoController extends Controller
     }
 
     /**
-     * Updates an existing PedidoAlocacao model.
-     * If update is successful, the browser will be redirected to the 'view' page.
+     * Esta ação é utilizada para aprovar/negar um pedido
      * @param int $id ID
      * @return string|\yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found

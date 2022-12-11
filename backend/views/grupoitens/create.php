@@ -4,9 +4,10 @@ use yii\helpers\Html;
 
 /** @var yii\web\View $this */
 /** @var common\models\Grupoitens $model */
+/** @var \common\models\Item[] $itens */
 
 $this->title = 'Registo Grupos de Itens';
-$this->params['breadcrumbs'][] = ['label' => 'Grupoitens', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Grupos de Itens', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="container mt-3">
@@ -17,7 +18,6 @@ $this->params['breadcrumbs'][] = $this->title;
             <?= $this->render('_form', [
                 'model' => $model,
                 'itens'=> $itens,
-                'model_item'=>$model_item,
             ]) ?>
         </div>
     </div>

@@ -8,7 +8,7 @@ use yii\widgets\DetailView;
 /** @var common\models\Grupoitens $model */
 
 $this->title = $model->nome;
-$this->params['breadcrumbs'][] = ['label' => 'Grupoitens', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Grupos de Itens', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
 ?>
@@ -28,7 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
             <div class="card-footer">
                 <div class="float-right">
-                    <a href="<?=Url::to(['grupoitens/update/'.$model->id]) ?>" class="btn btn-primary"><i class="fas fa-edit"></i></a>
+                    <?= Html::a('<i class="fas fa-pencil-alt"></i>', ['grupoitens/update', 'id' => $model->id], ['class' => 'btn btn-warning text-white']) ?>
 
                     <?= Html::a('<i class="fas fa-trash"></i>', ['delete', 'id' => $model->id], [
                         'class' => 'btn btn-danger',
@@ -54,16 +54,16 @@ $this->params['breadcrumbs'][] = $this->title;
                             <td>N</td>
                             <td>Nome do Item</td>
                             <td>Numero de Serie</td>
-                            <td scope="col">Ações</td>
+                            <td style="width: 1%; white-space: nowrap">Ações</td>
                         </tr>
                         </thead>
                         <tbody>
-                        <?php foreach ($itens as $item){ ?>
+                        <?php foreach ($model->items as $item){ ?>
                             <tr>
 
                                 <td>1</td>
                                 <td><?= $item->nome; ?></td>
-                                <td><?= $item->serialNumber; ?></td>
+                                <td><?= $item->serialNumber ?? "<i>Não Aplicável</i>"; ?></td>
                                 <td>
                                     <a href="<?=Url::to(['item/view/', 'id' => $item->id]) ?>" class="btn btn-primary"><i class="fas fa-info-circle"></i></a>
                                 </td>

@@ -120,7 +120,7 @@ class PedidoalocacaoController extends Controller
 
         foreach ($itens as $item)
         {
-            if($item->grupoItens == null && !$item->isInActivePedidoAlocacao())
+            if(!$item->isInActiveItemsGroup() && !$item->isInActivePedidoAlocacao())
             {
                 $row = new CustomTableRow("I_" . $item->id, $item->nome, $item->serialNumber);
                 $customTableData[] = $row;
@@ -177,33 +177,6 @@ class PedidoalocacaoController extends Controller
             'model' => $model,
             'customTableData' => $customTableData,
         ]);
-    }
-
-    /**
-     * Updates an existing PedidoAlocacao model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $id ID
-     * @return string|\yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
-
-        if($model->status == PedidoAlocacao::STATUS_ABERTO && $model->requerente_id == Yii::$app->user->id)
-        {
-            if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
-            }
-
-            return $this->render('update', [
-                'model' => $model,
-            ]);
-        }
-        else
-        {
-            return $this->redirect(['index']);
-        }
     }
 
     /**

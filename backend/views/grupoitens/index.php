@@ -9,7 +9,7 @@ use yii\grid\GridView;
 /** @var yii\web\View $this */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Grupo de Itens';
+$this->title = 'Grupos de Itens';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="container mt-3">
@@ -27,7 +27,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 'summary' => "A apresentar de <b>{begin}</b> a <b>{end}</b> de <b>{totalCount}</b> registos.",
                 'columns' => [
                     'nome',
-                    'notas:ntext',
+                    [
+                        'label' => 'Notas',
+                        'format' => 'html',
+                        'value' => function($data)
+                        {
+                            return $data->notas != null ? substr($data->notas, 0, 20) . "..." : "<i>Não Aplicável</i>";
+                        }
+                    ],
                     [
                         'class' => ActionColumn::class,
                         'contentOptions' => ['style' => 'width: 1%; white-space: nowrap;'],

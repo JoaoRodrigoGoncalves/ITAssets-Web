@@ -18,7 +18,6 @@ use Yii;
  *
  * @property Categoria $categoria
  * @property Grupoitens[] $grupoItens
- * @property Grupoitens $grupoitens
  * @property GruposItens_Item[] $grupositensitems
  * @property PedidoAlocacao[] $pedidoAlocacaos
  * @property Site $site
@@ -125,6 +124,18 @@ class Item extends \yii\db\ActiveRecord
         {
             foreach ($this->pedidoAlocacaos as $pedidoAlocacao) {
                 if($pedidoAlocacao->status == PedidoAlocacao::STATUS_APROVADO)
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    public function isInActiveItemsGroup()
+    {
+        if($this->grupoItens != null)
+        {
+            foreach ($this->grupoItens as $grupoitem) {
+                if($grupoitem->status == Grupoitens::STATUS_ACTIVE)
                     return true;
             }
         }

@@ -43,9 +43,8 @@ $this->params['breadcrumbs'][] = $this->title;
                                 <td><?= $pedido->getPrettyStatus() ?></td>
                                 <td style="white-space: nowrap">
                                     <?= Html::a('<i class="fa fa-eye"></i>', ['pedidoalocacao/view', 'id' => $pedido->id], ['class' => 'btn btn-primary']) ?>
-                                    <!-- TODO: Ver se isto é para manter aqui. Depende de como for implementado no backoffice -->
                                     <?php if ($pedido->status == 10): ?>
-                                        <?= Html::a('<i class="fa fa-close"></i>', ['pedidoalocacao/cancel', 'id' => $pedido->id], ['class' => 'btn btn-danger']) ?>
+                                        <?= Html::a('<i class="fa fa-close"></i>', ['pedidoalocacao/cancel', 'id' => $pedido->id], ['class' => 'btn btn-danger', 'data-method' => 'post']) ?>
                                     <?php endif; ?>
                                 </td>
                             </tr>
