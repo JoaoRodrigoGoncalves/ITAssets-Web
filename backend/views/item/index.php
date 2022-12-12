@@ -38,7 +38,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             <td class="btn-group">
                                 <a href="<?=Url::to(['item/view/', 'id' => $item->id]) ?>" class="btn btn-primary mr-1"><i class="fas fa-eye"></i></a>
                                 <a href="<?=Url::to(['item/update/', 'id' => $item->id]) ?>" class="btn btn-warning text-white mr-1"><i class="fas fa-pencil-alt"></i></a>
-                                <a href="<?=Url::to(['item/delete/', 'id' => $item->id]) ?>" class="btn btn-danger"><i class="fas fa-trash-alt"></i></a>
+                                <a href="<?=Url::to(['item/delete/', 'id' => $item->id,'data'=>['method'=>'POST']]) ?>" class="btn btn-danger"><i class="fas fa-trash-alt"></i></a>
                             </td>
                         </tr>
                     <?php endforeach; ?>
