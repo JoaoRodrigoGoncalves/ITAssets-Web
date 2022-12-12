@@ -46,7 +46,6 @@ class Item extends \yii\db\ActiveRecord
             [['nome', 'serialNumber', 'notas'], 'string', 'max' => 255],
             [['serialNumber', 'notas'], 'default', 'value' => null],
             [['categoria_id'], 'exist', 'skipOnError' => true, 'targetClass' => Categoria::class, 'targetAttribute' => ['categoria_id' => 'id']],
-            [['grupoitens_id'], 'exist', 'skipOnError' => true, 'targetClass' => Grupoitens::class, 'targetAttribute' => ['grupoitens_id' => 'id']],
             [['site_id'], 'exist', 'skipOnError' => true, 'targetClass' => Site::class, 'targetAttribute' => ['site_id' => 'id']],
         ];
     }
@@ -63,7 +62,6 @@ class Item extends \yii\db\ActiveRecord
             'categoria_id' => 'Categoria',
             'notas' => 'Notas',
             'status' => 'Status',
-            'grupoitens_id' => 'Grupoitens ID',
             'site_id' => 'Local',
         ];
     }
