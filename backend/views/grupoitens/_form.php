@@ -17,7 +17,13 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'nome')->textInput(['maxlength' => true]) ?>
 
     <div class="card">
-        <?= $form->field(new \common\models\GruposItens_Item(),'item_id',['options' => ['class' => 'list-group-item']])->checkboxList(ArrayHelper::map($itens,'id','nome'), ['separator' => '<br>'])->label('Item')?>
+        <?php
+            if(isset($itens))
+            {
+                echo $form->field(new \common\models\GruposItens_Item(),'item_id',['options' => ['class' => 'list-group-item']])->checkboxList(ArrayHelper::map($itens,'id','nome'), ['separator' => '<br>'])->label('Item');
+            }
+
+        ?>
     </div>
 
     <?= $form->field($model, 'notas')->textarea(['rows' => 6]) ?>
