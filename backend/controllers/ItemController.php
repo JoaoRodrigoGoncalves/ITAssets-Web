@@ -87,24 +87,21 @@ class ItemController extends Controller
      */
     public function actionCreate()
     {
-        $categoria = Categoria::find()->all();
-        if ($categoria != null) {
-            $item = new Item();
+        $item = new Item();
 
-            if ($this->request->isPost) {
-                $item->load($this->request->post());
-                $item->status=10;
-                if($item->save()) {
-                    return $this->redirect(['view', 'id' => $item->id]);
-                }
-            } else {
-                $item->loadDefaultValues();
+        if ($this->request->isPost) {
+            $item->load($this->request->post());
+            $item->status = 10;
+            if($item->save()) {
+                return $this->redirect(['view', 'id' => $item->id]);
             }
-
-            return $this->render('create', [
-                'item' => $item,
-            ]);
+        } else {
+            $item->loadDefaultValues();
         }
+
+        return $this->render('create', [
+            'item' => $item,
+        ]);
     }
 
     /**
@@ -136,13 +133,10 @@ class ItemController extends Controller
      */
     public function actionDelete($id)
     {
-        $item=Item::findOne($id);
+        $item = Item::findOne($id);
         if(!$item->isInActivePedidoAlocacao())
         {
-            //TODO: Manter estas linhas aqui ou manter os dados? (Razão: remoção de entidades relacionadas)
-            $item->site_id = 0;
-            $item->categoria_id = 0;
-            $item->status=0;
+            $item->status = 0;
             $item->save();
         }
         else

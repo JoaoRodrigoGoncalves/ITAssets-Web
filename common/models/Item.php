@@ -42,7 +42,7 @@ class Item extends \yii\db\ActiveRecord
     {
         return [
             [['nome'], 'required'],
-            [['categoria_id', 'status', 'grupoitens_id', 'site_id'], 'integer'],
+            [['categoria_id', 'status', 'site_id'], 'integer'],
             [['nome', 'serialNumber', 'notas'], 'string', 'max' => 255],
             [['serialNumber', 'notas'], 'default', 'value' => null],
             [['categoria_id'], 'exist', 'skipOnError' => true, 'targetClass' => Categoria::class, 'targetAttribute' => ['categoria_id' => 'id']],
