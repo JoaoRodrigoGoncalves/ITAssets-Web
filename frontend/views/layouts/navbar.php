@@ -29,7 +29,7 @@ use yii\helpers\Url;
                 <i class="fas fa-gear"></i>
             </a>
             <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#"><i class="fas fa-user"></i> Ver detalhes</a></li>
+                <li><a class="dropdown-item" href="<?= Url::to(['user/index'])?>"><i class="fas fa-user"></i> Ver detalhes</a></li>
                 <li class="dropdown-divider"></li>
                 <li>
                     <?= Html::a('<i class="fa-solid fa-right-from-bracket"></i> Sair', ['site/logout'], ['data-method' => 'post', 'class' => 'dropdown-item']) ?>
