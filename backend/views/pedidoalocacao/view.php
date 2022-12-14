@@ -50,7 +50,18 @@ $this->params['breadcrumbs'][] = $this->title;
                     </tr>
                     <tr>
                         <td>Item</td>
-                        <td><?= $model->item->nome ?? $model->grupoItem->nome ?></td>
+                        <td>
+                            <?php
+                                if($model->item != null)
+                                {
+                                    echo Html::a($model->item->nome, ['item/view', 'id' => $model->item->id]);
+                                }
+                                else
+                                {
+                                    echo Html::a($model->grupoItem->nome, ['grupoitens/view', 'id' => $model->grupoItem->id]);
+                                }
+                            ?>
+                        </td>
                     </tr>
                     <tr>
                         <td>Observações</td>

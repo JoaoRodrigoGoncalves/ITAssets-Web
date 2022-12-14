@@ -21,5 +21,4 @@ class m221129_152914_create_table_grupoitens extends Migration
     {
         $this->dropTable('grupoItens');
     }
-
 }

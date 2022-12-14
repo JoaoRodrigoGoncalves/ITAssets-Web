@@ -42,6 +42,21 @@ $this->params['breadcrumbs'][] = $this->title;
                     'id',
                     'dataPedido',
                     [
+                        'label' => 'Item',
+                        'format' => 'html',
+                        'value' => function($data)
+                        {
+                            if($data->item_id != null)
+                            {
+                                return Html::a($data->item->nome, ['item/view', 'id' => $data->item->id]);
+                            }
+                            else
+                            {
+                                return Html::a($data->grupoItem->nome, ['grupoitens/view', 'id' => $data->grupoItem->id]);
+                            }
+                        }
+                    ],
+                    [
                         'label' => 'Requerente',
                         'format' => 'html',
                         'value' => function($data)

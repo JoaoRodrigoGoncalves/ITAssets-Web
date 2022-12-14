@@ -1,16 +1,17 @@
 <?php
 
 use chillerlan\QRCode\QRCode;
-use common\models\Empresa;
+use common\models\PedidoAlocacao;
 use yii\helpers\Html;
 use yii\helpers\Url;
-use yii\grid\ActionColumn;
 use yii\grid\GridView;
-use yii\widgets\DetailView;
 
 /** @var yii\web\View $this */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 /** @var common\models\Item $item */
+/** @var array $historicoItem */
+/** @var array $historyProvider */
+
 $this->title = $item->nome;
 $this->params['breadcrumbs'][] = ['label' => 'Itens', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
@@ -40,6 +41,79 @@ $this->params['breadcrumbs'][] = $this->title;
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            <h4>Histórico</h4>
+        </div>
+        <div class="card-body">
+            <?= GridView::widget([
+                    'dataProvider' => $historyProvider,
+                    'layout' => "{items}\n{summary}\n{pager}",
+                    'columns' => [
+                        [
+                            'label' => 'Data',
+                            'value' => 'date'
+                        ],
+                        [
+                            'label' => 'Evento',
+                            'format' => 'html',
+                            'value' => function($data)
+                            {
+                                switch($data->type)
+                                {
+                                    case PedidoAlocacao::STATUS_ABERTO:
+                                        return "O " .
+                                            Html::a("Pedido Alocação Nº{$data->pedido_id}", ['pedidoalocacao/view', 'id' => "{$data->pedido_id}"]) .
+                                            " foi aberto por/para " .
+                                            Html::a($data->user->username, ['utilizador/view', 'id' => $data->user->id]) . ".";
+                                        break;
+
+                                    case PedidoAlocacao::STATUS_APROVADO:
+                                        return "O " .
+                                            Html::a("Pedido Alocação Nº{$data->pedido_id}", ['pedidoalocacao/view', 'id' => "{$data->pedido_id}"]) .
+                                            " foi aprovado por " .
+                                            Html::a($data->user->username, ['utilizador/view', 'id' => $data->user->id]) . ".";
+                                        break;
+
+                                    case PedidoAlocacao::STATUS_NEGADO:
+                                        return "O " .
+                                            Html::a("Pedido Alocação Nº{$data->pedido_id}", ['pedidoalocacao/view', 'id' => "{$data->pedido_id}"]) .
+                                            " foi negado por " .
+                                            Html::a($data->user->username, ['utilizador/view', 'id' => $data->user->id]) . ".";
+                                        break;
+
+                                    case PedidoAlocacao::STATUS_DEVOLVIDO:
+                                        return "O item foi marcado como devolvido no " .
+                                            Html::a("Pedido Alocação Nº{$data->pedido_id}", ['pedidoalocacao/view', 'id' => "{$data->pedido_id}"]);
+                                        break;
+
+                                    case PedidoAlocacao::STATUS_CANCELADO:
+                                        return "O " .
+                                            Html::a("Pedido Alocação Nº{$data->pedido_id}", ['pedidoalocacao/view', 'id' => "{$data->pedido_id}"]) .
+                                            " foi cancelado pelo requerente.";
+                                        break;
+                                }
+                            }
+                        ],
+                    ],
+                    'pager' => [
+                        'activePageCssClass' => 'page-item active',
+                        'maxButtonCount' => 8,
+
+                        // Css for each options. Links
+                        'linkOptions' => ['class' => 'page-link'],
+                        'disabledPageCssClass' => 'page-link disabled',
+
+                        // Customzing CSS class for navigating link
+                        'prevPageCssClass' => 'page-item',
+                        'nextPageCssClass' => 'page-item',
+                        'firstPageCssClass' => 'page-item',
+                        'lastPageCssClass' => 'page-item'
+                    ],
+                ]);
+            ?>
         </div>
     </div>
 </div>

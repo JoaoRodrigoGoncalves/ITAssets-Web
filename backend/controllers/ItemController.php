@@ -2,15 +2,13 @@
 
 namespace backend\controllers;
 
+use backend\models\History;
 use common\models\Item;
-use common\models\Categoria;
 use Yii;
-use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 use yii\web\Response;
 
 /**
@@ -50,21 +48,9 @@ class ItemController extends Controller
      */
     public function actionIndex()
     {
-        $categoria = Categoria::find()->all();
+        $itens= Item::find()->where(['status' => Item::STATUS_ACTIVE])->all();
 
-        if ($categoria != null)
-        {
-            $itens= Item::find()
-                ->where(['status' => 10])
-                ->all();
-
-            return $this->render('index',['itens'=>$itens]);
-        }
-        else
-        {
-            Yii::$app->session->setFlash('error', 'É necessário criar uma categoria primeiro!');
-            return $this->redirect(['categoria/create']);
-        }
+        return $this->render('index',['itens'=>$itens]);
     }
 
     /**
@@ -77,6 +63,7 @@ class ItemController extends Controller
     {
         return $this->render('view', [
             'item' => $this->findModel($id),
+            'historyProvider' => (new History())->getItemHistory($id),
         ]);
     }
 
