@@ -216,7 +216,7 @@ class PedidoalocacaoController extends Controller
         if($model->item xor $model->grupoItem)
         {
             $model->status = PedidoAlocacao::STATUS_DEVOLVIDO;
-            $model->dataFim = date_format(date_create("now"), "Y-m-d h:i:s");
+            $model->dataFim = date_format(date_create("now"), "Y-m-d H:i:s");
             $model->save();
         }
 

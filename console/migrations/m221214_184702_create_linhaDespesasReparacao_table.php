@@ -17,7 +17,10 @@ class m221214_184702_create_linhaDespesasReparacao_table extends Migration
             'descricao' => $this->string(),
             'quantidade' => $this->float(),
             'preco' => $this->double(),
+            'pedidoReparacao_id' => $this->integer()
         ]);
+
+        $this->addForeignKey('fk-pedidoreparacao-despesas', 'linha_despesas_reparacao', 'pedidoReparacao_id', 'pedido_reparacao', 'id');
     }
 
     /**
@@ -25,6 +28,7 @@ class m221214_184702_create_linhaDespesasReparacao_table extends Migration
      */
     public function safeDown()
     {
+        $this->dropForeignKey('fk-pedidoreparacao-despesas', 'linha_despesas_reparacao');
         $this->dropTable('linha_despesas_reparacao');
     }
 }

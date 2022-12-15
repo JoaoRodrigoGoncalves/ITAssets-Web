@@ -3,107 +3,135 @@
 namespace backend\models;
 
 use common\models\PedidoAlocacao;
+use common\models\PedidoReparacao;
 use DateTime;
 use yii\data\ArrayDataProvider;
+use yii\helpers\Html;
 
 class History
 {
-    public DateTime $data;
-    public string $message;
+    public string $data; //Data do evento
+    public string $message; //Mensagem descritiva do evento
+    protected int $idPedido; // Usado para dessambiguar a ordem de eventos
+    protected int $status; // Status dessambiguador
 
 
-    public function getItemHistory($id)
+    public function getItemHistory($itemId): ArrayDataProvider
     {
-        return self::processData(PedidoAlocacao::findAll(['item_id' => $id]));
+        $eventos = $this->processPedidoAlocacao(PedidoAlocacao::findAll(['item_id' => $itemId]));
+        //TODO: Escrever algo deste genero quando for para implementar o ITASSETS-53 (Isto é código não funcional, apenas exemplo)
+        //$eventos = array_merge($eventos, $this->processPedidoReparacao(PedidoReparacao::findAll(['item_id' => $id])));
+
+        return new ArrayDataProvider([
+            'allModels' => $this->sortEvents($eventos),
+            'pagination' => [
+                'pageSize' => 10,
+            ],
+        ]);
     }
 
-    public function getGroupHistory($id)
+    public function getGroupHistory($groupID): ArrayDataProvider
     {
-        return self::processData(PedidoAlocacao::findAll(['grupoItem_id' => $id]));
+        $eventos = $this->processPedidoAlocacao(PedidoAlocacao::findAll(['grupoItem_id' => $groupID]));
+        //TODO: Escrever algo deste genero quando for para implementar o ITASSETS-53 (Isto é código não funcional, apenas exemplo)
+        //$eventos = array_merge($eventos, $this->processPedidoReparacao(PedidoReparacao::findAll(['item_id' => $id])));
+
+        return new ArrayDataProvider([
+            'allModels' => $this->sortEvents($eventos),
+            'pagination' => [
+                'pageSize' => 10,
+            ],
+        ]);
     }
 
-    private function processData($model)
+    private function processPedidoAlocacao($model): array
     {
         $eventos = array();
 
         foreach($model as $pedido)
         {
             // Todos os pedidos começam por ser do status Aberto
-            $auxArray['date'] = $pedido->dataPedido;
-            $auxArray['pedido_id'] = $pedido->id;
-            $auxArray['user'] = (object)['id' => $pedido->requerente_id, 'username' => $pedido->requerente->username];
-            $auxArray['type'] = PedidoAlocacao::STATUS_ABERTO;
-            $eventos[] = (object)$auxArray;
-
-            $auxArray = null;
+            $aux = new History();
+            $aux->data = $pedido->dataPedido;
+            $aux->idPedido = $pedido->id;
+            $aux->status = PedidoAlocacao::STATUS_ABERTO;
+            $aux->message = "O " . Html::a("Pedido Alocação Nº{$pedido->id}", ['pedidoalocacao/view', 'id' => "{$pedido->id}"]) .
+                            " foi aberto por/para " .
+                            Html::a($pedido->requerente->username, ['utilizador/view', 'id' => $pedido->requerente_id]) . ".";
+            $eventos[] = $aux;
 
             switch($pedido->status)
             {
-
-                case PedidoAlocacao::STATUS_APROVADO:
-                    $auxArray['date'] = $pedido->dataInicio;
-                    $auxArray['pedido_id'] = $pedido->id;
-                    $auxArray['user'] = (object)['id' => $pedido->aprovador_id, 'username' => $pedido->aprovador->username];
-                    $auxArray['type'] = PedidoAlocacao::STATUS_APROVADO;
-                    $eventos[] = (object)$auxArray;
-
                 case PedidoAlocacao::STATUS_NEGADO:
-                    $auxArray['date'] = $pedido->dataInicio;
-                    $auxArray['pedido_id'] = $pedido->id;
-                    $auxArray['user'] = (object)['id' => $pedido->aprovador_id, 'username' => $pedido->aprovador->username];
-                    $auxArray['type'] = PedidoAlocacao::STATUS_NEGADO;
-                    $eventos[] = (object)$auxArray;
+                    $aux = new History();
+                    $aux->data = $pedido->dataInicio;
+                    $aux->idPedido = $pedido->id;
+                    $aux->status = PedidoAlocacao::STATUS_NEGADO;
+                    $aux->message = "O " . Html::a("Pedido Alocação Nº{$pedido->id}", ['pedidoalocacao/view', 'id' => "{$pedido->id}"]) .
+                                    " foi negado por " .
+                                    Html::a($pedido->aprovador->username, ['utilizador/view', 'id' => $pedido->aprovador_id]) . ".";
+                    $eventos[] = $aux;
                     break;
 
                 case PedidoAlocacao::STATUS_DEVOLVIDO:
-                    $auxArray['date'] = $pedido->dataInicio;
-                    $auxArray['pedido_id'] = $pedido->id;
-                    $auxArray['user'] = (object)['id' => $pedido->aprovador_id, 'username' => $pedido->aprovador->username];
-                    $auxArray['type'] = PedidoAlocacao::STATUS_APROVADO;
-                    $eventos[] = (object)$auxArray;
+                    $aux = new History();
+                    $aux->data = $pedido->dataFim;
+                    $aux->idPedido = $pedido->id;
+                    $aux->status = PedidoAlocacao::STATUS_DEVOLVIDO;
+                    $aux->message = "O item foi marcado como devolvido no " .
+                                    Html::a("Pedido Alocação Nº{$pedido->id}", ['pedidoalocacao/view', 'id' => "{$pedido->id}"]);
+                    $eventos[] = $aux;
+                    //Fall through intencional
 
-                    $auxArray['date'] = $pedido->dataFim;
-                    $auxArray['pedido_id'] = $pedido->id;
-                    $auxArray['type'] = PedidoAlocacao::STATUS_DEVOLVIDO;
-                    $eventos[] = (object)$auxArray;
+                case PedidoAlocacao::STATUS_APROVADO:
+                    $aux = new History();
+                    $aux->data = $pedido->dataInicio;
+                    $aux->idPedido = $pedido->id;
+                    $aux->status = PedidoAlocacao::STATUS_APROVADO;
+                    $aux->message = "O " . Html::a("Pedido Alocação Nº{$pedido->id}", ['pedidoalocacao/view', 'id' => "{$pedido->id}"]) .
+                        " foi aprovado por " .
+                        Html::a($pedido->aprovador->username, ['utilizador/view', 'id' => $pedido->aprovador_id]) . ".";
+                    $eventos[] = $aux;
                     break;
 
                 case PedidoAlocacao::STATUS_CANCELADO:
-                    $auxArray['date'] = $pedido->dataInicio;
-                    $auxArray['pedido_id'] = $pedido->id;
-                    $auxArray['user'] = (object)['id' => $pedido->requerente_id, 'username' => $pedido->requerente->username];
-                    $auxArray['type'] = PedidoAlocacao::STATUS_CANCELADO;
-                    $eventos[] = (object)$auxArray;
+                    $aux = new History();
+                    $aux->data = $pedido->dataInicio;
+                    $aux->idPedido = $pedido->id;
+                    $aux->status = PedidoAlocacao::STATUS_CANCELADO;
+                    $aux->message = "O " . Html::a("Pedido Alocação Nº{$pedido->id}", ['pedidoalocacao/view', 'id' => "{$pedido->id}"]) .
+                                    " foi cancelado pelo requerente.";
+                    $eventos[] = $aux;
                     break;
             }
         }
+        return $eventos;
+    }
 
-        usort($eventos, function($a, $b){
-            $timediff = strtotime($b->date) - strtotime($a->date);
+    private function processPedidoReparacao($model): array
+    {
+        //TODO: Implementar função
+        return array();
+    }
 
-            if($timediff == 0 && $a->pedido_id == $b->pedido_id)
+    private function sortEvents(array $array): array
+    {
+        usort($array, function($a, $b){
+            $timediff = strtotime($b->data) - strtotime($a->data);
+
+            if($timediff == 0 && $a->idPedido == $b->idPedido)
             {
-                /* Esta condução é mais para quando um item é alocado administrativamente a um utilizador
-                 * para que a ordem abaixo seja respeitada.
-                 * Aberto = 10
-                 * Aprovado = 9
-                 * Negado = 8
-                 * Devolvido = 7
-                 * Cancelado = 0
+                /* Esta condição é mais para quando um item é alocado administrativamente a um utilizador.
+                 * Neste caso, ordenamos pelo status, sendo que o status com o maior valor absoluto aparece à frente
+                 * de um com um menor valor.
                  */
-                return $a->type - $b->type;
+                return $a->status - $b->status;
             }
             else
             {
                 return $timediff;
             }
         });
-
-        return new ArrayDataProvider([
-            'allModels' => $eventos,
-            'pagination' => [
-                'pageSize' => 10,
-            ],
-        ]);
+        return $array;
     }
 }

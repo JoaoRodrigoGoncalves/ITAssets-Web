@@ -30,6 +30,9 @@ class m221214_134329_create_linhaPedidoReparacao_table extends Migration
      */
     public function safeDown()
     {
+        $this->dropForeignKey('fk-pedidoreparacao', 'linha_pedido_reparacao');
+        $this->dropForeignKey('fk-pedidoreparacao-item', 'linha_pedido_reparacao');
+        $this->dropForeignKey('fk-pedidoreparacao-grupo', 'linha_pedido_reparacao');
         $this->dropTable('linha_pedido_reparacao');
     }
 }

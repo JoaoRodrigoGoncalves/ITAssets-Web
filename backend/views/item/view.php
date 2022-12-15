@@ -54,48 +54,12 @@ $this->params['breadcrumbs'][] = $this->title;
                     'columns' => [
                         [
                             'label' => 'Data',
-                            'value' => 'date'
+                            'value' => 'data'
                         ],
                         [
                             'label' => 'Evento',
                             'format' => 'html',
-                            'value' => function($data)
-                            {
-                                switch($data->type)
-                                {
-                                    case PedidoAlocacao::STATUS_ABERTO:
-                                        return "O " .
-                                            Html::a("Pedido Alocação Nº{$data->pedido_id}", ['pedidoalocacao/view', 'id' => "{$data->pedido_id}"]) .
-                                            " foi aberto por/para " .
-                                            Html::a($data->user->username, ['utilizador/view', 'id' => $data->user->id]) . ".";
-                                        break;
-
-                                    case PedidoAlocacao::STATUS_APROVADO:
-                                        return "O " .
-                                            Html::a("Pedido Alocação Nº{$data->pedido_id}", ['pedidoalocacao/view', 'id' => "{$data->pedido_id}"]) .
-                                            " foi aprovado por " .
-                                            Html::a($data->user->username, ['utilizador/view', 'id' => $data->user->id]) . ".";
-                                        break;
-
-                                    case PedidoAlocacao::STATUS_NEGADO:
-                                        return "O " .
-                                            Html::a("Pedido Alocação Nº{$data->pedido_id}", ['pedidoalocacao/view', 'id' => "{$data->pedido_id}"]) .
-                                            " foi negado por " .
-                                            Html::a($data->user->username, ['utilizador/view', 'id' => $data->user->id]) . ".";
-                                        break;
-
-                                    case PedidoAlocacao::STATUS_DEVOLVIDO:
-                                        return "O item foi marcado como devolvido no " .
-                                            Html::a("Pedido Alocação Nº{$data->pedido_id}", ['pedidoalocacao/view', 'id' => "{$data->pedido_id}"]);
-                                        break;
-
-                                    case PedidoAlocacao::STATUS_CANCELADO:
-                                        return "O " .
-                                            Html::a("Pedido Alocação Nº{$data->pedido_id}", ['pedidoalocacao/view', 'id' => "{$data->pedido_id}"]) .
-                                            " foi cancelado pelo requerente.";
-                                        break;
-                                }
-                            }
+                            'value' => 'message'
                         ],
                     ],
                     'pager' => [
