@@ -3,6 +3,7 @@
 /** @var yii\web\View $this */
 
 use yii\bootstrap5\Html;
+use yii\helpers\Url;
 
 $this->title = 'ItAssets';
 ?>
@@ -34,8 +35,9 @@ $this->title = 'ItAssets';
                 </div>
 
                 <div class="lc-block d-grid gap-2 d-md-flex justify-content-md-start">
-                    <a class="btn btn-primary px-5 me-md-2" href="#" role="button">Entrar</a>
-                </div>
+
+                                <a href="<?=Url::to(['login']) ?>" class="btn btn-primary px-5 me-md-2 float-">Entrar</a>
+                            </div>
 
             </div>
         </div>
