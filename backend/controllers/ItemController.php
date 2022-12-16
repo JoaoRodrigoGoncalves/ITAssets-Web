@@ -2,16 +2,14 @@
 
 namespace backend\controllers;
 
-use common\models\Item;
 use common\models\Categoria;
+use common\models\Item;
 use Yii;
 use yii\data\ActiveDataProvider;
-use yii\filters\AccessControl;
 use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use yii\web\Response;
 
 /**
  * ItemController implements the CRUD actions for Item model.
@@ -23,24 +21,17 @@ class ItemController extends Controller
      */
     public function behaviors()
     {
-        return [
-            'access' => [
-                'class' => AccessControl::class,
-                'rules' => [
-                    [
-                        'actions' => ['index', 'view'],
-                        'allow' => true,
-                        'roles' => ['readItem']
+        return array_merge(
+            parent::behaviors(),
+            [
+                'verbs' => [
+                    'class' => VerbFilter::className(),
+                    'actions' => [
+                        'delete' => ['POST'],
                     ],
-                    [
-                        'actions' => ['create', 'update', 'delete'],
-                        'allow' => true,
-                        'roles' => ['writeItem']
-                    ]
                 ],
-            ],
-        ];
-
+            ]
+        );
     }
 
     /**
@@ -52,16 +43,16 @@ class ItemController extends Controller
     {
         $categoria = Categoria::find()->all();
 
-        if ($categoria != null)
-        {
-            $itens= Item::find()
-                ->where(['status' => 10])
-                ->all();
+        if ($categoria != null) {
+            $dataProvider = new ActiveDataProvider([
+                'query' => Item::find()
+                    ->where(['status' => 10])
+            ]);
 
-            return $this->render('index',['itens'=>$itens]);
-        }
-        else
-        {
+            return $this->render('index', [
+                'dataProvider' => $dataProvider,
+            ]);
+        }else{
             Yii::$app->session->setFlash('error', 'É necessário criar uma categoria primeiro!');
             return $this->redirect(['categoria/create']);
         }
