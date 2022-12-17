@@ -10,7 +10,7 @@ class m221204_003507_create_gruposItensItem_table extends Migration
 
     public function up()
     {
-        $this->createTable('gruposItensItem', [
+        $this->createTable('grupositensitem', [
             'grupoItens_id' => $this->integer()->notNull(),
             'item_id' => $this->integer()->notNull(),
         ]);

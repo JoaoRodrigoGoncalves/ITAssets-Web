@@ -7,24 +7,6 @@ use yii\db\Migration;
  */
 class m221130_095112_alter_table_item extends Migration
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function safeUp()
-    {
-
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function safeDown()
-    {
-        echo "m221130_095112_alter_table_item cannot be reverted.\n";
-
-        return false;
-    }
-
     public function up()
     {
         $this->addColumn('item', 'site_id', $this->integer());

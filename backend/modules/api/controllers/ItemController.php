@@ -2,6 +2,7 @@
 
 namespace backend\modules\api\controllers;
 
+use common\models\Item;
 use Yii;
 use yii\filters\auth\HttpBearerAuth;
 use yii\filters\VerbFilter;
@@ -32,6 +33,14 @@ class ItemController extends ActiveController
         return $behaviors;
     }
 
+    public function actions()
+    {
+        $actions = parent::actions();
+        unset($actions['delete']);
+        return $actions;
+    }
+
+
     public function checkAccess($action, $model = null, $params = [])
     {
         // Validar se o utilizador tem permissões para realizar a ação
@@ -57,5 +66,12 @@ class ItemController extends ActiveController
             default:
                 throw new NotFoundHttpException();
         }
+    }
+
+    public function actionDelete($id)
+    {
+        $model = Item::findOne(['id' => $id]);
+        $model->status = 0;
+        $model->save();
     }
 }
