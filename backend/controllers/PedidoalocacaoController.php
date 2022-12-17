@@ -45,7 +45,7 @@ class PedidoalocacaoController extends Controller
                         [
                             'actions' => ['update', 'return'],
                             'allow' => true,
-                            'roles' => ['editPedidoAlocacao']
+                            'roles' => ['changeStatusPedidoAlocacao']
                         ]
                     ],
                 ],

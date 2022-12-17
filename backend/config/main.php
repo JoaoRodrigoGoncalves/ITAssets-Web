@@ -55,9 +55,9 @@ return [
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'api/categoria', 'pluralize' => false],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'api/user', 'pluralize' => false],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'api/item', 'pluralize' => false],
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'api/pedidoalocacao', 'pluralize' => false],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'api/sysinfo'],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'api/login'],
-                ['class' => 'yii\rest\UrlRule', 'controller' => 'api/verifytoken'],
                 // Isto tem de ficar aqui em baixo porque o Yii2 é estúpido
                 ['pattern' => '<controller:\w+>/<id:\d+>', 'route' => '<controller>/view'],
                 ['pattern' => '<controller:\w+>/<action:\w+>/<id:\d+>', 'route' => '<controller>/<action>'],

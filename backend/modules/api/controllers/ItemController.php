@@ -7,6 +7,7 @@ use Yii;
 use yii\filters\auth\HttpBearerAuth;
 use yii\filters\VerbFilter;
 use yii\rest\ActiveController;
+use yii\web\BadRequestHttpException;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
@@ -40,7 +41,6 @@ class ItemController extends ActiveController
         return $actions;
     }
 
-
     public function checkAccess($action, $model = null, $params = [])
     {
         // Validar se o utilizador tem permissões para realizar a ação
@@ -70,8 +70,23 @@ class ItemController extends ActiveController
 
     public function actionDelete($id)
     {
+        $this->checkAccess("delete");
         $model = Item::findOne(['id' => $id]);
-        $model->status = 0;
-        $model->save();
+        if($model != null)
+        {
+            if(!$model->isInActiveItemsGroup() || !$model->isInActivePedidoAlocacao())
+            {
+                $model->status = 0;
+                $model->save();
+            }
+            else
+            {
+                throw new BadRequestHttpException("Não é possível apagar o item porque este se encontra em uso");
+            }
+        }
+        else
+        {
+            throw new NotFoundHttpException("Item não encontrado");
+        }
     }
 }

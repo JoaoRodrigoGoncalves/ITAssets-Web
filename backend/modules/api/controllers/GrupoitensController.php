@@ -2,14 +2,13 @@
 
 namespace backend\modules\api\controllers;
 
+use common\models\Grupoitens;
 use Yii;
 use yii\filters\auth\HttpBearerAuth;
-use yii\filters\VerbFilter;
 use yii\rest\ActiveController;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
-
 
 class GrupoitensController  extends ActiveController
 {
@@ -33,9 +32,15 @@ class GrupoitensController  extends ActiveController
         return $behaviors;
     }
 
+    public function actions()
+    {
+        $actions = parent::actions();
+        unset($actions['delete']);
+        return $actions;
+    }
+
     public function checkAccess($action, $model = null, $params = [])
     {
-
         switch ($action)
         {
             case "index":
@@ -57,6 +62,20 @@ class GrupoitensController  extends ActiveController
 
             default:
                 throw new NotFoundHttpException();
+        }
+    }
+
+    public function actionDelete($id)
+    {
+        $model = Grupoitens::findOne(['id' => $id]);
+        if($model != null)
+        {
+            $model->status = 0;
+            $model->save();
+        }
+        else
+        {
+            throw new NotFoundHttpException("Grupo não encontrado");
         }
     }
 }

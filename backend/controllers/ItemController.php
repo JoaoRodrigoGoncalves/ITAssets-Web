@@ -121,14 +121,14 @@ class ItemController extends Controller
     public function actionDelete($id)
     {
         $item = Item::findOne($id);
-        if(!$item->isInActivePedidoAlocacao())
+        if(!$item->isInActivePedidoAlocacao() || !$item->isInActiveItemsGroup())
         {
             $item->status = 0;
             $item->save();
         }
         else
         {
-            Yii::$app->session->setFlash('error', 'Não é possível remover o item porque este se encontra alocado a um utilizador');
+            Yii::$app->session->setFlash('error', 'Não é possível remover o item porque este se encontra em utilização');
         }
         return $this->redirect(['index']);
     }
