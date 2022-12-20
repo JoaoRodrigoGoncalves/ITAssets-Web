@@ -12,20 +12,19 @@ use Yii;
  * @property string|null $dataInicio
  * @property string|null $dataFim
  * @property string $descricaoProblema
+ * @property int $requerente_id
+ * @property int|null $responsavel_id
  * @property int $status
  * @property string|null $respostaObs
  *
- * @property LinhaDespesasReparacao[] $linhasDespesasReparacao
- * @property LinhaPedidoReparacao[] $linhasPedidoReparacao
- * @property PedidoReparacaoImagens[] $pedidosReparacaoImagens
+ * @property LinhaDespesasReparacao[] $linhaDespesasReparacaos
+ * @property LinhaPedidoReparacao[] $linhaPedidoReparacaos
+ * @property PedidoReparacaoImagens[] $pedidoReparacaoImagens
+ * @property User $requerente
+ * @property User $responsavel
  */
 class PedidoReparacao extends \yii\db\ActiveRecord
 {
-    const STATUS_ABERTO = 10;
-    const STATUS_EM_PROCESSAMENTO = 9;
-    const STATUS_TERMINADO = 3;
-    const STATUS_CANCELADO = 0;
-
     /**
      * {@inheritdoc}
      */
@@ -40,10 +39,13 @@ class PedidoReparacao extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['dataPedido', 'dataInicio', 'dataFim'], 'safe'],
-            [['descricaoProblema'], 'required'],
+            [['dataPedido', 'dataInicio', 'dataFim'], 'datetime', 'format' => 'php:Y-m-d H:i:s'],
+            [['descricaoProblema', 'requerente_id'], 'required'],
             [['descricaoProblema', 'respostaObs'], 'string'],
-            [['status'], 'integer'],
+            [['requerente_id', 'responsavel_id', 'status'], 'integer'],
+            [['dataInicio', 'dataFim', 'respostaObs', 'responsavel_id'], 'default', 'value' => null],
+            [['requerente_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['requerente_id' => 'id']],
+            [['responsavel_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['responsavel_id' => 'id']],
         ];
     }
 
@@ -58,7 +60,9 @@ class PedidoReparacao extends \yii\db\ActiveRecord
             'dataInicio' => 'Data Inicio',
             'dataFim' => 'Data Fim',
             'descricaoProblema' => 'Descricao Problema',
-            'status' => 'Status',
+            'requerente_id' => 'Relator',
+            'responsavel_id' => 'Responsável',
+            'status' => 'Estado',
             'respostaObs' => 'Resposta Obs',
         ];
     }
@@ -68,7 +72,7 @@ class PedidoReparacao extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getLinhasDespesaReparacao()
+    public function getLinhaDespesasReparacaos()
     {
         return $this->hasMany(LinhaDespesasReparacao::class, ['pedidoReparacao_id' => 'id']);
     }
@@ -78,7 +82,7 @@ class PedidoReparacao extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getLinhasPedidoReparacao()
+    public function getLinhaPedidoReparacaos()
     {
         return $this->hasMany(LinhaPedidoReparacao::class, ['pedido_id' => 'id']);
     }
@@ -88,8 +92,28 @@ class PedidoReparacao extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getPedidosReparacaoImagens()
+    public function getPedidoReparacaoImagens()
     {
         return $this->hasMany(PedidoReparacaoImagens::class, ['pedidoReparacao_id' => 'id']);
+    }
+
+    /**
+     * Gets query for [[Requerente]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getRequerente()
+    {
+        return $this->hasOne(User::class, ['id' => 'requerente_id']);
+    }
+
+    /**
+     * Gets query for [[Responsavel]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getResponsavel()
+    {
+        return $this->hasOne(User::class, ['id' => 'responsavel_id']);
     }
 }

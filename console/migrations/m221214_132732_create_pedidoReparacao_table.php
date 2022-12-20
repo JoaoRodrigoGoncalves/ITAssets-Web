@@ -18,9 +18,14 @@ class m221214_132732_create_pedidoReparacao_table extends Migration
             'dataInicio' => $this->dateTime(),
             'dataFim' => $this->dateTime(),
             'descricaoProblema' => $this->text()->notNull(),
+            'requerente_id' => $this->integer()->notNull(),
+            'responsavel_id' => $this->integer(),
             'status' => $this->integer()->notNull()->defaultValue(10),
             'respostaObs' => $this->text()
         ]);
+
+        $this->addForeignKey('fk-requerente-user-reparacao', 'pedido_reparacao', 'requerente_id', 'user', 'id');
+        $this->addForeignKey('fk-responsavel-user-reparacao', 'pedido_reparacao', 'responsavel_id', 'user', 'id');
     }
 
     /**
@@ -28,6 +33,9 @@ class m221214_132732_create_pedidoReparacao_table extends Migration
      */
     public function safeDown()
     {
+        $this->dropForeignKey('fk-requerente-user-reparacao', 'pedido_reparacao');
+        $this->dropForeignKey('fk-responsavel-user-reparacao', 'pedido_reparacao');
+
         $this->dropTable('pedido_reparacao');
     }
 }

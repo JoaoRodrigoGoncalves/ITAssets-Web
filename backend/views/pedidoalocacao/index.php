@@ -10,7 +10,7 @@ use yii\grid\GridView;
 /** @var common\models\PedidoAlocacaoSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Pedidos Alocação';
+$this->title = 'Pedidos de Alocação';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="container mt-3">
