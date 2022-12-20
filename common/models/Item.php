@@ -20,6 +20,7 @@ use Yii;
  * @property Grupoitens[] $grupoItens
  * @property GruposItens_Item[] $grupositensitems
  * @property PedidoAlocacao[] $pedidoAlocacaos
+ * @property LinhaPedidoReparacao[] $linhaPedidoReparacaos
  * @property Site $site
  */
 class Item extends \yii\db\ActiveRecord
@@ -107,6 +108,16 @@ class Item extends \yii\db\ActiveRecord
     }
 
     /**
+     * Gets query for [[LinhaPedidoReparacaos]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getLinhaPedidoReparacaos()
+    {
+        return $this->hasMany(LinhaPedidoReparacao::class, ['item_id' => 'id']);
+    }
+
+    /**
      * Gets query for [[PedidoAlocacaos]].
      *
      * @return \yii\db\ActiveQuery
@@ -134,6 +145,30 @@ class Item extends \yii\db\ActiveRecord
         {
             foreach ($this->grupoItens as $grupoitem) {
                 if($grupoitem->status == Grupoitens::STATUS_ACTIVE)
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    public function isInActivePedidoReparacao()
+    {
+        if($this->linhaPedidoReparacaos != null)
+        {
+            foreach ($this->linhaPedidoReparacaos as $linhaPedidoReparacao) {
+                if(in_array($linhaPedidoReparacao->pedido->status, [PedidoReparacao::STATUS_ABERTO, PedidoReparacao::STATUS_EM_REVISAO]))
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    public function isAlocatedToUser($userID)
+    {
+        if($this->isInActivePedidoAlocacao())
+        {
+            foreach ($this->pedidoAlocacaos as $pedidoAlocacao) {
+                if($pedidoAlocacao->status == PedidoAlocacao::STATUS_APROVADO && $pedidoAlocacao->requerente_id == $userID)
                     return true;
             }
         }

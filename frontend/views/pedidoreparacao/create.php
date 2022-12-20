@@ -14,6 +14,10 @@ use yii\widgets\ActiveForm;
 /** @var yii\widgets\ActiveForm $form */
 /** @var ArrayDataProvider $objectosSelecionados */
 /** @var string $objectosSelecionados_string */
+
+$this->title = 'Criar Novo Pedido de Reparação';
+$this->params['breadcrumbs'][] = ['label' => 'Pedido Reparacaos', 'url' => ['index']];
+$this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <div class="card m-5">
@@ -22,14 +26,48 @@ use yii\widgets\ActiveForm;
         <ul class="list-group list-group-flush">
             <li class="list-group-item">
                 <h5>Objetos Selecionados</h5>
+
+                <?php
+
+                    $objectSelectorConfig = [
+                        'Callback' => '/pedidoreparacao/create',
+                        'SearchFor' => [
+                            [
+                                'model' => Item::class,
+                                'functionRules' => [
+                                    [
+                                        'function' => 'isAlocatedToUser',
+                                        'args' => [Yii::$app->user->id]
+                                    ],
+                                    [
+                                        'function' => '!isInActiveItemsGroup',
+                                    ],
+                                    [
+                                        'function' => '!isInActivePedidoReparacao',
+                                    ],
+                                ]
+                            ],
+                            [
+                                'model' => Grupoitens::class,
+                                'functionRules' => [
+                                    [
+                                        'function' => 'isAlocatedToUser',
+                                        'args' => [Yii::$app->user->id]
+                                    ],
+                                    [
+                                        'function' => '!isInActivePedidoReparacao',
+                                    ],
+                                ]
+                            ]
+                        ],
+                        'Multiselect' => true,
+                    ];
+
+                ?>
+
                 <?= Html::a("Selecionar Objetos", ['/object-select/index'], ['class' => 'btn btn-primary mb-2' ,'data' => [
                     'method' => 'POST',
-                    'params' => [
-                        'Callback' => '/pedidoreparacao/create',
-                        'SearchFor' => [Item::class, Grupoitens::class],
-                        'Multiselect' => true,
-                        'functionRules' => ['!isInActivePedidoAlocacao', '!isInActiveItemsGroup', '!isInActivePedidoReparacao'],
-                    ]
+                    'params' => ['config' => json_encode($objectSelectorConfig)]
                 ]]) ?>
 
                 <?php if($objectosSelecionados != null): ?>
@@ -55,15 +93,6 @@ use yii\widgets\ActiveForm;
             <li class="list-group-item">
                 <?php $form = ActiveForm::begin(); ?>
 
-                <?php
-                $array_users = ArrayHelper::map(User::find()->where(['status' => User::STATUS_ACTIVE])->orderBy('username')->all(), 'id', function($userModel)
-                {
-                    return $userModel['username'] . " (" . $userModel['email'] . ")";
-                });
-                ?>
-
-                <?= $form->field($model, 'requerente_id')->dropDownList($array_users, ['prompt' => '- Selecione um utilizador -']) ?>
-
                 <input type="hidden" name="objectosSelecionados_string" value="<?= $objectosSelecionados_string ?>">
 
                 <?= $form->field($model, 'descricaoProblema')->textarea(['rows' => 6]) ?>
@@ -78,3 +107,4 @@ use yii\widgets\ActiveForm;
         <?php ActiveForm::end(); ?>
     </div>
 </div>
+

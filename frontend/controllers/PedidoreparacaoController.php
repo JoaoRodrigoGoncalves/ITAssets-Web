@@ -1,23 +1,24 @@
 <?php
 
-namespace backend\controllers;
+namespace frontend\controllers;
 
 use common\models\CustomTableRow;
 use common\models\Grupoitens;
 use common\models\Item;
 use common\models\LinhaPedidoReparacao;
 use common\models\PedidoReparacao;
-use common\models\PedidoReparacaoSearch;
+use frontend\models\PedidoReparacaoSearch;
 use Yii;
 use yii\data\ArrayDataProvider;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use Yii\web\ServerErrorHttpException;
+use yii\web\ServerErrorHttpException;
+use yii\web\UnauthorizedHttpException;
 
 /**
- * PedidoReparacaoController implements the CRUD actions for PedidoReparacao model.
+ * PedidoreparacaoController implements the CRUD actions for PedidoReparacao model.
  */
 class PedidoreparacaoController extends Controller
 {
@@ -33,25 +34,16 @@ class PedidoreparacaoController extends Controller
                     'class' => AccessControl::class,
                     'rules' => [
                         [
-                            'actions' => ['index', 'view'],
-                            'allow' => true,
-                            'roles' => ['readOthersPedidoReparacao']
-                        ],
-                        [
-                            'actions' => ['create'],
+                            'actions' => ['index', 'view', 'create'],
                             'allow' => true,
                             'roles' => ['createPedidoReparacao']
                         ],
-                        [
-                            'actions' => ['update'],
-                            'allow' => true,
-                            'roles' => ['changeStatusPedidoAlocacao']
-                        ],
-                        [
-                            'actions' => ['despesas'],
-                            'allow' => true,
-                            'roles' => ['addDespesasPedidoReparacao']
-                        ]
+                    ],
+                ],
+                'verbs' => [
+                    'class' => VerbFilter::className(),
+                    'actions' => [
+                        'delete' => ['POST'],
                     ],
                 ],
             ]
@@ -82,9 +74,18 @@ class PedidoreparacaoController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+        $modelo = $this->findModel($id);
+
+        if($modelo->requerente_id == Yii::$app->user->id)
+        {
+            return $this->render('view', [
+                'model' => $this->findModel($id),
+            ]);
+        }
+        else
+        {
+            throw new UnauthorizedHttpException();
+        }
     }
 
     /**
@@ -95,7 +96,6 @@ class PedidoreparacaoController extends Controller
     public function actionCreate()
     {
         $model = new PedidoReparacao();
-        // Por padrão, o utilizador ao qual o item vai ser associado, é ao utilizador que está a fazer o pedido
         $model->requerente_id = Yii::$app->user->id;
         $objectosSelecionados = null;
         $objectosSelecionados_string = ""; //Sim, isto é para ser vazio
@@ -176,27 +176,7 @@ class PedidoreparacaoController extends Controller
         return $this->render('create', [
             'model' => $model,
             'objectosSelecionados' => $objectosSelecionados,
-            'objectosSelecionados_string' => substr($objectosSelecionados_string, 0, -1),
-        ]);
-    }
-
-    /**
-     * Updates an existing PedidoReparacao model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $id ID
-     * @return string|\yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
-
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
-
-        return $this->render('update', [
-            'model' => $model,
+            'objectosSelecionados_string' => $objectosSelecionados_string,
         ]);
     }
 
@@ -209,7 +189,13 @@ class PedidoreparacaoController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+
+        if($model->requerente_id == Yii::$app->user->id)
+        {
+            $model->status = PedidoReparacao::STATUS_CANCELADO;
+            $model->save();
+        }
 
         return $this->redirect(['index']);
     }

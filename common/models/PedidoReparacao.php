@@ -25,6 +25,12 @@ use Yii;
  */
 class PedidoReparacao extends \yii\db\ActiveRecord
 {
+
+    const STATUS_ABERTO = 10;
+    const STATUS_EM_REVISAO = 7;
+    const STATUS_CONCLUIDO = 4;
+    const STATUS_CANCELADO = 0;
+
     /**
      * {@inheritdoc}
      */

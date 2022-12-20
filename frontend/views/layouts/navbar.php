@@ -14,7 +14,7 @@ use yii\helpers\Url;
             </a>
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Pedidos Reparação</span></a>
+                    <a class="nav-link" href="<?= Url::to(['pedidoreparacao/index']) ?>">Pedidos Reparação</span></a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="<?= Url::to(['pedidoalocacao/index']) ?>">Pedido Alocação</a>
