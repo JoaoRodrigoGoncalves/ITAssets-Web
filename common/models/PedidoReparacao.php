@@ -26,8 +26,9 @@ use Yii;
 class PedidoReparacao extends \yii\db\ActiveRecord
 {
 
-    const STATUS_ABERTO = 10;
-    const STATUS_EM_REVISAO = 7;
+    const STATUS_EM_PREPARACAO = 10; // Ainda não está aberto. Está começado mas não acabado. Blame backoffice
+    const STATUS_ABERTO = 8;
+    const STATUS_EM_REVISAO = 6;
     const STATUS_CONCLUIDO = 4;
     const STATUS_CANCELADO = 0;
 
@@ -121,5 +122,35 @@ class PedidoReparacao extends \yii\db\ActiveRecord
     public function getResponsavel()
     {
         return $this->hasOne(User::class, ['id' => 'responsavel_id']);
+    }
+
+    public function getPrettyStatus()
+    {
+        switch($this->status)
+        {
+            case self::STATUS_EM_PREPARACAO:
+                return "<span class='badge badge-warning text-white'>Em Preparação</span>";
+
+                break;
+
+            case self::STATUS_ABERTO:
+                return "<span class='badge badge-primary'>Aberto</span>";
+                break;
+
+            case self::STATUS_EM_REVISAO:
+                return "<span class='badge badge-success'>Em Revisão</span>";
+                break;
+
+            case self::STATUS_CONCLUIDO:
+                return "<span class='badge badge-info'>Concluído</span>";
+                break;
+
+            case self::STATUS_CANCELADO:
+                return "<span class='badge badge-secondary'>Cancelado</span>";
+                break;
+
+            default:
+                return $this->status;
+        }
     }
 }

@@ -103,9 +103,9 @@ class ObjectSelect
 
         return new ArrayDataProvider([
             'allModels' => $rows,
-            'pagination' => [
-                'pageSize' => 20,
-            ],
+//            'pagination' => [
+//                'pageSize' => 20,
+//            ],
         ]);
     }
 }

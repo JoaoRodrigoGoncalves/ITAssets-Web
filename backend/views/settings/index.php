@@ -3,8 +3,11 @@
 use common\models\PedidoAlocacao;
 use yii\bootstrap4\ActiveForm;
 use yii\helpers\Html;
+use yii\helpers\Url;
 
 $this->title = "Definições";
+$this->params['breadcrumbs'][] = $this->title;
+
 /** @var \common\models\User $user */
 /** @var \backend\models\ChangePasswordForm $password */
 ?>
@@ -33,13 +36,16 @@ $this->title = "Definições";
 
                         <ul class="list-group list-group-unbordered mb-3 mt-2">
                             <li class="list-group-item">
-                                <b>Itens Alocados</b> <a class="float-right"><?= PedidoAlocacao::find()->where(['requerente_id' => $user->id, 'status' => PedidoAlocacao::STATUS_APROVADO])->count() ?></a>
+                                <b>Itens Alocados</b> <a class="float-right"><?= $user->getPedidosAlocacaoAsRequester()->where(['status' => PedidoAlocacao::STATUS_APROVADO])->count() ?></a>
                             </li>
                             <li class="list-group-item">
                                 <b>Pedidos Alocação</b> <a class="float-right"><?= count($user->pedidosAlocacaoAsRequester) ?></a>
                             </li>
                             <li class="list-group-item">
-                                <b>Pedidos Reparação</b> <a class="float-right">13,287</a>
+                                <b>Pedidos Reparação</b> <a class="float-right"><?= count($user->pedidosReparacaoAsRequester) ?></a>
+                            </li>
+                            <li class="list-group-item text-center">
+                                <a href="<?= Url::to(['utilizador/view', 'id' => $user->id]) ?>">Ver Perfil <i class="fa fa-arrow-alt-circle-right"></i></a>
                             </li>
                         </ul>
                     </div>

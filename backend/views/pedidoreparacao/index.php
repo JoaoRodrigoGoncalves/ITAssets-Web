@@ -43,9 +43,19 @@ $this->params['breadcrumbs'][] = $this->title;
                     'dataPedido',
                     [
                         'label' => 'Relatador',
-                        'value' => ''
+                        'value' => function($data)
+                        {
+                            return $data->requerente->username;
+                        }
                     ],
-                    'status',
+                    [
+                        'label' => 'Estado',
+                        'format' => 'html',
+                        'value' => function($data)
+                        {
+                            return $data->getPrettyStatus();
+                        }
+                    ],
                     [
                         'class' => ActionColumn::class,
                         'contentOptions' => ['style' => 'width: 1%; white-space: nowrap;'],

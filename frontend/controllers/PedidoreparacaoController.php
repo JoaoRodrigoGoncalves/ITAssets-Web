@@ -140,7 +140,7 @@ class PedidoreparacaoController extends Controller
                     {
                         foreach ($objetos as $objeto) {
                             $linhaReparacao = new LinhaPedidoReparacao();
-                            $linhaReparacao->pedido_id = $model ->id;
+                            $linhaReparacao->pedido_id = $model->id;
 
                             list($modelName, $id) = explode("_", $objeto);
 
@@ -158,6 +158,10 @@ class PedidoreparacaoController extends Controller
                                     throw new ServerErrorHttpException();
                             }
                             $linhaReparacao->save();
+
+                            // Trocar o status do default de STATUS_EM_PREPARACAO para STATUS_ABERTO;
+                            $model->status = PedidoReparacao::STATUS_ABERTO;
+                            $model->save();
                         }
                         return $this->redirect(['view', 'id' => $model->id]);
                     }
@@ -176,7 +180,7 @@ class PedidoreparacaoController extends Controller
         return $this->render('create', [
             'model' => $model,
             'objectosSelecionados' => $objectosSelecionados,
-            'objectosSelecionados_string' => $objectosSelecionados_string,
+            'objectosSelecionados_string' => substr($objectosSelecionados_string, 0, -1),
         ]);
     }
 

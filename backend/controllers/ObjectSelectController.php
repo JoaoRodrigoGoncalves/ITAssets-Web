@@ -23,11 +23,13 @@ class ObjectSelectController extends Controller
 
     public function actionIndex()
     {
+        $config = json_decode($_POST['config']);
+
         return $this->render('index', [
-            'callback' => $_POST['Callback'],
-            'multiselect' => $_POST['Multiselect'] ?? false,
-            'currentlySelected' => $data['currentlySelected'] ?? null,
-            'tableData' => ObjectSelect::getArrayProvider()
+            'callback' => $config->Callback,
+            'multiselect' => $config->Multiselect ?? false,
+//            'currentlySelected' => $data['currentlySelected'] ?? null,
+            'tableData' => ObjectSelect::getArrayProvider($config)
         ]);
     }
 }

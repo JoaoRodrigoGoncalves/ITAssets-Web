@@ -6,8 +6,10 @@ use common\models\CustomTableRow;
 use common\models\Grupoitens;
 use common\models\Item;
 use common\models\LinhaPedidoReparacao;
+use common\models\PedidoAlocacao;
 use common\models\PedidoReparacao;
 use common\models\PedidoReparacaoSearch;
+use common\models\User;
 use Yii;
 use yii\data\ArrayDataProvider;
 use yii\filters\AccessControl;
@@ -38,7 +40,7 @@ class PedidoreparacaoController extends Controller
                             'roles' => ['readOthersPedidoReparacao']
                         ],
                         [
-                            'actions' => ['create'],
+                            'actions' => ['create', 'linhas'],
                             'allow' => true,
                             'roles' => ['createPedidoReparacao']
                         ],
@@ -54,6 +56,12 @@ class PedidoreparacaoController extends Controller
                         ]
                     ],
                 ],
+                'verbs' => [
+                    'class' => VerbFilter::class,
+                    'actions' => [
+                        'linhas' => ['GET', 'POST'],
+                    ],
+                ]
             ]
         );
     }
@@ -97,17 +105,42 @@ class PedidoreparacaoController extends Controller
         $model = new PedidoReparacao();
         // Por padrão, o utilizador ao qual o item vai ser associado, é ao utilizador que está a fazer o pedido
         $model->requerente_id = Yii::$app->user->id;
+
+        if($this->request->isPost && $model->load($this->request->post()))
+        {
+            $requerente = User::findOne($model->requerente_id);
+            if($requerente->getPedidosAlocacaoAsRequester()->where(['status' => PedidoAlocacao::STATUS_APROVADO])->count() > 0)
+            {
+                if($model->save())
+                {
+                    return $this->redirect(['pedidoreparacao/linhas', 'id' => $model->id]);
+                }
+            }
+            else
+            {
+                $model->addError('requerente_id', "Utilizador selecionado não tem qualquer item associado e por isso não é possível registar um pedido de reparação em seu nome.");
+            }
+        }
+
+        return $this->render('create', [
+            'model' => $model,
+        ]);
+    }
+
+    public function actionLinhas($id)
+    {
+        $model = $this->findModel($id);
+
         $objectosSelecionados = null;
-        $objectosSelecionados_string = ""; //Sim, isto é para ser vazio
+        $objectosSelecionados_string = null;
 
         if(isset($_POST['selection']))
         {
-            // A key onde vêm os valores selecionados pelo utilizador no object-select é "selection"
-            foreach ($_POST['selection'] as $item) {
+            foreach ($_POST['selection'] as $objecto) {
 
-                $objectosSelecionados_string .= $item . ","; // Adicionar os itens a uma string para que depois possam ser guardados
+                $objectosSelecionados_string .= $objecto . ","; // Adicionar os itens a uma string para que depois possam ser guardados
 
-                list($modelName, $id) = explode("_", $item);
+                list($modelName, $id) = explode("_", $objecto);
 
                 switch($modelName)
                 {
@@ -121,59 +154,63 @@ class PedidoreparacaoController extends Controller
                         $objectosSelecionados[] = new CustomTableRow($id, $inner_model->nome, null);
                         break;
                 }
+
             }
 
             $objectosSelecionados = new ArrayDataProvider([
-                'allModels' => $objectosSelecionados,
+                'allModels' => $objectosSelecionados
             ]);
         }
 
-        if($this->request->isPost && $model->load($this->request->post()))
+        if(isset($_POST['selectedObjects']))
         {
-            if($model->descricaoProblema != null)
+            $objects = explode(",", $_POST['selectedObjects']);
+
+            if(sizeof($objects) > 0)
             {
-                $objetos = explode(",", $_POST['objectosSelecionados_string']);
-
-                if(sizeof($objetos) > 0)
+                if($model->save())
                 {
-                    if($model->save())
-                    {
-                        foreach ($objetos as $objeto) {
-                            $linhaReparacao = new LinhaPedidoReparacao();
-                            $linhaReparacao->pedido_id = $model ->id;
+                    foreach ($objects as $objeto) {
+                        $linhaReparacao = new LinhaPedidoReparacao();
+                        $linhaReparacao->pedido_id = $model->id;
 
-                            list($modelName, $id) = explode("_", $objeto);
+                        list($modelName, $id) = explode("_", $objeto);
 
-                            switch($modelName)
-                            {
-                                case "Item":
-                                    $linhaReparacao->item_id = $id;
-                                    break;
+                        switch($modelName)
+                        {
+                            case "Item":
+                                $linhaReparacao->item_id = $id;
+                                break;
 
-                                case "Grupoitens":
-                                    $linhaReparacao->grupo_id = $id;
-                                    break;
+                            case "Grupoitens":
+                                $linhaReparacao->grupo_id = $id;
+                                break;
 
-                                default:
-                                    throw new ServerErrorHttpException();
-                            }
-                            $linhaReparacao->save();
+                            default:
+                                throw new ServerErrorHttpException();
                         }
-                        return $this->redirect(['view', 'id' => $model->id]);
+                        $linhaReparacao->save();
+
+                        // Trocar o status do default de STATUS_EM_PREPARACAO para STATUS_EM_REVISAO visto que isto é uma ação administrativa
+                        $model->status = PedidoReparacao::STATUS_EM_REVISAO;
+                        $model->responsavel_id = Yii::$app->user->id;
+                        $model->save();
                     }
-                    else
-                    {
-                        Yii::$app->session->setFlash('error', 'Ocoreu um erro ao guardar o pedido de reparação.');
-                    }
+                    return $this->redirect(['view', 'id' => $model->id]);
                 }
                 else
                 {
-                    Yii::$app->session->setFlash('error', 'É necessário indicar pelo menos um objeto!');
+                    Yii::$app->session->setFlash('error', 'Ocoreu um erro ao guardar o pedido de reparação.');
                 }
+            }
+            else
+            {
+                Yii::$app->session->setFlash('error', 'É necessário indicar pelo menos um objeto!');
             }
         }
 
-        return $this->render('create', [
+
+        return $this->render('linhas', [
             'model' => $model,
             'objectosSelecionados' => $objectosSelecionados,
             'objectosSelecionados_string' => substr($objectosSelecionados_string, 0, -1),

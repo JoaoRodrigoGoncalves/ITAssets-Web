@@ -4,6 +4,8 @@
 use common\models\PedidoAlocacao;
 use common\models\User;
 use yii\bootstrap4\ActiveForm;
+use yii\data\ArrayDataProvider;
+use yii\grid\GridView;
 use yii\helpers\Html;
 
 $this->title = $utilizador->username;
@@ -33,13 +35,13 @@ $this->params['breadcrumbs'][] = $this->title;
                                 <b>Estado</b> <a class="float-right"><?= $utilizador->getStatusLabel() ?></a>
                             </li>
                             <li class="list-group-item">
-                                <b>Itens Alocados</b> <a class="float-right"><?= PedidoAlocacao::find()->where(['requerente_id' => $utilizador->id, 'status' => PedidoAlocacao::STATUS_APROVADO])->count() ?></a>
+                                <b>Itens Alocados</b> <a class="float-right"><?= $utilizador->getPedidosAlocacaoAsRequester()->where(['status' => PedidoAlocacao::STATUS_APROVADO])->count() ?></a>
                             </li>
                             <li class="list-group-item">
                                 <b>Pedidos Alocação</b> <a class="float-right"><?= count($utilizador->pedidosAlocacaoAsRequester) ?></a>
                             </li>
                             <li class="list-group-item">
-                                <b>Pedidos Reparação</b> <a class="float-right">13,287</a>
+                                <b>Pedidos Reparação</b> <a class="float-right"><?= count($utilizador->pedidosReparacaoAsRequester) ?></a>
                             </li>
                         </ul>
 
@@ -77,19 +79,110 @@ $this->params['breadcrumbs'][] = $this->title;
                         </ul>
                         <div class="tab-content" id="userProfileTabContent">
                             <div class="tab-pane fade show active" id="itens" role="tabpanel" aria-labelledby="itens-tab">
-                                ...<br>
-                                Tabela de itens associados<br>
-                                ...
+                                <?= GridView::widget([
+                                    'dataProvider' => new ArrayDataProvider([
+                                            'allModels' => $utilizador->getPedidosAlocacaoAsRequester()->where(['status' => PedidoAlocacao::STATUS_APROVADO])->all()
+                                    ]),
+                                    'layout'=> "{items}",
+                                    'emptyText' => "Sem registos a mostrar.",
+                                    'columns' => [
+                                        [
+                                            'label' => 'Nº Pedido',
+                                            'format' => 'html',
+                                            'value' => function($data)
+                                            {
+                                                return Html::a($data->id, ['pedidoalocacao/view', 'id' => $data->id]);
+                                            }
+                                        ],
+                                        'dataInicio',
+                                        [
+                                            'label' => 'Item',
+                                            'format' => 'html',
+                                            'value' => function($data)
+                                            {
+                                                if($data->item_id != null)
+                                                {
+                                                    return Html::a($data->item->nome, ['item/view', 'id' => $data->item->id]);
+                                                }
+                                                else
+                                                {
+                                                    return Html::a($data->grupoItem->nome, ['grupoitens/view', 'id' => $data->grupoItem->id]);
+                                                }
+                                            }
+                                        ],
+                                    ],
+                                ]); ?>
                             </div>
                             <div class="tab-pane fade" id="alocacao" role="tabpanel" aria-labelledby="alocacao-tab">
-                                ...<br>
-                                Tabela de pedidos de itens<br>
-                                ...
+                                <?= GridView::widget([
+                                    'dataProvider' => new ArrayDataProvider([
+                                        'allModels' => $utilizador->pedidosAlocacaoAsRequester
+                                    ]),
+                                    'layout'=> "{items}",
+                                    'emptyText' => "Sem registos a mostrar.",
+                                    'columns' => [
+                                        [
+                                            'label' => 'Nº Pedido',
+                                            'format' => 'html',
+                                            'value' => function($data)
+                                            {
+                                                return Html::a($data->id, ['pedidoalocacao/view', 'id' => $data->id]);
+                                            }
+                                        ],
+                                        'dataPedido',
+                                        [
+                                            'label' => 'Item',
+                                            'format' => 'html',
+                                            'value' => function($data)
+                                            {
+                                                if($data->item_id != null)
+                                                {
+                                                    return Html::a($data->item->nome, ['item/view', 'id' => $data->item->id]);
+                                                }
+                                                else
+                                                {
+                                                    return Html::a($data->grupoItem->nome, ['grupoitens/view', 'id' => $data->grupoItem->id]);
+                                                }
+                                            }
+                                        ],
+                                        [
+                                            'label' => 'status',
+                                            'format' => 'html',
+                                            'value' => function($data)
+                                            {
+                                                return $data->getPrettyStatus();
+                                            }
+                                        ]
+                                    ],
+                                ]); ?>
                             </div>
                             <div class="tab-pane fade" id="reparacao" role="tabpanel" aria-labelledby="reparacao-tab">
-                                ...<br>
-                                Tabela de pedidos de reparação de itens<br>
-                                ...
+                                <?= GridView::widget([
+                                    'dataProvider' => new ArrayDataProvider([
+                                        'allModels' => $utilizador->pedidosReparacaoAsRequester
+                                    ]),
+                                    'layout'=> "{items}",
+                                    'emptyText' => "Sem registos a mostrar.",
+                                    'columns' => [
+                                        [
+                                            'label' => 'Nº Pedido',
+                                            'format' => 'html',
+                                            'value' => function($data)
+                                            {
+                                                return Html::a($data->id, ['pedidoreparacao/view', 'id' => $data->id]);
+                                            }
+                                        ],
+                                        'dataPedido',
+                                        [
+                                            'label' => 'status',
+                                            'format' => 'html',
+                                            'value' => function($data)
+                                            {
+                                                return $data->getPrettyStatus();
+                                            }
+                                        ]
+                                    ],
+                                ]); ?>
                             </div>
                         </div>
 

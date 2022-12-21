@@ -38,5 +38,20 @@ $this->params['breadcrumbs'][] = $this->title;
             'respostaObs:ntext',
         ],
     ]) ?>
+    Itens:
+    <?php
+
+    foreach ($model->linhaPedidoReparacaos as $linhaPedidoReparacao) {
+        if($linhaPedidoReparacao->item == null)
+        {
+            echo $linhaPedidoReparacao->grupo->nome . "<br>";
+        }
+        else
+        {
+            echo $linhaPedidoReparacao->item->nome . "<br>";
+        }
+    }
+    
+    ?>
 
 </div>
