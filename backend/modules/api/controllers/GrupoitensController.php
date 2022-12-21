@@ -10,6 +10,7 @@ use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
+
 class GrupoitensController  extends ActiveController
 {
     public $modelClass = 'common\models\Grupoitens';

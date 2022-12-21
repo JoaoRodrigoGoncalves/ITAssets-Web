@@ -5,7 +5,9 @@ namespace backend\controllers;
 use backend\models\History;
 use common\models\Item;
 use Yii;
+use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -21,24 +23,32 @@ class ItemController extends Controller
      */
     public function behaviors()
     {
-        return [
-            'access' => [
-                'class' => AccessControl::class,
-                'rules' => [
-                    [
-                        'actions' => ['index', 'view'],
-                        'allow' => true,
-                        'roles' => ['readItem']
+        return array_merge(
+            parent::behaviors(),
+            [
+                'access' => [
+                    'class' => AccessControl::class,
+                    'rules' => [
+                        [
+                            'actions' => ['index', 'view'],
+                            'allow' => true,
+                            'roles' => ['readItem']
+                        ],
+                        [
+                            'actions' => ['create', 'update', 'delete'],
+                            'allow' => true,
+                            'roles' => ['writeItem']
+                        ]
                     ],
-                    [
-                        'actions' => ['create', 'update', 'delete'],
-                        'allow' => true,
-                        'roles' => ['writeItem']
-                    ]
                 ],
-            ],
-        ];
-
+                'verbs' => [
+                    'class' => VerbFilter::className(),
+                    'actions' => [
+                        'delete' => ['POST'],
+                    ],
+                ],
+            ]
+        );
     }
 
     /**
@@ -48,9 +58,13 @@ class ItemController extends Controller
      */
     public function actionIndex()
     {
-        $itens= Item::find()->where(['status' => Item::STATUS_ACTIVE])->all();
+        $dataProvider = new ActiveDataProvider([
+            'query' => Item::find()->where(['status' => Item::STATUS_ACTIVE])
+        ]);
 
-        return $this->render('index',['itens'=>$itens]);
+        return $this->render('index', [
+            'dataProvider' => $dataProvider,
+        ]);
     }
 
     /**

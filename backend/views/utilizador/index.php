@@ -5,9 +5,11 @@ use backend\models\Utilizador;
 use common\models\User;
 use yii\helpers\Html;
 use yii\helpers\Url;
+use yii\grid\ActionColumn;
+use yii\grid\GridView;
 
 /** @var yii\web\View $this */
-/** @var User[] $utilizadores */
+/** @var yii\data\ActiveDataProvider $dataProvider */
 
 $this->title = "Gestão de Utilizadores";
 ?>
@@ -19,56 +21,74 @@ $this->title = "Gestão de Utilizadores";
             <?= Html::a('<i class="fas fa-user-plus"></i> Registar', ['create'], ['class' => 'btn btn-primary float-right']) ?>
         </div>
         <div class="card-body">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th scope="col">Nome</th>
-                        <th scope="col">Email</th>
-                        <th scope="col">Tipo de Utilizador</th>
-                        <th>Estado</th>
-                        <th style="width: 1%; white-space: nowrap;"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($utilizadores as $utilizador)
-
-                        if ($utilizador->status != 0){?>
-                        <tr>
-                            <td><?=$utilizador->username?></td>
-                            <td><?=$utilizador->email?></td>
-                            <td>
-                                <?= "<span class='badge badge-info'>" . Utilizador::getRoleLabel($utilizador->getRole()->name) . "</span>" ?>
-                            </td>
-                            <td>
-                                <?= $utilizador->getStatusLabel() ?>
-                            </td>
-                            <td class="btn-group">
-                                <?= Html::a('<i class="fas fa-user"></i>', ['utilizador/view', 'id' => $utilizador->id], ['class' => 'btn btn-primary mr-1']) ?>
-                                <?php if(Yii::$app->user->can('writeUtilizador')): ?>
-                                    <?= Html::a('<i class="fas fa-pencil-alt text-white"></i>', ['utilizador/update/', 'id' => $utilizador->id], ['class' => 'btn btn-warning mr-1']) ?>
-                                    <?php
-                                        if($utilizador->id == Yii::$app->user->id)
+            <?= GridView::widget([
+                'dataProvider' => $dataProvider,
+                'layout'=> "{items}\n{summary}\n{pager}",
+                'emptyText' => "Sem dados a mostrar.",
+                'summary' => "A apresentar de <b>{begin}</b> a <b>{end}</b> de <b>{totalCount}</b> registos.",
+                'columns' => [
+                    [
+                        'label' => 'Nome',
+                        'value' => 'username'
+                    ],
+                    [
+                        'label' => 'Email',
+                        'value' => 'email'
+                    ],
+                    [
+                        'label' => 'Tipo de Utilizador',
+                        'format' => 'html',
+                        'value' => function($data)
+                        {
+                            return "<span class='badge badge-info'>" . Utilizador::getRoleLabel($data->getRole()->name) . "</span>";
+                        }
+                    ],
+                    [
+                        'label' => 'Estado',
+                        'format' => 'html',
+                        'value' => function($data) {
+                            return $data->getStatusLabel();
+                        }
+                    ],
+                    [
+                        'class' => ActionColumn::class,
+                        'contentOptions' => ['style' => 'width: 1%; white-space: nowrap;'],
+                        'template' => '{view} {update} {delete}',
+                        'buttons' => [
+                            'view' => function($url, $model)
+                            {
+                                return Html::a('<i class="fas fa-eye"></i>', ['utilizador/view', 'id' => $model->id], ['class' => 'btn btn-primary']);
+                            },
+                            'update' => function($url, $model)
+                            {
+                                if (Yii::$app->user->can('writeUtilizador')) {
+                                    return Html::a('<i class="fas fa-pencil-alt text-white"></i>', ['utilizador/update', 'id' => $model->id], ['class' => 'btn btn-warning mr-1']);
+                                }
+                            },
+                            'delete' => function($url, $model)
+                            {
+                                if (Yii::$app->user->can('writeUtilizador')) {
+                                    if($model->id == Yii::$app->user->id)
+                                    {
+                                        return Html::button("<span class='material-symbols-outlined' style='font-variation-settings: \"FILL\" 1, \"wght\" 400, \"GRAD\" 200, \"opsz\" 20; padding-bottom: 0;'>toggle_off</span>", ['class' => 'btn btn-danger pb-0', 'disabled' => 'disabled']);
+                                    }
+                                    else
+                                    {
+                                        if($model->status == 10)
                                         {
-                                            echo Html::button("<span class='material-symbols-outlined' style='font-variation-settings: \"FILL\" 1, \"wght\" 400, \"GRAD\" 200, \"opsz\" 20; padding-bottom: 0;'>toggle_off</span>", ['class' => 'btn btn-danger pb-0', 'disabled' => 'disabled']);
+                                            return Html::a("<span class='material-symbols-outlined' style='font-variation-settings: \"FILL\" 1, \"wght\" 400, \"GRAD\" 200, \"opsz\" 20; padding-bottom: 0;'>toggle_off</span>", ['utilizador/activar', 'id' => $model->id], ['class' => 'btn  btn-danger pb-0']);
                                         }
                                         else
                                         {
-                                            if($utilizador->status == 10)
-                                            {
-                                                echo Html::a("<span class='material-symbols-outlined' style='font-variation-settings: \"FILL\" 1, \"wght\" 400, \"GRAD\" 200, \"opsz\" 20; padding-bottom: 0;'>toggle_off</span>", ['utilizador/activar', 'id' => $utilizador->id], ['class' => 'btn  btn-danger pb-0']);
-                                            }
-                                            else
-                                            {
-                                                echo Html::a("<span class='material-symbols-outlined' style='font-variation-settings: \"FILL\" 1, \"wght\" 400, \"GRAD\" 200, \"opsz\" 20; padding-bottom: 0;'>toggle_on</span>", ['utilizador/activar', 'id' => $utilizador->id], ['class' => 'btn  btn-success pb-0']);
-                                            }
+                                            return Html::a("<span class='material-symbols-outlined' style='font-variation-settings: \"FILL\" 1, \"wght\" 400, \"GRAD\" 200, \"opsz\" 20; padding-bottom: 0;'>toggle_on</span>", ['utilizador/activar', 'id' => $model->id], ['class' => 'btn  btn-success pb-0']);
                                         }
-                                    ?>
-                                <?php endif; ?>
-                            </td>
-                        </tr>
-                    <?php } ?>
-                </tbody>
-            </table>
+                                    }
+                                }
+                            }
+                        ],
+                    ],
+                ],
+            ]); ?>
         </div>
     </div>
 </div>
