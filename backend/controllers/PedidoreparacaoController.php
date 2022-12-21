@@ -129,10 +129,11 @@ class PedidoreparacaoController extends Controller
 
     public function actionLinhas($id)
     {
+
         $model = $this->findModel($id);
 
         $objectosSelecionados = null;
-        $objectosSelecionados_string = null;
+        $objectosSelecionados_string = "";
 
         if(isset($_POST['selection']))
         {
