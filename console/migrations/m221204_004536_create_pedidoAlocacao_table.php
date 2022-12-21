@@ -36,7 +36,7 @@ class m221204_004536_create_pedidoAlocacao_table extends Migration
         $this->addForeignKey('fk-requerente', 'pedido_alocacao', 'requerente_id', 'user', 'id');
         $this->addForeignKey('fk-aprovador', 'pedido_alocacao', 'aprovador_id', 'user', 'id');
         $this->addForeignKey('fk-pedidoalocacao_item', 'pedido_alocacao', 'item_id', 'item', 'id');
-        $this->addForeignKey('fk-grupoItem', 'pedido_alocacao', 'grupoItem_id', 'grupoItens', 'id');
+        $this->addForeignKey('fk-grupoItem', 'pedido_alocacao', 'grupoItem_id', 'grupoitens', 'id');
     }
 
     /**

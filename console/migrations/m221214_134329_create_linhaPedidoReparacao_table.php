@@ -22,7 +22,7 @@ class m221214_134329_create_linhaPedidoReparacao_table extends Migration
 
         $this->addForeignKey('fk-pedidoreparacao', 'linha_pedido_reparacao', 'pedido_id', 'pedido_reparacao', 'id');
         $this->addForeignKey('fk-pedidoreparacao-item', 'linha_pedido_reparacao', 'item_id', 'item', 'id');
-        $this->addForeignKey('fk-pedidoreparacao-grupo', 'linha_pedido_reparacao', 'grupo_id', 'grupoItens', 'id');
+        $this->addForeignKey('fk-pedidoreparacao-grupo', 'linha_pedido_reparacao', 'grupo_id', 'grupoitens', 'id');
     }
 
     /**
