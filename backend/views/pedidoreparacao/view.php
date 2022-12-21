@@ -59,22 +59,13 @@ $this->params['breadcrumbs'][] = $this->title;
                         <td>Descrição do Problema</td>
                         <td><?= $model->descricaoProblema ?? "<i>Não Aplicável</i>" ?></td>
                     </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <div class="card mb-4">
-            <div class="card-body">
-                <table class="table">
-                    <tbody>
-                        Itens:
+                    <tr>
                         <?php
                         foreach ($model->linhaPedidoReparacaos as $linhaPedidoReparacao) {
                             echo " <tr>";
                             if($linhaPedidoReparacao->item == null)
                             {
-                                echo "<td>Grupo</td>";
+                                echo "<td>Grupo de Itens</td>";
                                 echo "<td>".Html::a($linhaPedidoReparacao->grupo->nome, ['grupoitens/view', 'id' => $linhaPedidoReparacao->grupo->id])."</td>";
                             }
                             else
@@ -85,6 +76,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             echo "</tr>";
                         }
                         ?>
+                    </tr>
                     </tbody>
                 </table>
             </div>
