@@ -5,6 +5,7 @@ namespace backend\controllers;
 
 use Yii;
 use yii\base\Model;
+use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\helpers\Url;
@@ -40,8 +41,13 @@ class UtilizadorController extends Controller
 
     public function actionIndex()
     {
-        $utilizadores = User::find()->all();
-        return $this->render('index', ['utilizadores' => $utilizadores]);
+        $dataProvider = new ActiveDataProvider([
+            'query' => User::find()
+        ]);
+
+        return $this->render('index', [
+            'dataProvider' => $dataProvider,
+        ]);
     }
 
     public function actionView($id)

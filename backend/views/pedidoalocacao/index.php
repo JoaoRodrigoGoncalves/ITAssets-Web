@@ -39,8 +39,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 'emptyText' => "Sem registos a mostrar.",
                 'summary' => "A apresentar de <b>{begin}</b> a <b>{end}</b> de <b>{totalCount}</b> registos.",
                 'columns' => [
-                    'id',
-                    'dataPedido',
+                    [
+                        'label' => 'ID Pedido',
+                        'value' => 'id'
+                    ],
+                    [
+                        'label' => 'Data Pedido',
+                        'value' => 'dataPedido'
+                    ],
                     [
                         'label' => 'Requerente',
                         'format' => 'html',
