@@ -2,9 +2,11 @@
 
 namespace frontend\controllers;
 
+use frontend\models\ChangePasswordForm;
 use Yii;
 use common\models\User;
 use yii\data\ActiveDataProvider;
+use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -39,94 +41,50 @@ class UserController extends Controller
      */
     public function actionIndex()
     {
-        $this->layout='main';
+        $this->layout = "main";
         $user = User::findOne(['id' => Yii::$app->user->id]);
 
-        return $this->render('index', ['user' => $user]);
+        $password = new ChangePasswordForm();
+
+        if(Yii::$app->session->hasFlash('error_old_password'))
+            $password->addError('old_password', Yii::$app->session->getFlash('error_old_password'));
+
+        return $this->render('index', ['user' => $user, 'password' => $password]);
     }
 
-    /**
-     * Displays a single User model.
-     * @param int $id
-     * @return string
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionView($id)
+    public function actionSave()
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
-    }
-
-    /**
-     * Creates a new User model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return string|\yii\web\Response
-     */
-    public function actionCreate()
-    {
-        $model = new User();
-
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+        if($this->request->isPost)
+        {
+            $user = User::findOne(['id' => Yii::$app->user->id]);
+            $user->load($this->request->post());
+            if($user->validate())
+            {
+                $user->save();
+                Yii::$app->session->setFlash('success', 'Dados atualizados com sucesso');
+                $this->redirect(Url::to(['user/index']));
             }
-        } else {
-            $model->loadDefaultValues();
+            else
+            {
+                // TODO: Erro validação falhou. Como passar para lá devolta?
+                // Talvez usar o addError ao $user e renderizar a index mesmo no /save
+            }
         }
-
-        return $this->render('create', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Updates an existing User model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $id
-     * @return string|\yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
-
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        else
+        {
+            $this->redirect(Url::to(['user/index']));
         }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
     }
 
-    /**
-     * Deletes an existing User model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $id
-     * @return \yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionDelete($id)
+    public function actionPassword()
     {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
-    }
-
-    /**
-     * Finds the User model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $id
-     * @return User the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel($id)
-    {
-        if (($model = User::findOne(['id' => $id])) !== null) {
-            return $model;
+        if($this->request->isPost)
+        {
+            $settings = new ChangePasswordForm();
+            $settings->load($this->request->post());
+            $settings->updatePassword(); // Não é necessário confirmar se foi possível atualizar porque a prórpia função já guarda um flash para isso
         }
-
-        throw new NotFoundHttpException('The requested page does not exist.');
+        $this->redirect(Url::to(['user/index']));
     }
+
 }
