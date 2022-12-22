@@ -35,7 +35,6 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
         </div>
     </div>
-
     <div class="card mb-4">
         <div class="card-body">
             <table class="table">

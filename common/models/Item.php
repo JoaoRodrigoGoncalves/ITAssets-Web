@@ -67,6 +67,21 @@ class Item extends \yii\db\ActiveRecord
         ];
     }
 
+    // Para a API
+    public function fields()
+    {
+        $fields = parent::fields();
+        unset($fields['categoria_id'], $fields['site_id']);
+        $fields['categoria'] = function ($model) {
+            return $this->categoria;
+        };
+        $fields['site'] = function ()
+        {
+            return $this->site;
+        };
+        return $fields;
+    }
+
     /**
      * Gets query for [[Categoria]].
      *
@@ -86,16 +101,6 @@ class Item extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Grupoitens::class, ['id' => 'grupoItens_id'])->viaTable('grupositensitem', ['item_id' => 'id']);
     }
-
-    /**
-     * Gets query for [[Grupoitens]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-//    public function getGrupoitens()
-//    {
-//        return $this->hasOne(Grupoitens::class, ['id' => 'grupoitens_id']);
-//    }
 
     /**
      * Gets query for [[Grupositensitems]].

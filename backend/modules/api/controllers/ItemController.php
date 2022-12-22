@@ -6,6 +6,7 @@ use common\models\Item;
 use Yii;
 use yii\filters\auth\HttpBearerAuth;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 use yii\rest\ActiveController;
 use yii\web\BadRequestHttpException;
 use yii\web\ForbiddenHttpException;
@@ -37,7 +38,7 @@ class ItemController extends ActiveController
     public function actions()
     {
         $actions = parent::actions();
-        unset($actions['delete']);
+        unset($actions['index'], $actions['delete']);
         return $actions;
     }
 
@@ -66,6 +67,12 @@ class ItemController extends ActiveController
             default:
                 throw new NotFoundHttpException();
         }
+    }
+
+    public function actionIndex()
+    {
+        $this->checkAccess("index");
+        return Item::findAll(['status' => Item::STATUS_ACTIVE]);
     }
 
     public function actionDelete($id)
