@@ -6,39 +6,88 @@ use yii\widgets\DetailView;
 /** @var yii\web\View $this */
 /** @var common\models\PedidoReparacao $model */
 
-$this->title = $model->id;
+$this->title = "Nº pedido:".$model->id;
 $this->params['breadcrumbs'][] = ['label' => 'Pedido Reparacaos', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
 <div class="pedido-reparacao-view">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <div class="container flex-grow-1 container-p-y mt-3">
+        <div class="card">
+            <div class="card-header bg-info">
+                <h2><?= Html::encode($this->title)?></h2>
+            </div>
+            <div class="card-body">
+                <div class="row no-gutters row-bordered">
+                    <div class="d-flex col-md align-items-center">
+                        <div class="card-body d-block text-body">
+                            <h4 class="font-weight-bold mb-0">Requerente: <span class="text-muted font-weight-normal"><?= $model->requerente->username?></span></h4>
+                            <div class="text-muted">Nº de Pedido: <?= $model->id?></div>
+                            <div class="text-muted">Data de Pedido: <?= $model->dataPedido?></div>
 
-    <p>
-        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ]) ?>
-    </p>
+                        </div>
+                    </div>
+                    <div class="d-flex col-md align-items-center"></div>
+                    <div class="d-flex col-md align-items-center">
+                        <div class="card-body d-block text-body">
+                            <h4 class="font-weight-bold mb-0">Aprovador: <span class="text-muted font-weight-normal"><?= $model->responsavel->username ?? "<i>Por definir</i>"?></span></h4>
 
-    <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            'id',
-            'dataPedido',
-            'dataInicio',
-            'dataFim',
-            'descricaoProblema:ntext',
-            'requerente_id',
-            'responsavel_id',
-            'status',
-            'respostaObs:ntext',
-        ],
-    ]) ?>
+                            <div class="text-muted mb-2">Status: <?= $model->getPrettyStatus()?></div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <table class="table">
+                    <tbody>
+                    <tr>
+                        <td>Data de Início</td>
+                        <td><?= $model->dataInicio ?? "<i>Não Aplicável</i>"?></td>
+                    </tr>
+                    <tr>
+                        <td>Data de Conclusão</td>
+                        <td><?= $model->dataFim ?? "<i>Não Aplicável</i>" ?></td>
+                    </tr>
+                    <tr>
+                        <td>Descrição do Problema</td>
+                        <td><?= $model->descricaoProblema ?? "<i>Não Aplicável</i>" ?></td>
+                    </tr>
+                    <tr>
+                        <?php
+                        foreach ($model->linhaPedidoReparacaos as $linhaPedidoReparacao) {
+                            echo " <tr>";
+                            if($linhaPedidoReparacao->item == null)
+                            {
+                                echo "<td>Grupo de Itens</td>";
+                                echo "<td>".Html::a($linhaPedidoReparacao->grupo->nome, ['../pedidoalocacao/'.$linhaPedidoReparacao->grupo->id])."</td>";
+                            }
+                            else
+                            {
+                                echo "<td>Item</td>";
+                                echo "<td>".Html::a($linhaPedidoReparacao->item->nome, ['../pedidoalocacao/'.$linhaPedidoReparacao->item->id])."</td>";
+                            }
+                            echo "</tr>";
+                        }
+                        ?>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+
+
 
 </div>
+
+
+

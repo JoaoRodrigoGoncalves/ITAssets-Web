@@ -52,7 +52,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'label' => 'Responsavel',
                         'value' => function($data)
                         {
-                            return $data->responsavel->username;
+                            return $data->responsavel->username ?? "Nao aplicavel";
                         }
                     ],
                     [

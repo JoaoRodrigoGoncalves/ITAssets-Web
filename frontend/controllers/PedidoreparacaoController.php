@@ -57,12 +57,14 @@ class PedidoreparacaoController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new PedidoReparacaoSearch();
-        $dataProvider = $searchModel->search($this->request->queryParams);
+
+        $reparacoes = PedidoReparacao::find()
+            ->where(['requerente_id' => Yii::$app->user->id])
+            ->orderBy(['id' => SORT_DESC])
+            ->all();
 
         return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
+            'reparacoes' => $reparacoes,
         ]);
     }
 

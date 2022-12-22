@@ -7,45 +7,55 @@ use yii\grid\ActionColumn;
 use yii\grid\GridView;
 
 /** @var yii\web\View $this */
-/** @var frontend\models\PedidoReparacaoSearch $searchModel */
-/** @var yii\data\ActiveDataProvider $dataProvider */
+/** @var PedidoReparacao[] $reparacao */
 
-$this->title = 'Pedido Reparacaos';
+$this->title = 'Pedidos de Reparação';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="pedido-reparacao-index">
+<div class="m-5">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <h1 class="mb-5"><?= Html::encode($this->title) ?></h1>
 
-    <p>
-        <?= Html::a('Create Pedido Reparacao', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
+    <div class="card">
+        <div class="card-header">
+            <?= Html::a('<i class="fas fa-plus"></i> Pedido', ['create'], ['class' => 'btn btn-success float-right']) ?>
+        </div>
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th style="width: 1%; white-space: nowrap">Número Pedido</th>
+                    <th>Data</th>
 
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
-            'id',
-            'dataPedido',
-            'dataInicio',
-            'dataFim',
-            'descricaoProblema:ntext',
-            //'requerente_id',
-            //'responsavel_id',
-            //'status',
-            //'respostaObs:ntext',
-            [
-                'class' => ActionColumn::className(),
-                'urlCreator' => function ($action, PedidoReparacao $model, $key, $index, $column) {
-                    return Url::toRoute([$action, 'id' => $model->id]);
-                 }
-            ],
-        ],
-    ]); ?>
-
-
+                    <th>Aprovador</th>
+                    <th>Estado</th>
+                    <th style="width: 1%"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php if(count($reparacoes) > 0): ?>
+                    <?php
+                    foreach ($reparacoes as $reparacao): ?>
+                        <tr>
+                            <td><?= $reparacao->id ?></td>
+                            <td><?= $reparacao->dataPedido ?></td>
+                            <td><?= $reparacao->responsavel->username ?? "Por definir" ?></td>
+                            <td><?= $reparacao->getPrettyStatus() ?></td>
+                            <td style="white-space: nowrap">
+                                <?= Html::a('<i class="fa fa-eye"></i>', ['pedidoreparacao/view', 'id' => $reparacao->id], ['class' => 'btn btn-primary']) ?>
+                                <?php if ($reparacao->status == 10): ?>
+                                    <?= Html::a('<i class="fa fa-close"></i>', ['pedidoreparacao/cancel', 'id' => $reparacao->id], ['class' => 'btn btn-danger', 'data-method' => 'post']) ?>
+                                <?php endif; ?>
+                            </td>
+                        </tr>
+                    <?php endforeach;?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="6">Sem dados</td>
+                    </tr>
+                <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
