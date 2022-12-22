@@ -49,6 +49,13 @@ $this->params['breadcrumbs'][] = $this->title;
                         }
                     ],
                     [
+                        'label' => 'Responsavel',
+                        'value' => function($data)
+                        {
+                            return $data->responsavel->username;
+                        }
+                    ],
+                    [
                         'label' => 'Estado',
                         'format' => 'html',
                         'value' => function($data)

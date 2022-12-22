@@ -31,7 +31,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <div class="d-flex col-md align-items-center"></div>
                     <div class="d-flex col-md align-items-center">
                         <div class="card-body d-block text-body">
-                            <h4 class="font-weight-bold mb-0">Aprovador: <span class="text-muted font-weight-normal"><?= $model->aprovador->username ?? "<i>Não Aplicável</i>"?></span></h4>
+                            <h4 class="font-weight-bold mb-0">Aprovador: <span class="text-muted font-weight-normal"><?= $model->responsavel->username ?? "<i>Não Aplicável</i>"?></span></h4>
 
                             <div class="text-muted mb-2">Status: <?= $model->getPrettyStatus()?></div>
 
