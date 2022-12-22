@@ -17,7 +17,7 @@ $this->params['breadcrumbs'] = [['label' => $this->title]];
         <p>
             <?= nl2br(Html::encode($message)) ?>
         </p>
-        <?= Html::encode($exception->getMessage()) ?>
+	<?= Html::encode($exception->getMessage()) ?>
 
         <p>O erro acima mencionado ocurreu ao tentar processar o seu pedido.</p>
         <div class="d-flex justify-content-end">
