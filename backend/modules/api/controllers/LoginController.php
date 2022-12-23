@@ -49,8 +49,9 @@ class LoginController extends Controller
             $token = $loginModel->APILogin();
             if($token)
             {
-                $role = array_values(Yii::$app->authManager->getRolesByUser(User::findIdentityByAccessToken($token)->id))[0];
-                return $this->asJson(['token' => $token, 'level' => $role->name]);
+                $user = User::findIdentityByAccessToken($token);
+                $role = array_values(Yii::$app->authManager->getRolesByUser($user->id))[0];
+                return $this->asJson(['token' => $token, 'username' => $user->username, 'email' => $user->email, 'level' => $role->name]);
             }
             else
             {

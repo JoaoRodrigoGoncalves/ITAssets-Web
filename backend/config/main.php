@@ -64,10 +64,6 @@ return [
                 ['pattern' => '<controller:\w+>/<action:\w+>', 'route' => '<controller>/<action>'],
             ],
         ],
-//        'dataFilter' => [
-//          'class' => 'yii\data\ActiveDataFilter',
-//          ''
-//        ],
     ],
     'params' => $params,
     'defaultRoute' => 'login/index',
