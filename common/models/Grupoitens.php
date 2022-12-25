@@ -133,4 +133,24 @@ class Grupoitens extends ActiveRecord
         }
         return false;
     }
+
+    public function getDataAlocacaoBaseadoEmData($date)
+    {
+        if(count($this->pedidoAlocacaos) < 1)
+            return null;
+
+        $dataAlocacao = date("Y-m-d H:i:s", 0);
+        foreach ($this->pedidoAlocacaos as $pedidoAlocacao)
+        {
+            if($pedidoAlocacao->dataInicio != null)
+            {
+                if($pedidoAlocacao->dataInicio < date_create($date) && $pedidoAlocacao->dataInicio > $dataAlocacao)
+                {
+                    $dataAlocacao = $pedidoAlocacao->dataInicio;
+                }
+            }
+        }
+
+        return $dataAlocacao;
+    }
 }

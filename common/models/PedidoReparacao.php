@@ -17,8 +17,8 @@ use Yii;
  * @property int $status
  * @property string|null $respostaObs
  *
- * @property LinhaDespesasReparacao[] $linhaDespesasReparacaos
- * @property LinhaPedidoReparacao[] $linhaPedidoReparacaos
+ * @property LinhaDespesasReparacao[] $linhasDespesasReparacao
+ * @property LinhaPedidoReparacao[] $linhasPedidoReparacao
  * @property PedidoReparacaoImagens[] $pedidoReparacaoImagens
  * @property User $requerente
  * @property User $responsavel
@@ -75,21 +75,21 @@ class PedidoReparacao extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[LinhaDespesasReparacaos]].
+     * Gets query for [[LinhasDespesasReparacao]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getLinhaDespesasReparacaos()
+    public function getLinhasDespesasReparacao()
     {
         return $this->hasMany(LinhaDespesasReparacao::class, ['pedidoReparacao_id' => 'id']);
     }
 
     /**
-     * Gets query for [[LinhaPedidoReparacaos]].
+     * Gets query for [[LinhasPedidoReparacao]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getLinhaPedidoReparacaos()
+    public function getLinhasPedidoReparacao()
     {
         return $this->hasMany(LinhaPedidoReparacao::class, ['pedido_id' => 'id']);
     }
@@ -152,5 +152,17 @@ class PedidoReparacao extends \yii\db\ActiveRecord
             default:
                 return $this->status;
         }
+    }
+
+    public function calcularTotalDespesas()
+    {
+        $total = 0;
+
+        foreach ($this->linhasDespesasReparacao as $despesa)
+        {
+            $total += ($despesa->preco * $despesa->quantidade);
+        }
+
+        return $total;
     }
 }

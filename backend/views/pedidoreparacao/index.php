@@ -43,16 +43,25 @@ $this->params['breadcrumbs'][] = $this->title;
                     'dataPedido',
                     [
                         'label' => 'Relatador',
+                        'format' => 'html',
                         'value' => function($data)
                         {
-                            return $data->requerente->username;
+                            return Html::a($data->requerente->username, ['utilizador/view', 'id' => $data->requerente->id]);
                         }
                     ],
                     [
-                        'label' => 'Responsavel',
+                        'label' => 'Responsável',
+                        'format' => 'html',
                         'value' => function($data)
                         {
-                            return $data->responsavel->username ?? "Nao aplicavel";
+                            if($data->responsavel != null)
+                            {
+                                return Html::a($data->responsavel->username, ['utilizador/view', 'id' => $data->responsavel->id]);
+                            }
+                            else
+                            {
+                                return "<i>Não aplicável</i>";
+                            }
                         }
                     ],
                     [
@@ -74,7 +83,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             },
                             'update' => function($url, $model)
                             {
-                                if($model->status == 10)
+                                if($model->status == PedidoReparacao::STATUS_ABERTO)
                                 {
                                     return Html::a('<i class="fas fa-thumbs-up"></i>', ['pedidoreparacao/update', 'id' => $model->id], ['class' => 'btn btn-secondary']);
                                 }

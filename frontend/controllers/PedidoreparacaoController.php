@@ -38,12 +38,17 @@ class PedidoreparacaoController extends Controller
                             'allow' => true,
                             'roles' => ['createPedidoReparacao']
                         ],
+                        [
+                            'actions' => ['cancelar'],
+                            'allow' => true,
+                            'roles' => ['cancelPedidoReparacao']
+                        ]
                     ],
                 ],
                 'verbs' => [
-                    'class' => VerbFilter::className(),
+                    'class' => VerbFilter::class,
                     'actions' => [
-                        'delete' => ['POST'],
+                        'cancelar' => ['POST'],
                     ],
                 ],
             ]
@@ -57,7 +62,6 @@ class PedidoreparacaoController extends Controller
      */
     public function actionIndex()
     {
-
         $reparacoes = PedidoReparacao::find()
             ->where(['requerente_id' => Yii::$app->user->id])
             ->orderBy(['id' => SORT_DESC])
@@ -193,7 +197,7 @@ class PedidoreparacaoController extends Controller
      * @return \yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionDelete($id)
+    public function actionCancelar($id)
     {
         $model = $this->findModel($id);
 

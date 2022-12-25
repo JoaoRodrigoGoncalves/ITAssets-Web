@@ -132,6 +132,16 @@ class Item extends \yii\db\ActiveRecord
         return $this->hasMany(PedidoAlocacao::class, ['item_id' => 'id']);
     }
 
+    /**
+     * Gets query for [[Site]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSite()
+    {
+        return $this->hasOne(Site::class, ['id' => 'site_id']);
+    }
+
     public function isInActivePedidoAlocacao()
     {
         if($this->pedidoAlocacaos != null)
@@ -180,14 +190,24 @@ class Item extends \yii\db\ActiveRecord
         return false;
     }
 
-    /**
-     * Gets query for [[Site]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getSite()
+    public function getDataAlocacaoBaseadoEmData($date)
     {
-        return $this->hasOne(Site::class, ['id' => 'site_id']);
+        if(count($this->pedidoAlocacaos) < 1)
+            return null;
+
+        $dataAlocacao = date("Y-m-d H:i:s", 0);
+        foreach ($this->pedidoAlocacaos as $pedidoAlocacao)
+        {
+            if($pedidoAlocacao->dataInicio != null)
+            {
+                if($pedidoAlocacao->dataInicio < date_create($date) && $pedidoAlocacao->dataInicio > $dataAlocacao)
+                {
+                    $dataAlocacao = $pedidoAlocacao->dataInicio;
+                }
+            }
+        }
+
+        return $dataAlocacao;
     }
 
     public function getStatusLabel()

@@ -34,6 +34,7 @@ class LinhaDespesasReparacao extends \yii\db\ActiveRecord
             [['quantidade', 'preco'], 'number'],
             [['pedidoReparacao_id'], 'integer'],
             [['descricao'], 'string', 'max' => 255],
+            [['descricao', 'preco', 'quantidade', 'pedidoReparacao_id'], 'required'],
             [['pedidoReparacao_id'], 'exist', 'skipOnError' => true, 'targetClass' => PedidoReparacao::class, 'targetAttribute' => ['pedidoReparacao_id' => 'id']],
         ];
     }
@@ -45,10 +46,10 @@ class LinhaDespesasReparacao extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'descricao' => 'Descricao',
+            'descricao' => 'Descrição',
             'quantidade' => 'Quantidade',
-            'preco' => 'Preco',
-            'pedidoReparacao_id' => 'Pedido Reparacao ID',
+            'preco' => 'Preço Unitário',
+            'pedidoReparacao_id' => 'Pedido Reparação',
         ];
     }
 

@@ -7,7 +7,7 @@ use yii\grid\ActionColumn;
 use yii\grid\GridView;
 
 /** @var yii\web\View $this */
-/** @var PedidoReparacao[] $reparacao */
+/** @var PedidoReparacao[] $reparacoes */
 
 $this->title = 'Pedidos de Reparação';
 $this->params['breadcrumbs'][] = $this->title;
@@ -26,7 +26,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 <tr>
                     <th style="width: 1%; white-space: nowrap">Número Pedido</th>
                     <th>Data</th>
-
                     <th>Aprovador</th>
                     <th>Estado</th>
                     <th style="width: 1%"></th>
@@ -39,19 +38,19 @@ $this->params['breadcrumbs'][] = $this->title;
                         <tr>
                             <td><?= $reparacao->id ?></td>
                             <td><?= $reparacao->dataPedido ?></td>
-                            <td><?= $reparacao->responsavel->username ?? "Por definir" ?></td>
+                            <td><?= $reparacao->responsavel->username ?? "<i>Não Aplicável</i>" ?></td>
                             <td><?= $reparacao->getPrettyStatus() ?></td>
-                            <td style="white-space: nowrap">
+                            <td style="width: 1%; white-space: nowrap">
                                 <?= Html::a('<i class="fa fa-eye"></i>', ['pedidoreparacao/view', 'id' => $reparacao->id], ['class' => 'btn btn-primary']) ?>
-                                <?php if ($reparacao->status == 10): ?>
-                                    <?= Html::a('<i class="fa fa-close"></i>', ['pedidoreparacao/cancel', 'id' => $reparacao->id], ['class' => 'btn btn-danger', 'data-method' => 'post']) ?>
+                                <?php if ($reparacao->status == PedidoReparacao::STATUS_ABERTO): ?>
+                                    <?= Html::a('<i class="fa fa-close"></i>', ['pedidoreparacao/cancelar', 'id' => $reparacao->id], ['class' => 'btn btn-danger', 'data-method' => 'post']) ?>
                                 <?php endif; ?>
                             </td>
                         </tr>
                     <?php endforeach;?>
                 <?php else: ?>
                     <tr>
-                        <td colspan="6">Sem dados</td>
+                        <td colspan="6">Sem dados para apresentar</td>
                     </tr>
                 <?php endif; ?>
                 </tbody>

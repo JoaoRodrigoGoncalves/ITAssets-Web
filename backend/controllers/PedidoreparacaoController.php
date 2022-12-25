@@ -5,6 +5,7 @@ namespace backend\controllers;
 use common\models\CustomTableRow;
 use common\models\Grupoitens;
 use common\models\Item;
+use common\models\LinhaDespesasReparacao;
 use common\models\LinhaPedidoReparacao;
 use common\models\PedidoAlocacao;
 use common\models\PedidoReparacao;
@@ -91,7 +92,7 @@ class PedidoreparacaoController extends Controller
     public function actionView($id)
     {
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $this->findModel($id)
         ]);
     }
 
@@ -109,6 +110,8 @@ class PedidoreparacaoController extends Controller
         if($this->request->isPost && $model->load($this->request->post()))
         {
             $requerente = User::findOne($model->requerente_id);
+
+            // Verificar se o utilizador tem algum item associado
             if($requerente->getPedidosAlocacaoAsRequester()->where(['status' => PedidoAlocacao::STATUS_APROVADO])->count() > 0)
             {
                 if($model->save())
@@ -238,18 +241,9 @@ class PedidoreparacaoController extends Controller
         ]);
     }
 
-    /**
-     * Deletes an existing PedidoReparacao model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $id ID
-     * @return \yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionDelete($id)
+    public function actionFinalize($id)
     {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
+        
     }
 
     /**
