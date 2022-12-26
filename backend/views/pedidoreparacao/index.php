@@ -83,11 +83,11 @@ $this->params['breadcrumbs'][] = $this->title;
                             },
                             'update' => function($url, $model)
                             {
-                                if($model->status == PedidoReparacao::STATUS_ABERTO)
-                                {
-                                    return Html::a('<i class="fas fa-thumbs-up"></i>', ['pedidoreparacao/update', 'id' => $model->id], ['class' => 'btn btn-secondary']);
-                                }
-                                return null;
+                                return match ($model->status) {
+                                    PedidoReparacao::STATUS_ABERTO => Html::a('<i class="fas fa-reply"></i>', ['pedidoreparacao/slefassign', 'id' => $model->id], ['class' => 'btn btn-secondary']),
+                                    PedidoReparacao::STATUS_EM_REVISAO => Html::a('<i class="fas fa-reply"></i>', ['pedidoreparacao/finalizar', 'id' => $model->id], ['class' => 'btn btn-secondary']),
+                                    default => null,
+                                };
                             }
                         ],
                     ],

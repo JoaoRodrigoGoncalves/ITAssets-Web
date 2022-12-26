@@ -70,7 +70,7 @@ class PedidoReparacao extends \yii\db\ActiveRecord
             'requerente_id' => 'Relator',
             'responsavel_id' => 'Responsável',
             'status' => 'Estado',
-            'respostaObs' => 'Resposta Obs',
+            'respostaObs' => 'Detalhes da Reparação',
         ];
     }
 

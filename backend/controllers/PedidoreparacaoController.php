@@ -46,7 +46,7 @@ class PedidoreparacaoController extends Controller
                             'roles' => ['createPedidoReparacao']
                         ],
                         [
-                            'actions' => ['update'],
+                            'actions' => ['selfassign', 'finalizar'],
                             'allow' => true,
                             'roles' => ['changeStatusPedidoAlocacao']
                         ],
@@ -54,6 +54,11 @@ class PedidoreparacaoController extends Controller
                             'actions' => ['despesas'],
                             'allow' => true,
                             'roles' => ['addDespesasPedidoReparacao']
+                        ],
+                        [
+                            'actions' => ['cancelar'],
+                            'allow' => true,
+                            'roles' => ['cancelPedidoReparacao']
                         ]
                     ],
                 ],
@@ -76,6 +81,8 @@ class PedidoreparacaoController extends Controller
     {
         $searchModel = new PedidoReparacaoSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
+
+        $dataProvider->sort->defaultOrder = ['id' => SORT_DESC];
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -130,9 +137,24 @@ class PedidoreparacaoController extends Controller
         ]);
     }
 
+    public function actionSelfassign($id)
+    {
+        $model = $this->findModel($id);
+        if($model->status == PedidoReparacao::STATUS_ABERTO)
+        {
+            $model->responsavel_id = Yii::$app->user->id;
+            $model->status = PedidoReparacao::STATUS_EM_REVISAO;
+            $model->save();
+        }
+        else
+        {
+            Yii::$app->session->setFlash("error", "Não é possível atribuir um responsável neste estado.");
+        }
+        return $this->redirect(['pedidoreparacao/view', 'id' => $model->id]);
+    }
+
     public function actionLinhas($id)
     {
-
         $model = $this->findModel($id);
 
         $objectosSelecionados = null;
@@ -221,29 +243,39 @@ class PedidoreparacaoController extends Controller
         ]);
     }
 
-    /**
-     * Updates an existing PedidoReparacao model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $id ID
-     * @return string|\yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionUpdate($id)
+    public function actionFinalizar($id)
     {
         $model = $this->findModel($id);
+        if(in_array($model->status, [PedidoReparacao::STATUS_EM_PREPARACAO, PedidoReparacao::STATUS_EM_REVISAO]))
+        {
+            if ($this->request->isPost && $model->load($this->request->post())) {
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+                $model->status = PedidoReparacao::STATUS_CONCLUIDO;
+                if($model->save())
+                {
+                    return $this->redirect(['view', 'id' => $model->id]);
+                }
+            }
+
+            return $this->render('finalizar', [
+                'model' => $model
+            ]);
         }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
     }
 
-    public function actionFinalize($id)
+    public function actionCancelar($id)
     {
-        
+        $model = $this->findModel($id);
+        if($model->status == PedidoReparacao::STATUS_EM_PREPARACAO)
+        {
+            $model->status = PedidoReparacao::STATUS_CANCELADO;
+            $model->save();
+        }
+        else
+        {
+            Yii::$app->session->setFlash("error", "Não é possível cancelar este pedido");
+        }
+        return $this->redirect(['view', 'id' => $model->id]);
     }
 
     /**

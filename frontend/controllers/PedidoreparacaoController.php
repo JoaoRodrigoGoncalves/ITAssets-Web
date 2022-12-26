@@ -201,7 +201,7 @@ class PedidoreparacaoController extends Controller
     {
         $model = $this->findModel($id);
 
-        if($model->requerente_id == Yii::$app->user->id)
+        if($model->requerente_id == Yii::$app->user->id && $model->status == PedidoReparacao::STATUS_ABERTO)
         {
             $model->status = PedidoReparacao::STATUS_CANCELADO;
             $model->save();

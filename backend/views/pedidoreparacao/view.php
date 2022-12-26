@@ -27,17 +27,27 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="d-flex col-md align-items-center"></div>
                 <div class="d-flex col-md align-items-center">
                     <div class="card-body d-block text-body">
-                        <h4 class="font-weight-bold mb-0">Aprovador: <span class="text-muted font-weight-normal"><?= $model->responsavel->username ?? "<i>Não Aplicável</i>"?></span></h4>
+                        <h4 class="font-weight-bold mb-0">Responsável: <span class="text-muted font-weight-normal"><?= $model->responsavel->username ?? "<i>Não Aplicável</i>"?></span></h4>
                         <div class="text-muted mb-2">Status: <?= $model->getPrettyStatus()?></div>
                     </div>
                 </div>
             </div>
         </div>
-        <?php if($model->status == PedidoReparacao::STATUS_EM_REVISAO): ?>
-            <div class="card-footer">
-                <?= Html::a('Finalizar', ['pedidoreparacao/finalizar', 'id' => $model->id], ['class' => 'btn btn-success float-right']) ?>
-            </div>
-        <?php endif; ?>
+        <?php
+            if(in_array($model->status, [PedidoReparacao::STATUS_EM_REVISAO, PedidoReparacao::STATUS_ABERTO, PedidoReparacao::STATUS_EM_PREPARACAO]))
+            {
+                echo '<div class="card-footer">';
+
+                echo match ($model->status)
+                {
+                    PedidoReparacao::STATUS_EM_PREPARACAO => Html::a("Cancelar Pedido", ['pedidoreparacao/cancelar', 'id' => $model->id], ['class' => 'btn btn-danger float-right']),
+                    PedidoReparacao::STATUS_ABERTO => Html::a("Tornar-se Responsável", ['pedidoreparacao/selfassign', 'id' => $model->id], ['class' => 'btn btn-success float-right']),
+                    PedidoReparacao::STATUS_EM_REVISAO => Html::a('Finalizar', ['pedidoreparacao/finalizar', 'id' => $model->id], ['class' => 'btn btn-success float-right']),
+                };
+
+                echo '</div>';
+            }
+        ?>
     </div>
 
     <div class="row mb-4">
@@ -59,6 +69,14 @@ $this->params['breadcrumbs'][] = $this->title;
                                 <td style="width: 1%; white-space: nowrap;"><b>Descrição do problema:</b></td>
                                 <td><?= $model->descricaoProblema ?? "<i>Não Aplicável</i>" ?></td>
                             </tr>
+                            <?php if($model->status == PedidoReparacao::STATUS_CONCLUIDO): ?>
+                                <tr>
+                                    <td style="width: 1%; white-space: nowrap;"><b>Detalhes da reparação:</b></td>
+                                    <td>
+                                        <?= $model->respostaObs ?? "<i>Nada foi indicado pelo responsável.</i>" ?>
+                                    </td>
+                                </tr>
+                            <?php endif; ?>
                         </tbody>
                     </table>
                 </div>
