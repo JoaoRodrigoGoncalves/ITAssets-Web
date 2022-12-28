@@ -2,6 +2,7 @@
 
 namespace backend\modules\api\controllers;
 
+use common\models\Categoria;
 use Yii;
 use yii\filters\auth\HttpBearerAuth;
 use yii\rest\ActiveController;
@@ -30,6 +31,13 @@ class CategoriaController extends ActiveController
         return $behaviors;
     }
 
+    public function actions()
+    {
+        $actions = parent::actions();
+        unset($actions['delete']);
+        return $actions;
+    }
+
     public function checkAccess($action, $model = null, $params = [])
     {
         // Validar se o utilizador tem permissões para realizar a ação
@@ -54,6 +62,20 @@ class CategoriaController extends ActiveController
 
             default:
                 throw new NotFoundHttpException($action . " desconhecido");
+        }
+    }
+
+    public function actionDelete($id)
+    {
+        $model = Categoria::findOne(['id' => $id]);
+        if($model != null)
+        {
+            $model->status = 0;
+            $model->save();
+        }
+        else
+        {
+            throw new NotFoundHttpException("Categoria não encontrada");
         }
     }
 }

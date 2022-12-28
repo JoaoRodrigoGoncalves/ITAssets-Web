@@ -2,13 +2,11 @@
 
 namespace frontend\controllers;
 
-use frontend\models\ChangePasswordForm;
 use Yii;
 use common\models\User;
-use yii\data\ActiveDataProvider;
+use frontend\models\ChangePasswordForm;
 use yii\helpers\Url;
 use yii\web\Controller;
-use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
@@ -86,5 +84,4 @@ class UserController extends Controller
         }
         $this->redirect(Url::to(['user/index']));
     }
-
 }

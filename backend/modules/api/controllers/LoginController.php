@@ -3,6 +3,7 @@
 namespace backend\modules\api\controllers;
 
 use common\models\Login;
+use common\models\User;
 use Yii;
 use yii\filters\VerbFilter;
 use yii\rest\Controller;
@@ -48,7 +49,9 @@ class LoginController extends Controller
             $token = $loginModel->APILogin();
             if($token)
             {
-                return $this->asJson(['token' => $token]);
+                $user = User::findIdentityByAccessToken($token);
+                $role = array_values(Yii::$app->authManager->getRolesByUser($user->id))[0];
+                return $this->asJson(['token' => $token, 'username' => $user->username, 'email' => $user->email, 'level' => $role->name]);
             }
             else
             {

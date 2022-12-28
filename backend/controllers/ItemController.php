@@ -2,14 +2,16 @@
 
 namespace backend\controllers;
 
-use common\models\Categoria;
+use backend\models\History;
 use common\models\Item;
 use Yii;
 use yii\data\ActiveDataProvider;
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
+use yii\web\Response;
 
 /**
  * ItemController implements the CRUD actions for Item model.
@@ -24,6 +26,21 @@ class ItemController extends Controller
         return array_merge(
             parent::behaviors(),
             [
+                'access' => [
+                    'class' => AccessControl::class,
+                    'rules' => [
+                        [
+                            'actions' => ['index', 'view'],
+                            'allow' => true,
+                            'roles' => ['readItem']
+                        ],
+                        [
+                            'actions' => ['create', 'update', 'delete'],
+                            'allow' => true,
+                            'roles' => ['writeItem']
+                        ]
+                    ],
+                ],
                 'verbs' => [
                     'class' => VerbFilter::className(),
                     'actions' => [
@@ -41,21 +58,13 @@ class ItemController extends Controller
      */
     public function actionIndex()
     {
-        $categoria = Categoria::find()->all();
+        $dataProvider = new ActiveDataProvider([
+            'query' => Item::find()->where(['status' => Item::STATUS_ACTIVE])
+        ]);
 
-        if ($categoria != null) {
-            $dataProvider = new ActiveDataProvider([
-                'query' => Item::find()
-                    ->where(['status' => 10])
-            ]);
-
-            return $this->render('index', [
-                'dataProvider' => $dataProvider,
-            ]);
-        }else{
-            Yii::$app->session->setFlash('error', 'É necessário criar uma categoria primeiro!');
-            return $this->redirect(['categoria/create']);
-        }
+        return $this->render('index', [
+            'dataProvider' => $dataProvider,
+        ]);
     }
 
     /**
@@ -68,6 +77,7 @@ class ItemController extends Controller
     {
         return $this->render('view', [
             'item' => $this->findModel($id),
+            'historyProvider' => (new History())->getItemHistory($id),
         ]);
     }
 
@@ -125,14 +135,14 @@ class ItemController extends Controller
     public function actionDelete($id)
     {
         $item = Item::findOne($id);
-        if(!$item->isInActivePedidoAlocacao())
+        if(!$item->isInActivePedidoAlocacao() || !$item->isInActiveItemsGroup())
         {
             $item->status = 0;
             $item->save();
         }
         else
         {
-            Yii::$app->session->setFlash('error', 'Não é possível remover o item porque este se encontra alocado a um utilizador');
+            Yii::$app->session->setFlash('error', 'Não é possível remover o item porque este se encontra em utilização');
         }
         return $this->redirect(['index']);
     }

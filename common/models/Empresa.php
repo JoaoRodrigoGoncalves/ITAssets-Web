@@ -34,6 +34,7 @@ class Empresa extends ActiveRecord
             [['nome', 'rua', 'localidade'], 'string', 'max' => 255],
             [['NIF'], 'string', 'max' => 9],
             [['codigoPostal'], 'string', 'max' => 8],
+            [['nome', 'rua', 'localidade', 'NIF', 'codigoPostal'], 'required']
         ];
     }
 

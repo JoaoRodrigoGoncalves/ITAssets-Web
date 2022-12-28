@@ -17,5 +17,6 @@ return [
             // 'cache' => 'cache',
         ],
     ],
+    'timeZone' => 'Europe/Lisbon',
 ];
 

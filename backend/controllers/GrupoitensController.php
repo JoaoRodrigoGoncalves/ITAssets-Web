@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use backend\models\History;
 use common\models\Grupoitens;
 use common\models\GruposItens_Item;
 use common\models\Item;
@@ -9,9 +10,9 @@ use common\models\PedidoAlocacao;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
 /**
  * GrupoitensController implements the CRUD actions for Grupoitens model.
@@ -86,9 +87,9 @@ class GrupoitensController extends Controller
     public function actionView($id)
     {
         $grupoitens = $this->findModel($id);
-
         return $this->render('view', [
-            'model' => $grupoitens
+            'model' => $grupoitens,
+            'historyProvider' => (new History())->getGroupHistory($id)
         ]);
     }
 

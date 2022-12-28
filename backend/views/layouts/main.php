@@ -12,7 +12,6 @@ use yii\web\View;
 //FontAwesomeAsset::register($this);
 AppAsset::register($this);
 
-// TODO: Remover isto quando colocar os assets para o logo e imagem de utilizador
 $assetDir = Yii::$app->assetManager->getPublishedUrl('@vendor/almasaeed2010/adminlte/dist');
 ?>
 <?php $this->beginPage() ?>

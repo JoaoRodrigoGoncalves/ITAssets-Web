@@ -45,7 +45,7 @@ class PedidoalocacaoController extends Controller
                         [
                             'actions' => ['update', 'return'],
                             'allow' => true,
-                            'roles' => ['editPedidoAlocacao']
+                            'roles' => ['changeStatusPedidoAlocacao']
                         ]
                     ],
                 ],
@@ -215,9 +215,27 @@ class PedidoalocacaoController extends Controller
 
         if($model->item xor $model->grupoItem)
         {
-            $model->status = PedidoAlocacao::STATUS_DEVOLVIDO;
-            $model->dataFim = date_format(date_create("now"), "Y-m-d h:i:s");
-            $model->save();
+            $canProceed = true;
+
+            if($model->item != null)
+            {
+                $canProceed = !$model->item->isInActivePedidoReparacao();
+            }else
+            {
+                $canProceed = !$model->grupoItem->isInActivePedidoReparacao();
+            }
+
+
+            if($canProceed)
+            {
+                $model->status = PedidoAlocacao::STATUS_DEVOLVIDO;
+                $model->dataFim = date_format(date_create("now"), "Y-m-d H:i:s");
+                $model->save();
+            }
+            else
+            {
+                Yii::$app->session->setFlash("error", "Objeto está associado a um pedido de reparação ativo e por isso não pode ser devolvido");
+            }
         }
 
         return $this->redirect(['pedidoalocacao/view', 'id' => $id]);

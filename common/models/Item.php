@@ -20,6 +20,7 @@ use Yii;
  * @property Grupoitens[] $grupoItens
  * @property GruposItens_Item[] $grupositensitems
  * @property PedidoAlocacao[] $pedidoAlocacaos
+ * @property LinhaPedidoReparacao[] $linhaPedidoReparacaos
  * @property Site $site
  */
 class Item extends \yii\db\ActiveRecord
@@ -66,6 +67,21 @@ class Item extends \yii\db\ActiveRecord
         ];
     }
 
+    // Para a API
+    public function fields()
+    {
+        $fields = parent::fields();
+        unset($fields['categoria_id'], $fields['site_id']);
+        $fields['categoria'] = function ($model) {
+            return $this->categoria;
+        };
+        $fields['site'] = function ()
+        {
+            return $this->site;
+        };
+        return $fields;
+    }
+
     /**
      * Gets query for [[Categoria]].
      *
@@ -87,16 +103,6 @@ class Item extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[Grupoitens]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-//    public function getGrupoitens()
-//    {
-//        return $this->hasOne(Grupoitens::class, ['id' => 'grupoitens_id']);
-//    }
-
-    /**
      * Gets query for [[Grupositensitems]].
      *
      * @return \yii\db\ActiveQuery
@@ -107,6 +113,16 @@ class Item extends \yii\db\ActiveRecord
     }
 
     /**
+     * Gets query for [[LinhaPedidoReparacaos]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getLinhaPedidoReparacaos()
+    {
+        return $this->hasMany(LinhaPedidoReparacao::class, ['item_id' => 'id']);
+    }
+
+    /**
      * Gets query for [[PedidoAlocacaos]].
      *
      * @return \yii\db\ActiveQuery
@@ -114,6 +130,16 @@ class Item extends \yii\db\ActiveRecord
     public function getPedidoAlocacaos()
     {
         return $this->hasMany(PedidoAlocacao::class, ['item_id' => 'id']);
+    }
+
+    /**
+     * Gets query for [[Site]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSite()
+    {
+        return $this->hasOne(Site::class, ['id' => 'site_id']);
     }
 
     public function isInActivePedidoAlocacao()
@@ -140,14 +166,48 @@ class Item extends \yii\db\ActiveRecord
         return false;
     }
 
-    /**
-     * Gets query for [[Site]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getSite()
+    public function isInActivePedidoReparacao()
     {
-        return $this->hasOne(Site::class, ['id' => 'site_id']);
+        if($this->linhaPedidoReparacaos != null)
+        {
+            foreach ($this->linhaPedidoReparacaos as $linhaPedidoReparacao) {
+                if(in_array($linhaPedidoReparacao->pedido->status, [PedidoReparacao::STATUS_ABERTO, PedidoReparacao::STATUS_EM_REVISAO]))
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    public function isAlocatedToUser($userID)
+    {
+        if($this->isInActivePedidoAlocacao())
+        {
+            foreach ($this->pedidoAlocacaos as $pedidoAlocacao) {
+                if($pedidoAlocacao->status == PedidoAlocacao::STATUS_APROVADO && $pedidoAlocacao->requerente_id == $userID)
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    public function getDataAlocacaoBaseadoEmData($date)
+    {
+        if(count($this->pedidoAlocacaos) < 1)
+            return null;
+
+        $dataAlocacao = date("Y-m-d H:i:s", 0);
+        foreach ($this->pedidoAlocacaos as $pedidoAlocacao)
+        {
+            if($pedidoAlocacao->dataInicio != null)
+            {
+                if($pedidoAlocacao->dataInicio < date_create($date) && $pedidoAlocacao->dataInicio > $dataAlocacao)
+                {
+                    $dataAlocacao = $pedidoAlocacao->dataInicio;
+                }
+            }
+        }
+
+        return $dataAlocacao;
     }
 
     public function getStatusLabel()

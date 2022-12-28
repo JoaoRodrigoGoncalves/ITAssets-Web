@@ -33,7 +33,7 @@ use yii\helpers\Url;
                     ['label' => 'Itens', 'icon' => 'box', 'url' => '/item/index'],
                     ['label' => 'Grupos de Itens', 'icon' => 'boxes', 'url' => '/grupoitens/index'],
                     ['label' => 'Pedidos de Alocação', 'icon' => 'clipboard', 'url' => '/pedidoalocacao/index'],
-                    ['label' => 'Pedidos de Reparação', 'icon' => 'wrench', 'url' => '#'],
+                    ['label' => 'Pedidos de Reparação', 'icon' => 'wrench', 'url' => '/pedidoreparacao/index'],
                     ['label' => 'Utilizadores', 'icon' => 'users', 'url' => '/utilizador/index'],
                     ['label' => 'Locais', 'icon' => 'map-marker-alt', 'url' => '/site/index'],
                     ['label' => 'Categorias', 'icon' => 'stream', 'url' => '/categoria/index'],

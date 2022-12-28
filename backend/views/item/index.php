@@ -32,13 +32,18 @@ $this->params['breadcrumbs'][] = $this->title;
                     ],
                     [
                         'label' => 'Nº de Série',
-                        'value' => 'serialNumber'
+                        'format' => 'html',
+                        'value' => function($data)
+                        {
+                            return $data->serialNumber ?? "<i>Não Aplicável</i>";
+                        }
                     ],
                     [
                         'label' => 'Categoria',
+                        'format' => 'html',
                         'value' => function($data)
                         {
-                            return $data->categoria->nome;
+                            return $data->categoria->nome ?? "<i>Não Aplicável</i>";
                         }
                     ],
                     [

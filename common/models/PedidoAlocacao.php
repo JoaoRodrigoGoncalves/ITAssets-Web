@@ -98,23 +98,23 @@ class PedidoAlocacao extends \yii\db\ActiveRecord
     {
         switch($this->status)
         {
-            case 10:
+            case self::STATUS_ABERTO:
                 return "<span class='badge badge-primary'>Aberto</span>";
                 break;
 
-            case 9:
+            case self::STATUS_APROVADO:
                 return "<span class='badge badge-success'>Aprovado</span>";
                 break;
 
-            case 8:
+            case self::STATUS_NEGADO:
                 return "<span class='badge badge-danger'>Negado</span>";
                 break;
 
-            case 7:
+            case self::STATUS_DEVOLVIDO:
                 return "<span class='badge badge-info'>Devolvido</span>";
                 break;
 
-            case 0:
+            case self::STATUS_CANCELADO:
                 return "<span class='badge badge-secondary'>Cancelado</span>";
                 break;
 

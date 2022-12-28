@@ -14,6 +14,8 @@ use yii\web\Response;
 class UserController extends ActiveController
 {
 
+    public $modelClass = 'common\models\User';
+
     public function behaviors()
     {
         $behaviors = parent::behaviors();

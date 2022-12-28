@@ -69,7 +69,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="card-footer">
             <div class="float-right">
                 <?php if($model->status == PedidoAlocacao::STATUS_ABERTO): ?>
-                    <?= Html::a('Delete', ['cancel', 'id' => $model->id], ['class' => 'btn btn-danger', 'data-method' => 'post']) ?>
+                    <?= Html::a('Cancelar', ['cancel', 'id' => $model->id], ['class' => 'btn btn-danger', 'data-method' => 'post']) ?>
                 <?php endif; ?>
             </div>
         </div>

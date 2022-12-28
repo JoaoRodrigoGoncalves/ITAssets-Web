@@ -26,13 +26,14 @@ use yii\web\IdentityInterface;
  *
  * @property PedidoAlocacao[] $pedidosAlocacaoAsAprover
  * @property PedidoAlocacao[] $pedidosAlocacaoAsRequester
+ * @property PedidoReparacao[] $pedidosReparacaoAsAprover
+ * @property PedidoReparacao[] $pedidosReparacaoAsRequester
  */
 class User extends ActiveRecord implements IdentityInterface
 {
     const STATUS_DELETED = 0;
     const STATUS_INACTIVE = 9;
     const STATUS_ACTIVE = 10;
-
 
     /**
      * {@inheritdoc}
@@ -264,7 +265,7 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * Gets query for [[PedidoAlocacaos]].
+     * Gets query for [[PedidosAlocacaoAsAprover]].
      *
      * @return \yii\db\ActiveQuery
      */
@@ -274,12 +275,32 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * Gets query for [[PedidoAlocacaos0]].
+     * Gets query for [[PedidosAlocacaoAsRequester]].
      *
      * @return \yii\db\ActiveQuery
      */
     public function getPedidosAlocacaoAsRequester()
     {
         return $this->hasMany(PedidoAlocacao::class, ['requerente_id' => 'id']);
+    }
+
+    /**
+     * Gets query for [[PedidosReparacaoAsRequester]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPedidosReparacaoAsRequester()
+    {
+        return $this->hasMany(PedidoReparacao::class, ['requerente_id' => 'id']);
+    }
+
+    /**
+     * Gets query for [[PedidosReparacaoAsAprover]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPedidosReparacaoAsAprover()
+    {
+        return $this->hasMany(PedidoReparacao::class, ['responsavel_id' => 'id']);
     }
 }

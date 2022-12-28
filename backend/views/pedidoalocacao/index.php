@@ -10,7 +10,7 @@ use yii\grid\GridView;
 /** @var common\models\PedidoAlocacaoSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Pedidos Alocação';
+$this->title = 'Pedidos de Alocação';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="container mt-3">
@@ -46,6 +46,21 @@ $this->params['breadcrumbs'][] = $this->title;
                     [
                         'label' => 'Data Pedido',
                         'value' => 'dataPedido'
+                    ],
+                    [
+                        'label' => 'Item',
+                        'format' => 'html',
+                        'value' => function($data)
+                        {
+                            if($data->item_id != null)
+                            {
+                                return Html::a($data->item->nome, ['item/view', 'id' => $data->item->id]);
+                            }
+                            else
+                            {
+                                return Html::a($data->grupoItem->nome, ['grupoitens/view', 'id' => $data->grupoItem->id]);
+                            }
+                        }
                     ],
                     [
                         'label' => 'Requerente',
@@ -91,7 +106,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             {
                                 if($model->status == 10)
                                 {
-                                    return Html::a('<i class="fas fa-thumbs-up"></i>', ['pedidoalocacao/update', 'id' => $model->id], ['class' => 'btn btn-secondary']);
+                                    return Html::a('<i class="fas fa-reply"></i>', ['pedidoalocacao/update', 'id' => $model->id], ['class' => 'btn btn-secondary']);
                                 }
                                 return null;
                             }
