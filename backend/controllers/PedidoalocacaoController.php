@@ -163,7 +163,7 @@ class PedidoalocacaoController extends Controller
                     $model->aprovador_id = Yii::$app->user->id;
                     $model->dataInicio = date_format(date_create(), "Y-m-d H:i:s");
 
-                    if(@$model->save()) { // @ para cancelar warning de bug no PHP (Ver https://github.com/php/php-src/issues/9431) TODO: Validar que isto já foi resolvido
+                    if($model->save()) {
                         $model->cancelarPedidosAlocacaoAbertos();
                         return $this->redirect(['view', 'id' => $model->id]);
                     }
@@ -200,7 +200,7 @@ class PedidoalocacaoController extends Controller
         if ($this->request->isPost && $model->load($this->request->post())) {
             $model->aprovador_id = Yii::$app->user->id;
             $model->dataInicio = date_format(date_create(), "Y-m-d H:i:s");
-            @$model->save(); // @ para cancelar warning de bug no PHP (Ver https://github.com/php/php-src/issues/9431) TODO: Validar que isto já foi resolvido
+            $model->save();
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -230,7 +230,7 @@ class PedidoalocacaoController extends Controller
             {
                 $model->status = PedidoAlocacao::STATUS_DEVOLVIDO;
                 $model->dataFim = date_format(date_create("now"), "Y-m-d H:i:s");
-                @$model->save(); // @ para cancelar warning de bug no PHP (Ver https://github.com/php/php-src/issues/9431) TODO: Validar que isto já foi resolvido
+                $model->save();
             }
             else
             {

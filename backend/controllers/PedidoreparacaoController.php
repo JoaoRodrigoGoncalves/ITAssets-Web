@@ -5,7 +5,6 @@ namespace backend\controllers;
 use common\models\CustomTableRow;
 use common\models\Grupoitens;
 use common\models\Item;
-use common\models\LinhaDespesasReparacao;
 use common\models\LinhaPedidoReparacao;
 use common\models\PedidoAlocacao;
 use common\models\PedidoReparacao;
