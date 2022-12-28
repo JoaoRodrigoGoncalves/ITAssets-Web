@@ -17,7 +17,7 @@ class GrupoitensController  extends ActiveController
 
     public function behaviors()
     {
-        $behaviors = parent::behaviors();-
+        $behaviors = parent::behaviors();
 
         $behaviors['formats'] = [
             'class' => 'yii\filters\ContentNegotiator',

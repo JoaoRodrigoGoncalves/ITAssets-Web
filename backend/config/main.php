@@ -56,6 +56,7 @@ return [
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'api/user', 'pluralize' => false],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'api/item', 'pluralize' => false],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'api/pedidoalocacao', 'pluralize' => false],
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'api/grupoitens', 'pluralize' => false],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'api/sysinfo'],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'api/login'],
                 // Isto tem de ficar aqui em baixo porque o Yii2 é estúpido
