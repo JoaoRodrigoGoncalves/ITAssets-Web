@@ -106,7 +106,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             {
                                 if($model->status == 10)
                                 {
-                                    return Html::a('<i class="fas fa-thumbs-up"></i>', ['pedidoalocacao/update', 'id' => $model->id], ['class' => 'btn btn-secondary']);
+                                    return Html::a('<i class="fas fa-reply"></i>', ['pedidoalocacao/update', 'id' => $model->id], ['class' => 'btn btn-secondary']);
                                 }
                                 return null;
                             }

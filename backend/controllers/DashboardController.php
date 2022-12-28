@@ -74,8 +74,8 @@ class DashboardController extends Controller
                 // Como a $reparacoes está a devolver um ActiveRecord[] e não um PedidoReparacao[], não
                 // é possível aceder à associação das linhas de reparação diretamente
                 foreach (LinhaDespesasReparacao::findAll(['pedidoReparacao_id' => $reparacao->id]) as $despesas) {
-                    $dadosGrafico[$data] += $despesas->preco;
-                    $totalDespesas += $despesas->preco;
+                    $dadosGrafico[$data] += $despesas->preco * $despesas->quantidade;
+                    $totalDespesas += $despesas->preco * $despesas->quantidade;
                 }
             }
         }

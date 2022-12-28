@@ -49,18 +49,26 @@ $this->params['breadcrumbs'][] = $this->title;
                     <div class="card-body">
                         <table class="table table-borderless">
                             <tbody>
-                            <tr>
-                                <td><b>Data de Início:</b></td>
-                                <td><?= $model->dataInicio ?? "<i>Não Aplicável</i>"?></td>
-                            </tr>
-                            <tr>
-                                <td><b>Data de Conclusão:</b></td>
-                                <td><?= $model->dataFim ?? "<i>Não Aplicável</i>" ?></td>
-                            </tr>
-                            <tr>
-                                <td style="width: 1%; white-space: nowrap;"><b>Descrição do problema:</b></td>
-                                <td><?= $model->descricaoProblema ?? "<i>Não Aplicável</i>" ?></td>
-                            </tr>
+                                <tr>
+                                    <td><b>Data de Início:</b></td>
+                                    <td><?= $model->dataInicio ?? "<i>Não Aplicável</i>"?></td>
+                                </tr>
+                                <tr>
+                                    <td><b>Data de Conclusão:</b></td>
+                                    <td><?= $model->dataFim ?? "<i>Não Aplicável</i>" ?></td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 1%; white-space: nowrap;"><b>Descrição do problema:</b></td>
+                                    <td><?= $model->descricaoProblema ?? "<i>Não Aplicável</i>" ?></td>
+                                </tr>
+                                <?php if($model->status == PedidoReparacao::STATUS_CONCLUIDO): ?>
+                                    <tr>
+                                        <td style="width: 1%; white-space: nowrap;"><b>Detalhes da reparação:</b></td>
+                                        <td>
+                                            <?= $model->respostaObs ?? "<i>Nada foi indicado pelo responsável.</i>" ?>
+                                        </td>
+                                    </tr>
+                                <?php endif; ?>
                             </tbody>
                         </table>
                     </div>
