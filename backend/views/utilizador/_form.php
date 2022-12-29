@@ -15,7 +15,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
 
-    <?=  $form->field($model,'role')->dropDownList($roles)?>
+    <?=  $form->field($model,'role')->dropDownList($roles) ?>
 
     <?= Html::submitButton('Guardar', ['class' => 'btn btn-success btn-lg btn-block']) ?>
 

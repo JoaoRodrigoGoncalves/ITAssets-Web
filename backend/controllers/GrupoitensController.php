@@ -181,10 +181,10 @@ class GrupoitensController extends Controller
     {
         $model = $this->findModel($id);
 
-        if (PedidoAlocacao::find()->where(['grupoItem_id' => $id, 'status' => PedidoAlocacao::STATUS_APROVADO])->count() > 0)
+        // Verificar se o grupo está alocado ou em reparação
+        if ($model->isinActivePedidoAlocacao() || $model->isInActivePedidoReparacao())
         {
-            //caso o exista pedidos de alocacao
-            Yii::$app->session->setFlash("error", "Não é possivel eliminar o grupo visto que o mesmo esta associado a um Pedido de Alocação ativo");
+            Yii::$app->session->setFlash("error", "Não é possivel eliminar o grupo visto que o mesmo esta associado a um Pedido de Alocação ou Reparação ativo");
         }
         else
         {

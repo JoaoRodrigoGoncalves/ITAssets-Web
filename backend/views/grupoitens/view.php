@@ -1,5 +1,6 @@
 <?php
 
+use chillerlan\QRCode\QRCode;
 use common\models\PedidoAlocacao;
 use yii\grid\GridView;
 use yii\helpers\Html;
@@ -19,14 +20,26 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="container mt-3">
         <div class="card">
             <div class="card-header bg-info">
-                <h2>Detalhes do Grupo Itens Nº<?=$model->id?></h2>
+                <h2>Grupo Itens "<?=$model->nome?>"</h2>
             </div>
             <div class="card-body">
-                <div>
-                    <h4>Nome do Grupo: <?= $model->nome ?></h4>
-                    Notas:
-                    <br>
-                    <div style="margin-left:10px"><?= $model->notas ?></div>
+                <div class="row no-gutters row-bordered">
+                    <div class="d-flex col-md align-items-center">
+                        <div class="card-body d-block text-body">
+                            <h5>
+                                <div class="font-weight-bold mb-4">Alocado? <span class="text-muted font-weight-normal"> <?= $model->isinActivePedidoAlocacao() ? "Sim" : "Não" ?></span></div>
+                                <div class="font-weight-bold mb-4">Em Reparação? <span class="text-muted font-weight-normal"> <?= $model->isInActivePedidoReparacao() ? "Sim" : "Não" ?></span></div>
+                                <div class="font-weight-bold mb-0">Observações: <span class="text-muted font-weight-normal"><?= $model->notas ?? "<i>Nada a Apresentar.</i>"?></span></div>
+                            </h5>
+                        </div>
+                    </div>
+                    <div class="d-flex col-md align-items-center"></div>
+                    <div class="d-flex col-md align-items-center">
+                        <div class="card-body d-block text-body text-center">
+                            <img src="<?= (new QRCode())->render("GRUPO_" . $model->id)?>">
+                            <div class="font-weight-bold mb-0">Número de Série: <span class="text-muted font-weight-normal"> <?= $item->serialNumber ?? "<i>Sem Número de Série</i>"?></span></div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="card-footer">

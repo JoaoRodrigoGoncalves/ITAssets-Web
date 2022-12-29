@@ -27,9 +27,13 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="d-flex col-md align-items-center">
                     <div class="card-body d-block text-body">
                         <h5>
-                            <div class="font-weight-bold mb-4">Item: <span class="text-muted font-weight-normal"><?= $item->nome?></span></div>
                             <div class="font-weight-bold mb-4">Categoria: <span class="text-muted font-weight-normal"> <?= $item->categoria->nome ?? "<i>Sem categoria</i>"?></span></div>
-                            <div class="font-weight-bold mb-0">Observações: <span class="text-muted font-weight-normal"><?= $item->notas ?? "<i>Não aplicável</i>"?></span></div>
+                            <div class="font-weight-bold mb-4">Em Grupo de Itens? <span class="text-muted font-weight-normal"> <?= $item->isInActiveItemsGroup() ? "Sim" : "Não"?></span></div>
+                            <?php if(!$item->isInActiveItemsGroup()): ?>
+                                <div class="font-weight-bold mb-4">Alocado? <span class="text-muted font-weight-normal"> <?= $item->isInActivePedidoAlocacao() ? "Sim" : "Não"?></span></div>
+                                <div class="font-weight-bold mb-4">Em Reparação? <span class="text-muted font-weight-normal"> <?= $item->isInActivePedidoReparacao() ? "Sim" : "Não"?></span></div>
+                            <?php endif; ?>
+                            <div class="font-weight-bold mb-0">Observações: <span class="text-muted font-weight-normal"><?= $item->notas ?? "<i>Nada a Apresentar.</i>"?></span></div>
                         </h5>
                     </div>
                 </div>

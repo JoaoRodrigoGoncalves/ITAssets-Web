@@ -101,7 +101,8 @@ class UtilizadorController extends Controller
         // Carregar os valores atuais do utilizador para o modelo
         $model->setAttributes($user->attributes);
         // Carregar a role do utilizador, visto que não é um parametro padrão de User
-        $model->role = $user->getRole();
+        // Carregamos o nome e não o objeto para que a dropdown mostre o role atual selecionado
+        $model->role = $user->getRole()->name;
 
 
         $roles = array();

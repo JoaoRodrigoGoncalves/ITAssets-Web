@@ -94,12 +94,6 @@ class Utilizador extends Model
      */
     public function updateUser($id): bool
     {
-        if(!$this->validate())
-        {
-            Yii::$app->session->setFlash("error", "Validação falhou");
-            return false;
-        }
-
         $user = User::findOne(['id' => $id]);
         $user->username = $this->username;
         $user->email = $this->email;
@@ -113,6 +107,11 @@ class Utilizador extends Model
             $auth->assign(($auth->getRole($this->role)),$id);
             return true;
         }
+        else
+        {
+            $this->addErrors($user->getErrors());
+        }
+        Yii::$app->session->setFlash("error", "Validação falhou");
         return false;
     }
 }
