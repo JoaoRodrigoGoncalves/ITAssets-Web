@@ -50,7 +50,7 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'obs')->textarea(['rows' => 6]) ?>
 
     <div class="form-group">
-        <?= Html::submitButton('Alocar', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton('Alocar', ['class' => 'btn btn-success btn-lg btn-block']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

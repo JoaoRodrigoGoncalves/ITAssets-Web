@@ -19,7 +19,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="card">
         <div class="card-header">
             <div class="float-right">
-                <?= Html::a('<i class="fas fa-stream"></i> Registar', ['create'], ['class' => 'btn btn-primary']) ?>
+                <?= Html::a('<i class="fas fa-plus"></i> Registar', ['create'], ['class' => 'btn btn-primary']) ?>
             </div>
         </div>
         <div class="card-body">

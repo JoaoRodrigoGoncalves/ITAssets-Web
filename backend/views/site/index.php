@@ -18,7 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <br>
     <div class="card">
         <div class="card-header">
-            <?= Html::a('<i class="fas fa-location"></i> Registar', ['create'], ['class' => 'btn btn-primary']) ?>
+            <?= Html::a('<i class="fas fa-plus"></i> Registar', ['create'], ['class' => 'btn btn-primary']) ?>
             <div class="float-right">
                 <?php echo $this->render('_search', ['model' => $searchModel]); ?>
             </div>
