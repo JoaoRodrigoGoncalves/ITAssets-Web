@@ -122,6 +122,7 @@ class PedidoreparacaoController extends Controller
             // Verificar se o utilizador tem algum item associado
             if($requerente->getPedidosAlocacaoAsRequester()->where(['status' => PedidoAlocacao::STATUS_APROVADO])->count() > 0)
             {
+                //TODO: Verificar se existe algum item associcado ao utilizador que ainda não esteja num pedido de reparação. Se sim, continuar
                 if($model->save())
                 {
                     // Não há notificação aqui, apenas quando os objetos são adicionados às linhas
@@ -146,6 +147,7 @@ class PedidoreparacaoController extends Controller
         {
             $model->responsavel_id = Yii::$app->user->id;
             $model->status = PedidoReparacao::STATUS_EM_REVISAO;
+            $model->dataInicio = date_format(date_create(), "Y-m-d H:i:s");
             $model->save();
 
             Notificacoes::addNotification(
@@ -227,6 +229,7 @@ class PedidoreparacaoController extends Controller
 
                         // Trocar o status do default de STATUS_EM_PREPARACAO para STATUS_EM_REVISAO visto que isto é uma ação administrativa
                         $model->status = PedidoReparacao::STATUS_EM_REVISAO;
+                        $model->dataInicio = date_format(date_create(), "Y-m-d H:i:s");
                         $model->responsavel_id = Yii::$app->user->id;
                         $model->save();
 
@@ -265,6 +268,7 @@ class PedidoreparacaoController extends Controller
             if ($this->request->isPost && $model->load($this->request->post())) {
 
                 $model->status = PedidoReparacao::STATUS_CONCLUIDO;
+                $model->dataFim = date_format(date_create(), "Y-m-d H:i:s");
                 if($model->save())
                 {
                     Notificacoes::addNotification(
@@ -289,6 +293,7 @@ class PedidoreparacaoController extends Controller
         {
             // Não é necessário notificar aqui porque não havia nenhum item associado
             $model->status = PedidoReparacao::STATUS_CANCELADO;
+            $model->dataFim = date_format(date_create(), "Y-m-d H:i:s");
             $model->save();
         }
         else

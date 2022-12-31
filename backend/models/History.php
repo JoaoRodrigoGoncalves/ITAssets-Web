@@ -22,7 +22,6 @@ class History
         $aux_reparacao = PedidoReparacao::find()->innerJoin('linha_pedido_reparacao', 'linha_pedido_reparacao.pedido_id = pedido_reparacao.id') -> where(['item_id' => $itemId,])-> all();
         $reparacao = $this->processPedidoReparacao(PedidoReparacao::findAll(['id' => $aux_reparacao]));
 
-        //TODO: Escrever algo deste genero quando for para implementar o ITASSETS-53 (Isto é código não funcional, apenas exemplo)
         $eventos = array_merge($eventos, $reparacao);
 
         return new ArrayDataProvider([
@@ -39,7 +38,6 @@ class History
         $aux_reparacao = PedidoReparacao::find()->innerJoin('linha_pedido_reparacao', 'linha_pedido_reparacao.pedido_id = pedido_reparacao.id') -> where(['grupo_id' => $groupID,])-> all();
         $reparacao = $this->processPedidoReparacao(PedidoReparacao::findAll(['id' => $aux_reparacao]));
 
-        //TODO: Escrever algo deste genero quando for para implementar o ITASSETS-53 (Isto é código não funcional, apenas exemplo)
         $eventos = array_merge($eventos, $reparacao);
 
         return new ArrayDataProvider([
@@ -131,17 +129,6 @@ class History
             $reparacao[] = $aux;
 
             switch($pedido->status) {
-                case PedidoReparacao::STATUS_EM_REVISAO:
-                    $aux = new History();
-                    $aux->data = $pedido->dataPedido;
-                    $aux->idPedido = $pedido->id;
-                    $aux->status = PedidoReparacao::STATUS_EM_REVISAO;
-                    $aux->message = "O " . Html::a("Pedido de Reparação Nº{$pedido->id}", ['pedidoreparacao/view', 'id' => "{$pedido->id}"]) .
-                        " foi marcado em revisão por " .
-                        Html::a($pedido->responsavel->username, ['utilizador/view', 'id' => $pedido->responsavel_id]) . ".";
-                    $reparacao[] = $aux;
-                    break;
-
                 case PedidoReparacao::STATUS_CONCLUIDO:
                     $aux = new History();
                     $aux->data = $pedido->dataFim;
@@ -149,6 +136,17 @@ class History
                     $aux->status = PedidoReparacao::STATUS_CONCLUIDO;
                     $aux->message = "O item foi marcado como concluído no " .
                         Html::a("Pedido de Reparação Nº{$pedido->id}", ['pedidoreparacao/view', 'id' => "{$pedido->id}"]);
+                    $reparacao[] = $aux;
+                    //Fall through intencional
+
+                case PedidoReparacao::STATUS_EM_REVISAO:
+                    $aux = new History();
+                    $aux->data = $pedido->dataInicio;
+                    $aux->idPedido = $pedido->id;
+                    $aux->status = PedidoReparacao::STATUS_EM_REVISAO;
+                    $aux->message = "O " . Html::a("Pedido de Reparação Nº{$pedido->id}", ['pedidoreparacao/view', 'id' => "{$pedido->id}"]) .
+                        " foi marcado em revisão por " .
+                        Html::a($pedido->responsavel->username, ['utilizador/view', 'id' => $pedido->responsavel_id]) . ".";
                     $reparacao[] = $aux;
                     break;
 

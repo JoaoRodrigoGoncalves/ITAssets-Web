@@ -31,7 +31,7 @@ class NotificacaoController extends \yii\web\Controller
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => Notificacoes::find()
+            'query' => Notificacoes::find()->where(['user_id' => Yii::$app->user->id])
         ]);
 
         $dataProvider->sort->defaultOrder = ['id' => SORT_DESC];

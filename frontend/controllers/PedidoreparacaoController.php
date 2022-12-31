@@ -204,6 +204,7 @@ class PedidoreparacaoController extends Controller
         if($model->requerente_id == Yii::$app->user->id && $model->status == PedidoReparacao::STATUS_ABERTO)
         {
             $model->status = PedidoReparacao::STATUS_CANCELADO;
+            $model->dataFim = date_format(date_create(), "Y-m-d H:i:s");
             $model->save();
         }
 

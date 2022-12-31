@@ -11,7 +11,6 @@ use common\models\Site;
  */
 class SiteSearch extends Site
 {
-    //TODO: Mudar a estrutura disto para fazer sentido face ao que está implementado na página
     /**
      * {@inheritdoc}
      */

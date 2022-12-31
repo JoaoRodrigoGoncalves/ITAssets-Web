@@ -90,13 +90,12 @@ class SettingsController extends Controller
             {
                 $user->save();
                 Yii::$app->session->setFlash('success', 'Dados atualizados com sucesso');
-                $this->redirect(Url::to(['settings/index']));
             }
             else
             {
-                // TODO: Erro validação falhou. Como passar para lá devolta?
-                // Talvez usar o addError ao $user e renderizar a index mesmo no /save
+                Yii::$app->session->setFlash('error', 'Erro de validação');
             }
+            $this->redirect(Url::to(['settings/index']));
         }
         else
         {

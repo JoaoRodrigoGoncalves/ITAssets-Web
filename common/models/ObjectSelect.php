@@ -99,8 +99,6 @@ class ObjectSelect
             };
         }
 
-        //TODO: Guardar o "SendBack" em algum lado para enviar de volta
-
         return new ArrayDataProvider([
             'allModels' => $rows,
 //            'pagination' => [
