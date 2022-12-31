@@ -22,7 +22,9 @@
         "kartik-v/yii2-widget-select2": "dev-master",
         "kartik-v/yii2-widget-datepicker": "dev-master",
         "chillerlan/php-qrcode": "^4.3",
-        "kartik-v/yii2-number": "dev-master"
+        "kartik-v/yii2-number": "dev-master",
+        "php-mqtt/client": "^1.7",
+        "nesbot/carbon": "^2.64"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

@@ -192,7 +192,6 @@ class GrupoitensController extends Controller
             $model->status= Grupoitens::STATUS_DELETED;
             if($model->save())
             {
-
                 PedidoAlocacao::findOne(['grupoItem_id' => $id])?->cancelarPedidosAlocacaoAbertos();
                 Yii::$app->session->setFlash("success", "Grupo foi eliminado com sucesso");
             }

@@ -5,12 +5,14 @@ namespace backend\controllers;
 use common\models\CustomTableRow;
 use common\models\Grupoitens;
 use common\models\Item;
+use common\models\Notificacoes;
 use common\models\PedidoAlocacao;
 use common\models\PedidoAlocacaoSearch;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
+use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\ServerErrorHttpException;
@@ -165,6 +167,12 @@ class PedidoalocacaoController extends Controller
 
                     if($model->save()) {
                         $model->cancelarPedidosAlocacaoAbertos();
+                        Notificacoes::addNotification(
+                            $model->requerente_id,
+                            'O objeto "' . $model->getObjectName() . '" foi-lhe atribuído.',
+                            Url::to(['pedidoalocacao/view', 'id' => $model->id])
+                        );
+
                         return $this->redirect(['view', 'id' => $model->id]);
                     }
                     else
@@ -200,7 +208,26 @@ class PedidoalocacaoController extends Controller
         if ($this->request->isPost && $model->load($this->request->post())) {
             $model->aprovador_id = Yii::$app->user->id;
             $model->dataInicio = date_format(date_create(), "Y-m-d H:i:s");
-            $model->save();
+            if($model->save())
+            {
+
+                $message = null;
+
+                if($model->status == PedidoAlocacao::STATUS_APROVADO)
+                {
+                    $message = "O seu pedido por " . $model->getObjectName() . " foi aprovado.";
+                }
+                else
+                {
+                    $message = "O seu pedido por " . $model->getObjectName() . " foi negado.";
+                }
+
+                Notificacoes::addNotification(
+                    $model->requerente_id,
+                    $message,
+                    Url::to(['pedidoalocacao/view', 'id' => $model->id])
+                );
+            }
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -230,7 +257,14 @@ class PedidoalocacaoController extends Controller
             {
                 $model->status = PedidoAlocacao::STATUS_DEVOLVIDO;
                 $model->dataFim = date_format(date_create("now"), "Y-m-d H:i:s");
-                $model->save();
+                if($model->save())
+                {
+                    Notificacoes::addNotification(
+                        $model->requerente_id,
+                        'O objeto ' . $model->getObjectName() . " foi marcado como devolvido.",
+                        Url::to(['pedidoalocacao/view', 'id' => $model->id])
+                    );
+                }
             }
             else
             {

@@ -6,6 +6,7 @@ use common\models\CustomTableRow;
 use common\models\Grupoitens;
 use common\models\Item;
 use common\models\LinhaPedidoReparacao;
+use common\models\Notificacoes;
 use common\models\PedidoAlocacao;
 use common\models\PedidoReparacao;
 use common\models\PedidoReparacaoSearch;
@@ -13,6 +14,7 @@ use common\models\User;
 use Yii;
 use yii\data\ArrayDataProvider;
 use yii\filters\AccessControl;
+use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -122,6 +124,7 @@ class PedidoreparacaoController extends Controller
             {
                 if($model->save())
                 {
+                    // Não há notificação aqui, apenas quando os objetos são adicionados às linhas
                     return $this->redirect(['pedidoreparacao/linhas', 'id' => $model->id]);
                 }
             }
@@ -144,6 +147,12 @@ class PedidoreparacaoController extends Controller
             $model->responsavel_id = Yii::$app->user->id;
             $model->status = PedidoReparacao::STATUS_EM_REVISAO;
             $model->save();
+
+            Notificacoes::addNotification(
+                $model->requerente_id,
+                'O estado do seu Pedido de Reparação Nº' . $model->id . ' foi atualizado.',
+                Url::to(['pedidoreparacao/view', 'id' => $model->id])
+            );
         }
         else
         {
@@ -220,6 +229,12 @@ class PedidoreparacaoController extends Controller
                         $model->status = PedidoReparacao::STATUS_EM_REVISAO;
                         $model->responsavel_id = Yii::$app->user->id;
                         $model->save();
+
+                        Notificacoes::addNotification(
+                            $model->requerente_id,
+                            'Um Pedido de Reparação com Nº' . $model->id . ' foi criado em seu nome.',
+                            Url::to(['pedidoreparacao/view', 'id' => $model->id])
+                        );
                     }
                     return $this->redirect(['view', 'id' => $model->id]);
                 }
@@ -252,6 +267,11 @@ class PedidoreparacaoController extends Controller
                 $model->status = PedidoReparacao::STATUS_CONCLUIDO;
                 if($model->save())
                 {
+                    Notificacoes::addNotification(
+                        $model->requerente_id,
+                        'O estado do Pedido de Reparação Nº' . $model->id . ' foi atualizado.',
+                        Url::to(['pedidoreparacao/view', 'id' => $model->id])
+                    );
                     return $this->redirect(['view', 'id' => $model->id]);
                 }
             }
@@ -267,6 +287,7 @@ class PedidoreparacaoController extends Controller
         $model = $this->findModel($id);
         if($model->status == PedidoReparacao::STATUS_EM_PREPARACAO)
         {
+            // Não é necessário notificar aqui porque não havia nenhum item associado
             $model->status = PedidoReparacao::STATUS_CANCELADO;
             $model->save();
         }

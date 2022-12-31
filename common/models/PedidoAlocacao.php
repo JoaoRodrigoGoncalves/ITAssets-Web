@@ -3,6 +3,7 @@
 namespace common\models;
 
 use Yii;
+use yii\helpers\Url;
 
 /**
  * This is the model class for table "pedido_alocacao".
@@ -130,12 +131,41 @@ class PedidoAlocacao extends \yii\db\ActiveRecord
     public function cancelarPedidosAlocacaoAbertos()
     {
         /**
-         * Atualizar todos os pedidos para "Negado" (8) e adicionar uma resposta padrão
+         * Atualizar todos os pedidos para "Negado" (8), adicionar uma resposta padrão e notificar
          */
-        self::updateAll(
-            ['status' => 8, 'obsResposta' => 'Item não está atualmente disponível.', 'aprovador_id' => $this->aprovador_id],
-            ['status' => 10, 'item_id' => $this->item_id, 'grupoItem_id' => $this->grupoItem_id]
-        );
+        $pedidos = PedidoAlocacao::findAll(['status' => PedidoAlocacao::STATUS_ABERTO, 'item_id' => $this->item_id, 'grupoItem_id' => $this->grupoItem_id]);
+        foreach ($pedidos as $pedido) {
+            $pedido->status = PedidoAlocacao::STATUS_NEGADO;
+            $pedido->obsResposta = 'Item não está atualmente disponível.';
+            $pedido->aprovador_id = $this->aprovador_id;
+            if($pedido->save())
+            {
+                Notificacoes::addNotification(
+                    $pedido->requerente_id,
+                    "O Pedido de Alocação Nº" . $pedido->id . " foi atualizado.",
+                    Url::to(['pedidoalocacao/view', 'id' => $pedido->id])
+                );
+            }
+        }
+    }
+
+    /**
+     * Utility para ir buscar o nome do objeto e não ser preciso
+     * estar constantemente a fazer a mesma verificação
+    */
+    public function getObjectName()
+    {
+        if($this->item != null)
+        {
+            return $this->item->nome;
+        }
+
+        if($this->grupoItem != null)
+        {
+            return $this->grupoItem->nome;
+        }
+
+        return null;
     }
 
     /**

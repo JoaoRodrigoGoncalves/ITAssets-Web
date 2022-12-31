@@ -1,5 +1,7 @@
 <?php
 
+use Carbon\Carbon;
+use common\models\Notificacoes;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
@@ -50,30 +52,44 @@ use yii\helpers\Url;
         </li>
 
         <!-- Notifications Dropdown Menu -->
+        <?php $notificacoes_nao_lidas = Notificacoes::find()->where(['user_id' => Yii::$app->user->id, 'read' => false])->orderBy(['id' => SORT_DESC])->all(); ?>
         <li class="nav-item dropdown">
             <a class="nav-link" data-toggle="dropdown" href="#">
                 <i class="far fa-bell"></i>
-                <span class="badge badge-warning navbar-badge">15</span>
+                <?php if(count($notificacoes_nao_lidas) > 0): ?>
+                    <span class="badge badge-warning navbar-badge" id="badge-num-notifications"><?= count($notificacoes_nao_lidas) ?></span>
+                <?php endif; ?>
             </a>
-            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                <span class="dropdown-header">15 Notifications</span>
+            <div class="dropdown-menu dropdown-menu-xl dropdown-menu-right">
+                <span class="dropdown-header"><?= count($notificacoes_nao_lidas) . ngettext(" Nova Notificação", " Novas Notificações", count($notificacoes_nao_lidas)) ?></span>
                 <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item">
-                    <i class="fas fa-envelope mr-2"></i> 4 new messages
-                    <span class="float-right text-muted text-sm">3 mins</span>
-                </a>
-                <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item">
-                    <i class="fas fa-users mr-2"></i> 8 friend requests
-                    <span class="float-right text-muted text-sm">12 hours</span>
-                </a>
-                <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item">
-                    <i class="fas fa-file mr-2"></i> 3 new reports
-                    <span class="float-right text-muted text-sm">2 days</span>
-                </a>
-                <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
+                <?php if(count($notificacoes_nao_lidas) > 0): ?>
+                    <?=
+                        Html::a('<i class="fas fa-check"></i> Marcar como lidas',FALSE, [
+                        'onclick'=>"
+                            $.ajax({
+                            type: 'POST',
+                            url:  '/notificacao/marcarlido',
+                        
+                            success: function(response) {
+                                $('#badge-num-notifications').remove();
+                            }
+                        
+                            });
+                            return false;",
+                        'class' => ['dropdown-header']
+                        ]);
+                    ?>
+                    <div class="dropdown-divider"></div>
+                <?php endif; ?>
+                <?php foreach ($notificacoes_nao_lidas as $notificacao): ?>
+                    <a href="<?= $notificacao->link ?? '#' ?>" class="dropdown-item">
+                        <?= $notificacao->message ?>
+                        <span class="float-right text-muted text-sm"><?= Carbon::parse($notificacao->datetime)->locale('pt_PT')->diffForHumans() ?></span>
+                    </a>
+                    <div class="dropdown-divider"></div>
+                <?php endforeach; ?>
+                <a href="<?= Url::to(['notificacao/index']) ?>" class="dropdown-item dropdown-footer">Ver Tudo</a>
             </div>
         </li>
         <li class="nav-item">
