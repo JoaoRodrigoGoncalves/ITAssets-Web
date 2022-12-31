@@ -12,7 +12,7 @@ $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' 
 $this->params['breadcrumbs'][] = 'Update';
 ?>
 <div class="container mt-2">
-    <h2>Edição de Categorias</h2>
+    <h2>Edição da Categoria: <?=$model->nome?></h2>
     <br>
     <div class="card">
         <div class="card-body">

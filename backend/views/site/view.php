@@ -14,7 +14,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="container flex-grow-1 container-p-y mt-3">
     <div class="card">
         <div class="card-header bg-info">
-            <h2><?= $this->title ?></h2>
+            <h2>Local "<?= $this->title ?>"</h2>
         </div>
         <div class="card-body">
             <?= DetailView::widget([
@@ -41,7 +41,7 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
         <div class="card-footer">
             <div class="float-right">
-                <?= Html::a('<i class="fas fa-pencil"></i>', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+                <?= Html::a('<i class="fas fa-pencil"></i>', ['update', 'id' => $model->id], ['class' => 'btn btn-warning text-white']) ?>
                 <?= Html::a('<i class="fas fa-trash"></i>', ['delete', 'id' => $model->id], [
                     'class' => 'btn btn-danger',
                     'data' => [

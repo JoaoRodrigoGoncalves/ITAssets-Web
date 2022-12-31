@@ -17,27 +17,30 @@ $this->params['breadcrumbs'][] = ['label' => 'Pedido Reparação', 'url' => ['in
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
-<h1><?= $this->title ?></h1>
-<div class="card m-5">
-    <div class="card-body">
-        <?php $form = ActiveForm::begin(); ?>
+<div class="container mt-3">
+    <h2><?= $this->title ?></h2>
+    <br>
+    <div class="card">
+        <div class="card-body">
+            <?php $form = ActiveForm::begin(); ?>
 
-        <?php
-        $array_users = ArrayHelper::map(User::find()->where(['status' => User::STATUS_ACTIVE])->orderBy('username')->all(), 'id', function($userModel)
-        {
-            return $userModel['username'] . " (" . $userModel['email'] . ")";
-        });
-        ?>
+            <?php
+            $array_users = ArrayHelper::map(User::find()->where(['status' => User::STATUS_ACTIVE])->orderBy('username')->all(), 'id', function($userModel)
+            {
+                return $userModel['username'] . " (" . $userModel['email'] . ")";
+            });
+            ?>
 
-        <?= $form->field($model, 'requerente_id')->dropDownList($array_users, ['prompt' => '- Selecione um utilizador -']) ?>
+            <?= $form->field($model, 'requerente_id')->dropDownList($array_users, ['prompt' => '- Selecione um utilizador -']) ?>
 
-        <?= $form->field($model, 'descricaoProblema')->textarea(['rows' => 6]) ?>
-    </div>
-
-    <div class="card-footer">
-        <div class="form-group">
-            <?= Html::submitButton('Continuar&nbsp;&nbsp;<i class="fa fa-arrow-alt-circle-right"></i>', ['class' => 'btn btn-success float-right']) ?>
+            <?= $form->field($model, 'descricaoProblema')->textarea(['rows' => 6]) ?>
         </div>
-        <?php ActiveForm::end(); ?>
+
+        <div class="card-footer">
+            <div class="form-group">
+                <?= Html::submitButton('Continuar&nbsp;&nbsp;<i class="fa fa-arrow-alt-circle-right"></i>', ['class' => 'btn btn-success float-right']) ?>
+            </div>
+            <?php ActiveForm::end(); ?>
+        </div>
     </div>
 </div>

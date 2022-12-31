@@ -20,7 +20,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="card-header">
             <div class="row">
                 <div class="col-2">
-                    <?= Html::a('<i class="fas fa-plus"></i> Nova Reparação', ['create'], ['class' => 'btn btn-success w-100 mb-2']) ?>
+                    <?= Html::a('<i class="fas fa-plus"></i> Reparação', ['create'], ['class' => 'btn btn-success w-100 mb-2']) ?>
                     <a class="btn btn-primary w-100" data-toggle="collapse" href="#filterCollapse" role="button" aria-expanded="false" aria-controls="filterCollapse">
                         Filtros
                     </a>

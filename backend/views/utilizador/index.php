@@ -18,7 +18,7 @@ $this->title = "Gestão de Utilizadores";
     <br>
     <div class="card">
         <div class="card-header">
-            <?= Html::a('<i class="fas fa-user-plus"></i> Registar', ['create'], ['class' => 'btn btn-primary float-right']) ?>
+            <?= Html::a('<i class="fas fa-plus"></i> Registar', ['create'], ['class' => 'btn btn-primary float-right']) ?>
         </div>
         <div class="card-body">
             <?= GridView::widget([

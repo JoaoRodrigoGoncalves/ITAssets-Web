@@ -20,7 +20,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="container flex-grow-1 container-p-y mt-3">
     <div class="card">
         <div class="card-header bg-info">
-            <h2><?= Html::encode($this->title)?></h2>
+            <h2>Item "<?= Html::encode($this->title) ?>"</h2>
         </div>
         <div class="card-body">
             <div class="row no-gutters row-bordered">

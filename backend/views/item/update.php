@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = 'Update';
 ?>
 
 <div class="container mt-2">
-    <h2>Edição de Itens</h2>
+    <h2>Edição do Item: <?=$item->nome?></h2>
     <br>
     <div class="card">
         <div class="card-body">
