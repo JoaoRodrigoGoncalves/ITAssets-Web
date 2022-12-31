@@ -36,7 +36,7 @@ class GrupoitensController  extends ActiveController
     public function actions()
     {
         $actions = parent::actions();
-        unset($actions['delete']);
+        unset($actions['delete'], $actions['index']);
         return $actions;
     }
 
@@ -66,12 +66,18 @@ class GrupoitensController  extends ActiveController
         }
     }
 
+    public function actionIndex()
+    {
+        $this->checkAccess('index');
+        return Grupoitens::findAll(['status' => Grupoitens::STATUS_ACTIVE]);
+    }
+
     public function actionDelete($id)
     {
         $model = Grupoitens::findOne(['id' => $id]);
         if($model != null)
         {
-            $model->status = 0;
+            $model->status = Grupoitens::STATUS_DELETED;
             $model->save();
         }
         else

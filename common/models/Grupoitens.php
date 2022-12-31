@@ -58,6 +58,16 @@ class Grupoitens extends ActiveRecord
         ];
     }
 
+    public function fields()
+    {
+        $fields = parent::fields();
+        $fields['itens'] = function ($model) {
+            return $this->items;
+        };
+        return $fields;
+    }
+
+
     /**
      * Gets query for [[Grupositensitems]].
      *
