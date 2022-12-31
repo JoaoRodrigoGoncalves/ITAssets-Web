@@ -3,12 +3,14 @@
 namespace backend\controllers;
 
 use backend\models\History;
+use common\models\CustomTableRow;
 use common\models\Grupoitens;
 use common\models\GruposItens_Item;
 use common\models\Item;
 use common\models\PedidoAlocacao;
 use Yii;
 use yii\data\ActiveDataProvider;
+use yii\data\ArrayDataProvider;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
@@ -101,39 +103,42 @@ class GrupoitensController extends Controller
     public function actionCreate()
     {
         $model = new Grupoitens();
-
-        /* Critétios para os itens que pode sem apresentados para adicionar a um grupo:
-
-            1 - Não pode fazer parte de outro grupo
-            2 - Não pode estar alocado a um utilizador
-            3 - Pode ter sido alocado anteriormente ou estar num pedido pendente
-                    Pode ter sido ABERTO, NEGADO, DEVOLVIDO, CANCELADO.
-                    Não pode estar em APROVADO
-
-        */
-
-        $itens = array();
-        foreach (Item::findAll(['status' => 10]) as $item) {
-            if(!$item->isInActivePedidoAlocacao() && !$item->isInActiveItemsGroup())
-                $itens[] = $item;
-        }
+        $itensSelecionados = null;
+        $itensSelecionados_string = "";
 
         if ($this->request->isPost) {
+            // Verificar se o POST é o senário em que se recebe a seleção de itens
+            // de object-selector
+            if($this->request->post('selection') != null)
+            {
+                foreach ($this->request->post('selection') as $item) {
+                    $itensSelecionados_string .= $item . ",";
+
+                    $inner_model = Item::findOne(['id' => substr($item, 5)]); //Item_?
+                    $itensSelecionados[] = new CustomTableRow($inner_model->id, $inner_model->nome, $inner_model->serialNumber);
+                }
+
+                $itensSelecionados = new ArrayDataProvider([
+                    'allModels' => $itensSelecionados
+                ]);
+            }
 
             if ($model->load($this->request->post())){
-                $values = $this->request->post();
-
-                //verfica se as keys do itens vem null
-                if ($values['GruposItens_Item']['item_id'] != null) {
+                // Verfica se a key dos itens selecionados vem null.
+                // Esta é a parte que diferencia um POST para gravar dados e um POST
+                // que apenas contém os itens selecionados
+                if ($this->request->post('selectedItems') != null) {
                     // Agora que sabemos que foram selecionados itens, tentamos guardar os dados base do Grupo
                     if($model->save())
                     {
-                        // Gravar e associar individualmente os itens ao grupo recém criado
-                        for ($i = 0; $i < count($values['GruposItens_Item']['item_id']); $i++)
+                        $item_array = explode(",", $this->request->post('selectedItems'));
+
+                        // Gravar e associar individualmente os itens ao grupo recém-criado
+                        for ($i = 0; $i < count($item_array); $i++)
                         {
                             $grupoitensItem = new GruposItens_Item();
                             $grupoitensItem->grupoItens_id = $model->id;
-                            $grupoitensItem->item_id = $values['GruposItens_Item']['item_id'][$i];
+                            $grupoitensItem->item_id = substr($item_array[$i], 5);
                             $grupoitensItem->save();
                         }
                         return $this->redirect(['index']);
@@ -146,7 +151,8 @@ class GrupoitensController extends Controller
 
         return $this->render('create', [
             'model' => $model,
-            'itens' => $itens,
+            'itensSelecionados' => $itensSelecionados,
+            'itensSelecionados_string' => substr($itensSelecionados_string, 0, -1),
         ]);
     }
 

@@ -20,14 +20,15 @@ $this->params['breadcrumbs'][] = ['label' => 'Pedido Reparacaos', 'url' => ['ind
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
-<div class="card m-5">
+<div class="m-5">
+    <h1><?= $this->title ?></h1>
+    <div class="card">
+        <div class="card-body">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <h5>Objetos Selecionados</h5>
 
-    <div class="card-body">
-        <ul class="list-group list-group-flush">
-            <li class="list-group-item">
-                <h5>Objetos Selecionados</h5>
-
-                <?php
+                    <?php
 
                     $objectSelectorConfig = [
                         'Callback' => '/pedidoreparacao/create',
@@ -63,41 +64,42 @@ $this->params['breadcrumbs'][] = $this->title;
                         'Multiselect' => true,
                     ];
 
-                ?>
-
-                <?= Html::a("Selecionar Objetos", ['/object-select/index'], ['class' => 'btn btn-primary mb-2' ,'data' => [
-                    'method' => 'POST',
-                    'params' => ['config' => json_encode($objectSelectorConfig)]
-                ]]) ?>
-
-                <?php if($objectosSelecionados != null): ?>
-                    <?= GridView::widget([
-                        'dataProvider' => $objectosSelecionados,
-                        'summary' => '',
-                        'columns' => [
-                            [
-                                'label' => 'Nome',
-                                'value' => 'nome'
-                            ],
-                            [
-                                'label' => 'Serial',
-                                'value' => 'serial'
-                            ],
-                        ]
-                    ]);
                     ?>
-                <?php else: ?>
-                    <p>Não existem objetos selecionados</p>
-                <?php endif; ?>
-            </li>
-            <li class="list-group-item">
-                <?php $form = ActiveForm::begin(); ?>
 
-                <input type="hidden" name="objectosSelecionados_string" value="<?= $objectosSelecionados_string ?>">
+                    <?= Html::a("Selecionar Objetos", ['/object-select/index'], ['class' => 'btn btn-primary mb-2' ,'data' => [
+                        'method' => 'POST',
+                        'params' => ['config' => json_encode($objectSelectorConfig)]
+                    ]]) ?>
 
-                <?= $form->field($model, 'descricaoProblema')->textarea(['rows' => 6]) ?>
-            </li>
-        </ul>
+                    <?php if($objectosSelecionados != null): ?>
+                        <?= GridView::widget([
+                            'dataProvider' => $objectosSelecionados,
+                            'summary' => '',
+                            'columns' => [
+                                [
+                                    'label' => 'Nome',
+                                    'value' => 'nome'
+                                ],
+                                [
+                                    'label' => 'Serial',
+                                    'value' => 'serial'
+                                ],
+                            ]
+                        ]);
+                        ?>
+                    <?php else: ?>
+                        <p>Não existem objetos selecionados</p>
+                    <?php endif; ?>
+                </li>
+                <li class="list-group-item">
+                    <?php $form = ActiveForm::begin(); ?>
+
+                    <input type="hidden" name="objectosSelecionados_string" value="<?= $objectosSelecionados_string ?>">
+
+                    <?= $form->field($model, 'descricaoProblema')->textarea(['rows' => 6]) ?>
+                </li>
+            </ul>
+        </div>
     </div>
 
     <div class="card-footer">

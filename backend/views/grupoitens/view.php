@@ -1,11 +1,9 @@
 <?php
 
 use chillerlan\QRCode\QRCode;
-use common\models\PedidoAlocacao;
 use yii\grid\GridView;
 use yii\helpers\Html;
 use yii\helpers\Url;
-use yii\widgets\DetailView;
 
 /** @var yii\web\View $this */
 /** @var common\models\Grupoitens $model */
@@ -37,7 +35,6 @@ $this->params['breadcrumbs'][] = $this->title;
                     <div class="d-flex col-md align-items-center">
                         <div class="card-body d-block text-body text-center">
                             <img src="<?= (new QRCode())->render("GRUPO_" . $model->id)?>">
-                            <div class="font-weight-bold mb-0">Número de Série: <span class="text-muted font-weight-normal"> <?= $item->serialNumber ?? "<i>Sem Número de Série</i>"?></span></div>
                         </div>
                     </div>
                 </div>

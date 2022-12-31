@@ -54,7 +54,7 @@ $this->params['breadcrumbs'][] = 'Seleção de Objetos';
                 'Multiselect' => true,
             ];
         ?>
-        <?= Html::a("Selecionar Objetos", ['/object-select/index'], ['class' => 'btn btn-primary mb-2' ,'data' => [
+        <?= Html::a('<i class="fa-solid fa-hand-pointer"></i> Selecionar Objetos', ['/object-select/index'], ['class' => 'btn btn-primary mb-2' ,'data' => [
             'method' => 'POST',
             'params' => ['config' => json_encode($objectSelectorConfig)]
         ]]) ?>

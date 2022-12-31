@@ -107,66 +107,75 @@ class PedidoalocacaoController extends Controller
         $model = new PedidoAlocacao();
         // Por padrão, o utilizador ao qual o item vai ser associado, é ao utilizador que está a fazer o pedido
         $model->requerente_id = Yii::$app->user->id;
-        $itens = Item::findAll(['status' => Item::STATUS_ACTIVE]);
-        $grupos = Grupoitens::findAll(['status' => Grupoitens::STATUS_ACTIVE]);
 
-        /**
-         * --- CustomID ('I_'/'G_' + id
-         *  |- Nome
-         *  |- Serial
-         */
-
-        $customTableData = array();
-
-        foreach ($itens as $item)
-        {
-            if(!$item->isInActiveItemsGroup() && !$item->isInActivePedidoAlocacao())
-            {
-                $row = new CustomTableRow("I_" . $item->id, $item->nome, $item->serialNumber);
-                $customTableData[] = $row;
-            }
-        }
-
-        foreach ($grupos as $grupo)
-        {
-            if(!$grupo->isinActivePedidoAlocacao())
-            {
-                $row = new CustomTableRow("G_" . $grupo->id, $grupo->nome, null);
-                $customTableData[] = $row;
-            }
-        }
+        $customTableData = null;
+        $selectedItem = "";
 
         if ($this->request->isPost) {
-            if ($model->load($this->request->post())) {
+            if($this->request->post('radioButtonSelection') != null)
+            {
+                //Obter dados que vieram da selecção de objeto
 
-                $row = $this->request->post()['item'];
-                $row_data = explode('_', $row);
+                $selectedItem = $this->request->post('radioButtonSelection');
+                list($modelName, $id) = explode("_", $this->request->post('radioButtonSelection'));
 
-                switch($row_data[0])
+                switch($modelName)
                 {
-                    case "I":
-                        $model->item_id = $row_data[1];
-                        if($model->item->isInActivePedidoAlocacao())
-                        {
-                            $model->addError('item_id', 'Item selecionado já se encontra em uso.');
-                        }
+                    case "Item":
+                        $inner_model = Item::findOne($id);
+                        $customTableData = new CustomTableRow($id, $inner_model->nome, $inner_model->serialNumber);
                         break;
 
-                    case "G":
-                        $model->grupoItem_id = $row_data[1];
-                        if($model->grupoItem->isinActivePedidoAlocacao())
-                        {
-                            $model->addError('grupoItem_id', 'Item selecionado já se encontra em uso.');
-                        }
+                    case "Grupoitens":
+                        $inner_model = Grupoitens::findOne($id);
+                        $customTableData = new CustomTableRow($id, $inner_model->nome, null);
                         break;
-
-                    default:
-                        throw new ServerErrorHttpException();
                 }
 
+            }
+            else
+            {
+                //Se é POST e não há uma seleção de radiobtn, é porque é para gravar o modelo
 
-                if($model->save()) {
-                    return $this->redirect(['view', 'id' => $model->id]);
+                $selectedItem = $this->request->post('selectedItem');
+                if($selectedItem != "")
+                {
+                    if ($model->load($this->request->post())) {
+
+                        list($inner_model, $id) = explode('_', $selectedItem);
+
+                        switch($inner_model)
+                        {
+                            case "Item":
+                                $model->item_id = $id;
+                                if($model->item->isInActivePedidoAlocacao())
+                                {
+                                    // Esta verificação não é própriamente necessária, mas pode ficar aqui para proteção adicional
+                                    $model->addError('item_id', 'Item selecionado já se encontra em uso.');
+                                }
+                                break;
+
+                            case "Grupoitens":
+                                $model->grupoItem_id = $id;
+                                if($model->grupoItem->isinActivePedidoAlocacao())
+                                {
+                                    // Esta verificação não é própriamente necessária, mas pode ficar aqui para proteção adicional
+                                    $model->addError('grupoItem_id', 'Item selecionado já se encontra em uso.');
+                                }
+                                break;
+
+                            default:
+                                throw new ServerErrorHttpException();
+                        }
+
+                        if($model->save()) {
+                            return $this->redirect(['view', 'id' => $model->id]);
+                        }
+                    }
+                }
+                else
+                {
+                    $model->addError('item_id', 'Selecione um objeto.');
                 }
             }
         } else {
@@ -176,6 +185,7 @@ class PedidoalocacaoController extends Controller
         return $this->render('create', [
             'model' => $model,
             'customTableData' => $customTableData,
+            'selectedItem' => $selectedItem,
         ]);
     }
 

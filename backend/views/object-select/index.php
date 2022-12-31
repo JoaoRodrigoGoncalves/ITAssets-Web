@@ -17,28 +17,60 @@ $this->title = "Seleção de objeto";
     </div>
     <?= Html::beginForm($callback) ?>
         <div class="card-body">
-            <?= GridView::widget([
-                'dataProvider' => $tableData,
-                'layout' => "{items}\n{summary}",
-                'columns' => [
-                    [
-                        'class' => ($multiselect ? 'yii\grid\CheckboxColumn' : 'yii\grid\RadioButtonColumn'),
-                        'headerOptions' => ['style' => 'width: 1%; white-space: nowrap;'],
-                        'checkboxOptions' => function($model) {
-                                return ['value' => $model->id, 'class' => 'checkbox-row', 'id' => 'checkbox'];
-                        }
-                    ],
-                    [
-                        'label' => 'Nome',
-                        'value' => 'nome'
-                    ],
-                    [
-                        'label' => 'Serial',
-                        'format' => 'html',
-                        'value' => 'serial'
-                    ],
-                ]
-            ]);
+            <?php
+                if($multiselect)
+                {
+                    // Tabela com Checkbox
+                    echo GridView::widget([
+                        'dataProvider' => $tableData,
+                        'layout' => "{items}\n{summary}\n{pager}",
+                        'columns' => [
+                            [
+                                'class' => 'yii\grid\CheckboxColumn',
+                                'headerOptions' => ['style' => 'width: 1%; white-space: nowrap;'],
+                                'checkboxOptions' => function($model) {
+                                    return ['value' => $model->id, 'class' => 'checkbox-row', 'id' => 'checkbox'];
+                                }
+                            ],
+                            [
+                                'label' => 'Nome',
+                                'value' => 'nome'
+                            ],
+                            [
+                                'label' => 'Serial',
+                                'format' => 'html',
+                                'value' => 'serial'
+                            ],
+                        ]
+                    ]);
+                }
+                else
+                {
+                    // Tabela com radio button
+                    echo GridView::widget([
+                        'dataProvider' => $tableData,
+                        'layout' => "{items}\n{summary}\n{pager}",
+                        'columns' => [
+                            [
+                                'class' => 'yii\grid\RadioButtonColumn',
+                                'headerOptions' => ['style' => 'width: 1%; white-space: nowrap;'],
+                                'radioOptions' => function($model)
+                                {
+                                    return ['value' => $model->id, 'id' => 'radiobtn', 'checked' => false, 'required' => true];
+                                }
+                            ],
+                            [
+                                'label' => 'Nome',
+                                'value' => 'nome'
+                            ],
+                            [
+                                'label' => 'Serial',
+                                'format' => 'html',
+                                'value' => 'serial'
+                            ],
+                        ]
+                    ]);
+                }
             ?>
         </div>
         <div class="card-footer">

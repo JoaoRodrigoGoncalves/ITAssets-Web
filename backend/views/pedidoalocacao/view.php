@@ -82,7 +82,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <?php endif; ?>
 
                 <?php if($model->status == PedidoAlocacao::STATUS_ABERTO): ?>
-                    <?= Html::a('<i class="fas fa-thumbs-up"></i>', ['update', 'id' => $model->id], ['class' => 'btn btn-secondary']) ?>
+                    <?= Html::a('<i class="fas fa-reply"></i>', ['update', 'id' => $model->id], ['class' => 'btn btn-secondary']) ?>
                 <?php endif; ?>
             </div>
         </div>

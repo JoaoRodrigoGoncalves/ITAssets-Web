@@ -2,11 +2,7 @@
 
 namespace common\models;
 
-use PhpMqtt\Client\Exceptions\ConfigurationInvalidException;
-use PhpMqtt\Client\Exceptions\ConnectingToBrokerFailedException;
-use PhpMqtt\Client\Exceptions\DataTransferException;
-use PhpMqtt\Client\Exceptions\ProtocolNotSupportedException;
-use PhpMqtt\Client\Exceptions\RepositoryException;
+use Exception;
 use PhpMqtt\Client\MqttClient;
 use Yii;
 use yii\web\ServerErrorHttpException;
@@ -80,11 +76,6 @@ class Notificacoes extends \yii\db\ActiveRecord
      * @param $link string|null Link da notificação
      * @return void
      * @throws ServerErrorHttpException
-     * @throws ConfigurationInvalidException
-     * @throws ConnectingToBrokerFailedException
-     * @throws DataTransferException
-     * @throws ProtocolNotSupportedException
-     * @throws RepositoryException
      */
     public static function addNotification(int $userID, string $message, string $link = null): void
     {
@@ -95,10 +86,20 @@ class Notificacoes extends \yii\db\ActiveRecord
 
         if($model->save())
         {
-            $mqtt = new MqttClient("127.0.0.1", 1883, "SERVER");
-            $mqtt->connect();
-            $mqtt->publish("USER_" . $userID . "_TOPIC", json_encode(['message' => $message, 'link' => $link], 0));
-            $mqtt->disconnect();
+            try
+            {
+                $mqtt = new MqttClient("127.0.0.1", 1883, "SERVER");
+                $mqtt->connect();
+                $mqtt->publish("USER_" . $userID . "_TOPIC", json_encode(['message' => $message, 'link' => $link], 0));
+                $mqtt->disconnect();
+            }
+            catch(Exception $exception)
+            {
+                // Provavelmente não foi possível contactar o broker.
+                // Por enquanto, não fazemos nada. O ideal seria fazer logging deste tipo de erros
+                // num ficheiro ou base de dados para o administrador/administrador de sistema
+                // consultar e atuar sobre.
+            }
         }
         else
         {
