@@ -4,6 +4,7 @@ namespace backend\tests\functional;
 
 use backend\tests\FunctionalTester;
 use common\fixtures\UserFixture;
+use common\models\User;
 
 /**
  * Class LoginCest
@@ -26,19 +27,20 @@ class LoginCest
             ]
         ];
     }
-    
-    /**
-     * @param FunctionalTester $I
-     */
-    public function loginUser(FunctionalTester $I)
-    {
-        $I->amOnRoute('/site/login');
-        $I->fillField('Username', 'erau');
-        $I->fillField('Password', 'password_0');
-        $I->click('login-button');
 
-        $I->see('Logout (erau)', 'form button[type=submit]');
-        $I->dontSeeLink('Login');
-        $I->dontSeeLink('Signup');
+    public function loginAdmin(FunctionalTester $I)
+    {
+        $authManager = \Yii::$app->authManager;
+        $authManager->assign($authManager->getRole('administrador'), User::findOne(['username' => 'erau'])->id);
+
+        $I->amOnPage('/login/index');
+        $I->see('Inicie sessão para continuar');
+
+        $I->fillField('Login[email]', 'sfriesen@jenkins.info');
+        $I->fillField('Login[password]', 'password_0');
+        $I->click('button[type="submit"]');
+
+        $I->see('erau', 'a');
+
     }
 }
