@@ -16,7 +16,6 @@ use yii\widgets\ActiveForm;
     <div class="input-group">
         <?= $form->field($model, 'nome', ['options' => ['class' => 'form-group']])->textInput(['placeholder' => 'Procurar', 'class' => 'form-control'])->label(false) ?>
         <div class="input-group-append">
-            <!-- TODO: remover estilo fixo -->
             <?= Html::submitButton('<i class="fas fa-search"></i>', ['class' => 'btn btn-outline-secondary', 'style' => 'height: 38px']) ?>
         </div>
     </div>

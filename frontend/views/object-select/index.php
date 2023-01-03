@@ -11,10 +11,6 @@ $this->title = "Seleção de objeto";
 ?>
 <h1><?= $this->title ?></h1>
 <div class="card m-5">
-    <div class="card-header">
-        <!-- TODO: Pesquisa -->
-        <p>Pesquisa</p>
-    </div>
     <?= Html::beginForm($callback) ?>
         <div class="card-body">
             <?php

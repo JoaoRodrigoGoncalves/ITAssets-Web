@@ -28,11 +28,14 @@ class LoginCest
         ];
     }
 
-    public function loginAdmin(FunctionalTester $I)
+    public function _before(FunctionalTester $I)
     {
         $authManager = \Yii::$app->authManager;
         $authManager->assign($authManager->getRole('administrador'), User::findOne(['username' => 'erau'])->id);
+    }
 
+    public function validLogin(FunctionalTester $I)
+    {
         $I->amOnPage('/login/index');
         $I->see('Inicie sessão para continuar');
 
@@ -41,6 +44,13 @@ class LoginCest
         $I->click('button[type="submit"]');
 
         $I->see('erau', 'a');
+    }
 
+    public function checkEmpty(FunctionalTester $I)
+    {
+        $I->amOnPage('/login/index');
+        $I->submitForm('#login-form', ['Login' => ['email' => '', 'password' => '']]);
+        $I->seeValidationError('Campo obrigatório');
+        $I->seeValidationError('Campo obrigatório');
     }
 }

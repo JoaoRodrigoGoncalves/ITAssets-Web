@@ -101,6 +101,8 @@ class ObjectSelect
 
         return new ArrayDataProvider([
             'allModels' => $rows,
+// TODO: (Projeto Final) Implementar uma paginação customizada que permita manter os dados para a seleção funcionar
+
 //            'pagination' => [
 //                'pageSize' => 20,
 //            ],

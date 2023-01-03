@@ -50,7 +50,7 @@ class SiteSearch extends Site
         $this->load($params);
 
         /**
-         * TODO: Adicionar filtro para poder pesquisar a morada inteira ou conseguir encontrar uma
+         * TODO: (Projeto Final) Adicionar filtro para poder pesquisar a morada inteira ou conseguir encontrar uma
          * morada independentemente se está exatamente igual ao registo
          */
          $query->andFilterWhere(['like', 'nome', $this->nome])
