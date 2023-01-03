@@ -28,18 +28,36 @@ use yii\helpers\Url;
         <nav class="mt-2">
             <?php
 
-            echo Menu::widget([
-                'items' => [
-                    ['label' => 'Itens', 'icon' => 'box', 'url' => '/item/index'],
-                    ['label' => 'Grupos de Itens', 'icon' => 'boxes', 'url' => '/grupoitens/index'],
-                    ['label' => 'Pedidos de Alocação', 'icon' => 'clipboard', 'url' => '/pedidoalocacao/index'],
-                    ['label' => 'Pedidos de Reparação', 'icon' => 'wrench', 'url' => '/pedidoreparacao/index'],
-                    ['label' => 'Utilizadores', 'icon' => 'users', 'url' => '/utilizador/index'],
-                    ['label' => 'Locais', 'icon' => 'map-marker-alt', 'url' => '/site/index'],
-                    ['label' => 'Categorias', 'icon' => 'stream', 'url' => '/categoria/index'],
-                    ['label' => 'Empresa', 'icon' => 'building', 'url' => '/empresa/index'],
-                ],
-            ]);
+                if(in_array(Yii::$app->authManager->getRole('Administrador'), Yii::$app->authManager->getRolesByUser(Yii::$app->user->id)))
+                {
+                    echo Menu::widget([
+                        'items' => [
+                            ['label' => 'Itens', 'icon' => 'box', 'url' => '/item/index'],
+                            ['label' => 'Grupos de Itens', 'icon' => 'boxes', 'url' => '/grupoitens/index'],
+                            ['label' => 'Pedidos de Alocação', 'icon' => 'clipboard', 'url' => '/pedidoalocacao/index'],
+                            ['label' => 'Pedidos de Reparação', 'icon' => 'wrench', 'url' => '/pedidoreparacao/index'],
+                            ['label' => 'Utilizadores', 'icon' => 'users', 'url' => '/utilizador/index'],
+                            ['label' => 'Locais', 'icon' => 'map-marker-alt', 'url' => '/site/index'],
+                            ['label' => 'Categorias', 'icon' => 'stream', 'url' => '/categoria/index'],
+                            ['label' => 'Empresa', 'icon' => 'building', 'url' => '/empresa/index'],
+                        ],
+                    ]);
+                }
+                else
+                {
+                    // Operador
+                    echo Menu::widget([
+                        'items' => [
+                            ['label' => 'Itens', 'icon' => 'box', 'url' => '/item/index'],
+                            ['label' => 'Grupos de Itens', 'icon' => 'boxes', 'url' => '/grupoitens/index'],
+                            ['label' => 'Pedidos de Alocação', 'icon' => 'clipboard', 'url' => '/pedidoalocacao/index'],
+                            ['label' => 'Pedidos de Reparação', 'icon' => 'wrench', 'url' => '/pedidoreparacao/index'],
+                            ['label' => 'Locais', 'icon' => 'map-marker-alt', 'url' => '/site/index'],
+                            ['label' => 'Categorias', 'icon' => 'stream', 'url' => '/categoria/index'],
+                        ],
+                    ]);
+                }
+
             ?>
         </nav>
         <!-- /.sidebar-menu -->
