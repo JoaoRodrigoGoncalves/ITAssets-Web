@@ -1,0 +1,9 @@
+suite_namespace: backend\tests\acceptance
+actor: AcceptanceTester
+modules:
+  enabled:
+    - WebDriver:
+        url: http://backoffice.itassets
+        browser: chrome
+    - Yii2:
+        part: init

@@ -23,7 +23,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'site_id')->dropDownList(ArrayHelper::map(Site::find()->all(), 'id', 'nome'), ['prompt' => '- Nenhum -']); ?>
 
-    <?= Html::submitButton('Guardar', ['class' => 'btn btn-success btn-lg btn-block']) ?>
+    <?= Html::submitButton('Guardar', ['class' => 'btn btn-success btn-lg btn-block','name'=>'save']) ?>
 
 
     <?php ActiveForm::end(); ?>
