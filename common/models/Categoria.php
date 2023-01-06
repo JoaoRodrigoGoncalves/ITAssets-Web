@@ -36,6 +36,7 @@ class Categoria extends ActiveRecord
         return [
             [['status'], 'integer'],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
+            [['nome'], 'required'],
             [['nome'], 'string', 'max' => 255],
         ];
     }

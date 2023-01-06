@@ -5,3 +5,9 @@ modules:
     enabled:
         - Yii2:
             part: fixtures
+        - Db
+    config:
+        Db:
+           dsn: 'mysql:host=localhost;dbname=itassets_test;port=3306'
+           user: 'root'
+           password: ''
