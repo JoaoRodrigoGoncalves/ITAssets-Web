@@ -3,6 +3,7 @@
 namespace common\tests\unit\models;
 
 use Codeception\Test\Unit;
+use common\models\User;
 use common\tests\UnitTester;
 use Yii;
 use common\models\Login;
@@ -32,11 +33,17 @@ class LoginFormTest extends Unit
         ];
     }
 
+    protected function _before()
+    {
+        $authmanager = Yii::$app->authManager;
+        $authmanager->assign($authmanager->getRole('administrador'), User::findOne(['username' => 'administrador'])->id);
+    }
+
+
     public function testLoginNoUser()
     {
-        // TODO: Corrigir código para funcionar com o novo sistema de autenticação
         $model = new Login([
-            'username' => 'not_existing_username',
+            'email' => 'not_existing_username@itassets.pt',
             'password' => 'not_existing_password',
         ]);
 
@@ -46,27 +53,23 @@ class LoginFormTest extends Unit
 
     public function testLoginWrongPassword()
     {
-        // TODO: Corrigir código para funcionar com o novo sistema de autenticação
-//        $model = new Login([
-//            'username' => 'bayer.hudson',
-//            'password' => 'wrong_password',
-//        ]);
-//
-//        verify($model->login())->false();
-//        verify( $model->errors)->arrayHasKey('password');
-//        verify(Yii::$app->user->isGuest)->true();
+        $model = new Login([
+            'email' => 'admin@itassets.pt',
+            'password' => '12345678',
+        ]);
+
+        verify($model->loginUser([Yii::$app->authManager->getRole('administrador')]))->false();
+        verify(Yii::$app->user->isGuest)->true();
     }
 
     public function testLoginCorrect()
     {
-//        // TODO: Corrigir código para funcionar com o novo sistema de autenticação
-//        $model = new Login([
-//            'username' => 'bayer.hudson',
-//            'password' => 'password_0',
-//        ]);
-//
-//        verify($model->loginUser([Yii::$app->authManager->getRole('administrador')]))->true();
-//        verify($model->errors)->arrayHasNotKey('password');
-//        verify(Yii::$app->user->isGuest)->false();
+        $model = new Login([
+            'email' => 'admin@itassets.pt',
+            'password' => 'password_0',
+        ]);
+
+        verify($model->loginUser([Yii::$app->authManager->getRole('administrador')]))->true();
+        verify(Yii::$app->user->isGuest)->false();
     }
 }
