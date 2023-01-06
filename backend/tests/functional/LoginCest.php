@@ -31,7 +31,7 @@ class LoginCest
     public function _before(FunctionalTester $I)
     {
         $authManager = \Yii::$app->authManager;
-        $authManager->assign($authManager->getRole('administrador'), User::findOne(['username' => 'erau'])->id);
+        $authManager->assign($authManager->getRole('administrador'), User::findOne(['username' => 'administrador'])->id);
     }
 
     public function validLogin(FunctionalTester $I)
@@ -39,18 +39,41 @@ class LoginCest
         $I->amOnPage('/login/index');
         $I->see('Inicie sessão para continuar');
 
-        $I->fillField('Login[email]', 'sfriesen@jenkins.info');
+        $I->fillField('Login[email]', 'admin@itassets.pt');
         $I->fillField('Login[password]', 'password_0');
         $I->click('button[type="submit"]');
 
-        $I->see('erau', 'a');
+        $I->see('administrador', 'a');
     }
 
     public function checkEmpty(FunctionalTester $I)
     {
         $I->amOnPage('/login/index');
-        $I->submitForm('#login-form', ['Login' => ['email' => '', 'password' => '']]);
-        $I->seeValidationError('Campo obrigatório');
-        $I->seeValidationError('Campo obrigatório');
+        $I->click('button[type="submit"]');
+        $I->see('Campo obrigatório', '.invalid-feedback');
+    }
+
+    public function checkWrongLogin(FunctionalTester $I)
+    {
+        $I->amOnPage('/login/index');
+
+        $I->fillField('Login[email]', 'admin@itassets.pt');
+        $I->fillField('Login[password]', 'passworderrada');
+        $I->click('button[type="submit"]');
+
+        $I->see('Credenciais incorretas', '.invalid-feedback');
+    }
+
+    public function checkNoAccessLogin(FunctionalTester $I)
+    {
+        $authManager = \Yii::$app->authManager;
+        $authManager->assign($authManager->getRole('funcionario'), User::findOne(['username' => 'funcionario'])->id);
+
+        $I->amOnPage('/login/index');
+        $I->fillField('Login[email]', 'funcionario@itassets.pt');
+        $I->fillField('Login[password]', 'password_0');
+        $I->click('button[type="submit"]');
+
+        $I->see('Permissões insuficientes', '.invalid-feedback');
     }
 }
