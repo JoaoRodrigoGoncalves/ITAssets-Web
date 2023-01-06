@@ -11,11 +11,6 @@ class SigninCest
     {
     }
 
-    // tests
-    public function tryToTest(AcceptanceTester $I)
-    {
-    }
-
     public function AcceptanceTest(AcceptanceTester $I)
     {
         //Pagina Inicial do backofficie

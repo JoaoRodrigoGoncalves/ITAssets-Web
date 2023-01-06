@@ -37,44 +37,19 @@ class grupoItens_ItemTest extends \Codeception\Test\Unit
     }
 
     public function testCampoGrupoItensIDNull(){
-        $newGrupoItensTeste = new Grupoitens();
-
-        $newGrupoItensTeste->status=10;
-        $newGrupoItensTeste->nome="Componentes";
-        $newGrupoItensTeste->notas=null;
-        $newGrupoItensTeste->save();
-
         $testGruposItens_Item = new GruposItens_Item();
-
         $testGruposItens_Item->grupoItens_id = null;
         $this->assertFalse($testGruposItens_Item->validate(['grupoItens_id']));
     }
 
     //Campo items_id
     public function testCampoItemIDAdd(){
-        $newSiteTeste = new Site();
-
-        $newSiteTeste->nome="Porto";
-        $newSiteTeste->rua="Rua das Flores";
-        $newSiteTeste->localidade="Porto";
-        $newSiteTeste->codPostal="2460-153";
-        $newSiteTeste->coordenadas="39.735692, -8.820847";
-        $newSiteTeste->notas=null;
-        $newSiteTeste->save();
-
-        $newCategoriaTeste = new Categoria();
-
-        $newCategoriaTeste->status=10;
-        $newCategoriaTeste->nome="Computadores";
-        $newCategoriaTeste->save();
-
         $newItemTeste = new Item();
-
-        $newItemTeste->status=10;
-        $newItemTeste->nome="Componentes";
+        $newItemTeste->status = Item::STATUS_ACTIVE;
+        $newItemTeste->nome = "Componentes";
         $newItemTeste->serialNumber = "dsc564sdsdS";
-        $newItemTeste->site_id = $newItemTeste->id;
-        $newItemTeste->categoria_id = $newItemTeste->id;
+        $newItemTeste->site_id = null;
+        $newItemTeste->categoria_id = null;
         $newItemTeste->notas = null;
         $newItemTeste->save();
 
@@ -85,34 +60,7 @@ class grupoItens_ItemTest extends \Codeception\Test\Unit
     }
 
     public function testCampoItemIDNull(){
-        $newSiteTeste = new Site();
-
-        $newSiteTeste->nome="Porto";
-        $newSiteTeste->rua="Rua das Flores";
-        $newSiteTeste->localidade="Porto";
-        $newSiteTeste->codPostal="2460-153";
-        $newSiteTeste->coordenadas="39.735692, -8.820847";
-        $newSiteTeste->notas=null;
-        $newSiteTeste->save();
-
-        $newCategoriaTeste = new Categoria();
-
-        $newCategoriaTeste->status=10;
-        $newCategoriaTeste->nome="Computadores";
-        $newCategoriaTeste->save();
-
-        $newItemTeste = new Item();
-
-        $newItemTeste->status=10;
-        $newItemTeste->nome="Componentes";
-        $newItemTeste->serialNumber = "dsc564sdsdS";
-        $newItemTeste->site_id = $newItemTeste->id;
-        $newItemTeste->categoria_id = $newItemTeste->id;
-        $newItemTeste->notas = null;
-        $newItemTeste->save();
-
         $testGruposItens_Item = new GruposItens_Item();
-
         $testGruposItens_Item->item_id = null;
         $this->assertFalse($testGruposItens_Item->validate(['item_id']));
     }
@@ -121,52 +69,33 @@ class grupoItens_ItemTest extends \Codeception\Test\Unit
      * Validação do Registo
      **/
     public function testRegistoGrupoItensItem(){
-        /* Itens */
-        //Site
-        $newSiteTeste = new Site();
-
-        $newSiteTeste->nome="Porto";
-        $newSiteTeste->rua="Rua das Flores";
-        $newSiteTeste->localidade="Porto";
-        $newSiteTeste->codPostal="2460-153";
-        $newSiteTeste->coordenadas="39.735692, -8.820847";
-        $newSiteTeste->notas=null;
-        $newSiteTeste->save();
-
-        //Categoria
-        $newCategoriaTeste = new Categoria();
-
-        $newCategoriaTeste->status=10;
-        $newCategoriaTeste->nome="Computadores";
-        $newCategoriaTeste->save();
-
         //Itens
         $newItemTeste = new Item();
 
-        $newItemTeste->status=10;
-        $newItemTeste->nome="ASUS VivoBook 15";
+        $newItemTeste->status = Item::STATUS_ACTIVE;
+        $newItemTeste->nome = "ASUS VivoBook 15";
         $newItemTeste->serialNumber = "dsc564sdsdS";
-        $newItemTeste->site_id = $newSiteTeste->id;
-        $newItemTeste->categoria_id = $newCategoriaTeste->id;
+        $newItemTeste->site_id = null;
+        $newItemTeste->categoria_id = null;
         $newItemTeste->notas = null;
         $newItemTeste->save();
 
         $newItemTeste2 = new Item();
 
-        $newItemTeste2->status=10;
-        $newItemTeste2->nome="Samsung A02";
+        $newItemTeste2->status = Item::STATUS_ACTIVE;
+        $newItemTeste2->nome = "Samsung A02";
         $newItemTeste2->serialNumber = "sdfw5a7ea5w";
-        $newItemTeste2->site_id = $newSiteTeste->id;
-        $newItemTeste2->categoria_id = $newCategoriaTeste->id;
+        $newItemTeste2->site_id = null;
+        $newItemTeste2->categoria_id = null;
         $newItemTeste2->notas = null;
         $newItemTeste2->save();
 
         /* Grupo Itens */
         $newGrupoItensTeste = new Grupoitens();
 
-        $newGrupoItensTeste->status=10;
-        $newGrupoItensTeste->nome="Computadores";
-        $newGrupoItensTeste->notas=null;
+        $newGrupoItensTeste->status = Grupoitens::STATUS_ACTIVE;
+        $newGrupoItensTeste->nome = "Computadores";
+        $newGrupoItensTeste->notas = null;
         $newGrupoItensTeste->save();
 
         /* Itens de um Grupo Itens */
