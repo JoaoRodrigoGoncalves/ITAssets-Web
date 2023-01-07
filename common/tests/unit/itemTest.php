@@ -21,6 +21,14 @@ class itemTest extends Unit
 
     // tests
 
+    //Campo Status
+    public function testCampoStatusInt(){
+        $testItem = new Item();
+
+        $testItem->status = "Active";
+        $this->assertFalse($testItem->validate(['status']));
+    }
+
     //Campo Nome
     public function testCampoNomeAdd()
     {
@@ -126,16 +134,17 @@ class itemTest extends Unit
     }
 
     public function testCampoCategoriaNull(){
-        $newCategoriaTeste = new Categoria();
-
-        $newCategoriaTeste->status=10;
-        $newCategoriaTeste->nome="Computadores";
-        $newCategoriaTeste->save();
-
         $testItem = new Item();
 
         $testItem->categoria_id = null;
         $this->assertTrue($testItem->validate(['categoria_id']));
+    }
+
+    public function testCampoCategoriaInt(){
+        $testItem = new Item();
+
+        $testItem->categoria_id = "Computadores";
+        $this->assertFalse($testItem->validate(['categoria_id']));
     }
 
     //Campo Site
@@ -159,51 +168,30 @@ class itemTest extends Unit
 
     public function testCampoSiteNull()
     {
-        $newSiteTeste = new Site();
-
-        $newSiteTeste->nome="Porto";
-        $newSiteTeste->rua="Rua das Flores";
-        $newSiteTeste->localidade="Porto";
-        $newSiteTeste->codPostal="2460-153";
-        $newSiteTeste->coordenadas="39.735692, -8.820847";
-        $newSiteTeste->notas=null;
-        $newSiteTeste->save();
-
         $testItem = new Item();
 
         $testItem->site_id = null;
         $this->assertTrue($testItem->validate(['site_id']));
     }
 
+    public function testCampoSiteInt(){
+        $testItem = new Item();
+
+        $testItem->site_id = "Lisboa";
+        $this->assertFalse($testItem->validate(['site_id']));
+    }
+
     /**
      * Validação do Registo
      **/
     public function testRegistoItem(){
-        /* Site */
-        $newSiteTeste = new Site();
-
-        $newSiteTeste->nome="Porto";
-        $newSiteTeste->rua="Rua das Flores";
-        $newSiteTeste->localidade="Porto";
-        $newSiteTeste->codPostal="2460-153";
-        $newSiteTeste->coordenadas="39.735692, -8.820847";
-        $newSiteTeste->notas=null;
-        $newSiteTeste->save();
-
-        /* Categoria */
-        $newCategoriaTeste = new Categoria();
-
-        $newCategoriaTeste->status=10;
-        $newCategoriaTeste->nome="Computadores";
-        $newCategoriaTeste->save();
-
         /* Item */
         $item = new Item();
 
         $item->nome = 'ASUS VivoBook 15';
         $item->serialNumber = '16rg1esra85af';
-        $item->categoria_id = $newCategoriaTeste->id;;
-        $item->site_id = $newSiteTeste->id;;
+        $item->categoria_id = null;
+        $item->site_id = null;
         $item->notas = null;
         $item->save();
 
@@ -214,31 +202,13 @@ class itemTest extends Unit
      * Validação da Edição
      **/
     public function testEdicaoItem(){
-        /* Site */
-        $newSiteTeste = new Site();
-
-        $newSiteTeste->nome="Porto";
-        $newSiteTeste->rua="Rua das Flores";
-        $newSiteTeste->localidade="Porto";
-        $newSiteTeste->codPostal="2460-153";
-        $newSiteTeste->coordenadas="39.735692, -8.820847";
-        $newSiteTeste->notas=null;
-        $newSiteTeste->save();
-
-        /* Categoria */
-        $newCategoriaTeste = new Categoria();
-
-        $newCategoriaTeste->status=10;
-        $newCategoriaTeste->nome="Computadores";
-        $newCategoriaTeste->save();
-
         /* Item */
         $item = new Item();
 
         $item->nome = 'ASUS VivoBook 15';
         $item->serialNumber = '16rg1esra85af';
-        $item->categoria_id = $newCategoriaTeste->id;;
-        $item->site_id = $newSiteTeste->id;;
+        $item->categoria_id = null;;
+        $item->site_id = null;;
         $item->notas = null;
         $item->save();
 
@@ -255,31 +225,13 @@ class itemTest extends Unit
      * Validação de Eliminação
      **/
     public function testEliminacaoItem(){
-        /* Site */
-        $newSiteTeste = new Site();
-
-        $newSiteTeste->nome="Porto";
-        $newSiteTeste->rua="Rua das Flores";
-        $newSiteTeste->localidade="Porto";
-        $newSiteTeste->codPostal="2460-153";
-        $newSiteTeste->coordenadas="39.735692, -8.820847";
-        $newSiteTeste->notas=null;
-        $newSiteTeste->save();
-
-        /* Categoria */
-        $newCategoriaTeste = new Categoria();
-
-        $newCategoriaTeste->status=10;
-        $newCategoriaTeste->nome="Computadores";
-        $newCategoriaTeste->save();
-
         /* Item */
         $item = new Item();
 
         $item->nome = 'ASUS VivoBook 15';
         $item->serialNumber = '16rg1esra85af';
-        $item->categoria_id = $newCategoriaTeste->id;;
-        $item->site_id = $newSiteTeste->id;;
+        $item->categoria_id = null;
+        $item->site_id = null;
         $item->notas = null;
         $item->save();
 

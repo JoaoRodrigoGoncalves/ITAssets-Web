@@ -17,6 +17,14 @@ class grupoItensTest extends \Codeception\Test\Unit
 
     // tests
 
+    //Campo Status
+    public function testCampoStatusInt(){
+        $testGrupoItens = new Grupoitens();
+
+        $testGrupoItens->status = "Active";
+        $this->assertFalse($testGrupoItens->validate(['status']));
+    }
+
     //Campo Nome
     public function testCampoNomeAdd()
     {
