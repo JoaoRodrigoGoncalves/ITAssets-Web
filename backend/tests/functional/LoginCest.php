@@ -32,6 +32,8 @@ class LoginCest
     {
         $authManager = \Yii::$app->authManager;
         $authManager->assign($authManager->getRole('administrador'), User::findOne(['username' => 'administrador'])->id);
+        $authManager->assign($authManager->getRole('operadorLogistica'), User::findOne(['username' => 'operador'])->id);
+        $authManager->assign($authManager->getRole('funcionario'), User::findOne(['username' => 'funcionario'])->id);
     }
 
     public function validLogin(FunctionalTester $I)
@@ -66,9 +68,6 @@ class LoginCest
 
     public function checkNoAccessLogin(FunctionalTester $I)
     {
-        $authManager = \Yii::$app->authManager;
-        $authManager->assign($authManager->getRole('funcionario'), User::findOne(['username' => 'funcionario'])->id);
-
         $I->amOnPage('/login/index');
         $I->fillField('Login[email]', 'funcionario@itassets.pt');
         $I->fillField('Login[password]', 'password_0');

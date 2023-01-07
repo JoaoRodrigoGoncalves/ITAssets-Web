@@ -6,19 +6,19 @@ namespace backend\tests\Functional;
 use backend\tests\FunctionalTester;
 use common\fixtures\UserFixture;
 use common\models\Empresa;
+use common\models\Item;
 use common\models\User;
 use PHPUnit\Framework\Assert;
 
-class UserCest
+class ItemCest
 {
-
     public function _fixtures()
     {
         return [
             'user' => [
                 'class' => UserFixture::class,
                 'dataFile' => codecept_data_dir() . 'login_data.php'
-            ],
+            ]
         ];
     }
     public function _before(FunctionalTester $I)
@@ -41,38 +41,34 @@ class UserCest
         }
     }
 
-    public function criarNovoUtilizador(FunctionalTester $I)
+    public function testRegistarItem(FunctionalTester $I)
     {
         $I->amLoggedInAs(User::findOne(['username' => 'administrador'])->id);
         $I->amOnPage('/dashboard/index');
 
-        $I->click('Utilizadores');
+        $I->click('Itens');
         $I->click('Registar');
 
-        $I->see('Registar Utilizador');
-        $I->fillField('Utilizador[username]', 'Funcionario teste');
-        $I->fillField('Utilizador[email]', 'user@itassets.pt');
-        $I->selectOption('Utilizador[role]', 'funcionario');
+        $I->fillField('Item[nome]', 'Item de teste registo');
+        $I->fillField('Item[serialNumber]', 'TEST123');
         $I->click('Guardar');
 
-        $I->see('Gestão de Utilizadores');
+        $I->see('Item de teste registo');
     }
 
-    public function criarNovoUtilizadorInvalido(FunctionalTester $I)
+    public function testRegistarItemInvalido(FunctionalTester $I)
     {
         $I->amLoggedInAs(User::findOne(['username' => 'administrador'])->id);
         $I->amOnPage('/dashboard/index');
 
-        $I->click('Utilizadores');
+        $count = Item::find()->count();
+
+        $I->click('Itens');
         $I->click('Registar');
-
-        $count = User::find()->count();
-
-        $I->see('Registar Utilizador');
         $I->click('Guardar');
 
-        $I->see('Campo Obrigatório');
+        $I->see('Nome cannot be blank.');
 
-        Assert::assertTrue(User::find()->count() == $count); // Confirmar que não foi criado
+        Assert::assertTrue(Item::find()->count() == $count); //Para validar que não foi mesmo criado um novo objeto
     }
 }

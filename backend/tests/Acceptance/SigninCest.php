@@ -15,7 +15,7 @@ class SigninCest
     {
         //Pagina Inicial do backofficie
         $I->amOnPage('/login/index');
-        $I->fillField('Login[email]','tiago@gmail.com');//preenche os dados nos campos
+        $I->fillField('Login[email]','aceitacao@itassets.pt'); //preenche os dados nos campos
         $I->fillField('Login[password]','Password123');
         $I->wait(5);// = sleep
         $I->click('Iniciar Sessão');// da login
@@ -24,12 +24,8 @@ class SigninCest
         $I->amOnPage('/item/index');
         $I->wait(5);
 
-
-
         //Create item
-
         $I->amOnPage('/item/create');
-
         $I->fillField('Item[nome]','Nitendo Switch da Ines');
         $I->fillField('Item[serialNumber]','917576143');
         $I->fillField('Item[notas]','O rato nao funciona');
@@ -40,15 +36,11 @@ class SigninCest
         $url_item= $I->grabFromCurrentUrl();
         $Item_id = explode("/", $url_item);
 
-        $I->wait(5);
         //Pagina Inicial Item
-
-
         $I->amOnPage('/item/index');
         $I->wait(5);
 
         //Editar Item
-
         $I->amOnPage('/item/update/'. end($Item_id));
         $I->wait(5);
         $I->fillField('Item[nome]','Fones da Ines');
@@ -56,9 +48,7 @@ class SigninCest
         $I->click('Guardar');
         $I->wait(10);
 
-
         //Alocar  Item
-
         $I->amOnPage('/pedidoalocacao/index');
         $I->wait(5);
         $I->click('Alocar');
@@ -76,19 +66,14 @@ class SigninCest
         $I->wait(5);
         $url_alocacao= $I->grabFromCurrentUrl();
         $Alocacao_id = explode("/", $url_alocacao);
-        $I->amOnPage('/pedidoalocacao/index');
-        $I->wait(5);
-
 
         //Reparação de um Item
-
         $I->amOnPage('/pedidoreparacao/index');
         $I->wait(5);
         $I->click('Reparação');
         $I->wait(5);
 
         //Fazer Pedido de Reparação
-
         $I->fillField('PedidoReparacao[descricaoProblema]','O rato morreu');//preenche os dados nos campos
         $I->wait(3);
         $I->click('Continuar');
@@ -100,9 +85,7 @@ class SigninCest
         $I->click('Guardar');
         $I->wait(10);
 
-        //ADdicionar despesa
-
-
+        //Addicionar despesa
         $I->click('Adicionar despesa');
         $I->wait(2);
         $I->fillField('LinhaDespesasReparacao[descricao]','Comprar pelicula');
@@ -111,22 +94,17 @@ class SigninCest
         $I->wait(5);
         $I->click('Guardar');
 
-
         $I->wait(5);
         $I->click('Finalizar');
-
         $I->wait(5);
 
         $I->fillField('PedidoReparacao[respostaObs]','A ines vendeu a nitendo para comprar 4 jantes de um carro');
         $I->wait(3);
         $I->click('Finalizar Pedido de Reparação');
         $I->wait(5);
+
         $I->amOnPage('/pedidoalocacao/'.end($Alocacao_id));
         $I->wait(3);
         $I->click("Devolver");
-        $I->wait(10);
-
-        //$I->amOnPage('/item/index');
-
     }
 }

@@ -45,7 +45,7 @@ class EmpresaController extends Controller
      */
     public function actionIndex()
     {
-        $empresa = Empresa::findOne(['id' => 1]);
+        $empresa = Empresa::find()->limit(1);
 
         if($empresa)
         {

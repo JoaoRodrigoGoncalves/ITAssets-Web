@@ -47,10 +47,7 @@ class DashboardController extends Controller
 
     public function actionIndex()
     {
-
-        $empresa = Empresa::findOne(['id' => 1]);
-
-        if(!$empresa)
+        if(Empresa::find()->count() == 0)
         {
             return $this->redirect(Url::to(['empresa/create']));
         }
