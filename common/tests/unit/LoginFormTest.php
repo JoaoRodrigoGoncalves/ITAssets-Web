@@ -1,13 +1,13 @@
 <?php
 
-namespace common\tests\unit\models;
+namespace unit;
 
 use Codeception\Test\Unit;
+use common\fixtures\UserFixture;
+use common\models\Login;
 use common\models\User;
 use common\tests\UnitTester;
 use Yii;
-use common\models\Login;
-use common\fixtures\UserFixture;
 
 /**
  * Login form test
