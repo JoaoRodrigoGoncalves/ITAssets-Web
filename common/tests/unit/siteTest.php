@@ -5,7 +5,6 @@ namespace common\tests\Unit;
 
 use Codeception\Test\Unit;
 use common\models\Site;
-use common\tests\UnitTester;
 
 class siteTest extends Unit
 {

@@ -17,6 +17,14 @@ class categoriaTest extends \Codeception\Test\Unit
 
     // tests
 
+    //Campo Status
+    public function testCampoStatusInt(){
+        $testCategoria = new Categoria();
+
+        $testCategoria->status = "Active";
+        $this->assertFalse($testCategoria->validate(['status']));
+    }
+
     //Campo Nome
     public function testCampoNomeAdd()
     {

@@ -21,6 +21,13 @@ class grupoItens_ItemTest extends \Codeception\Test\Unit
 
     // tests
     //Campo grupoItems_id
+    public function testCampoGrupoItensIDInt(){
+        $testGruposItens_Item = new GruposItens_Item();
+
+        $testGruposItens_Item->grupoItens_id = "Itens da Sala B";
+        $this->assertFalse($testGruposItens_Item->validate(['grupoItens_id']));
+    }
+
     public function testCampoGrupoItensIDAdd(){
         /* Grupo de Itens */
         $newGrupoItensTeste = new Grupoitens();
@@ -43,7 +50,15 @@ class grupoItens_ItemTest extends \Codeception\Test\Unit
     }
 
     //Campo items_id
+    public function testCampoItemIDInt(){
+        $testGruposItens_Item = new GruposItens_Item();
+
+        $testGruposItens_Item->item_id = "ASUS VivoBook 15";
+        $this->assertFalse($testGruposItens_Item->validate(['item_id']));
+    }
+
     public function testCampoItemIDAdd(){
+        //Item
         $newItemTeste = new Item();
         $newItemTeste->status = Item::STATUS_ACTIVE;
         $newItemTeste->nome = "Componentes";
