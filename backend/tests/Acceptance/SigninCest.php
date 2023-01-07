@@ -18,27 +18,27 @@ class SigninCest
         $I->fillField('Login[email]','tiago@gmail.com');//preenche os dados nos campos
         $I->fillField('Login[password]','Password123');
         $I->wait(5);// = sleep
-        $I->click('button[type="submit"]');// da login
-
-        //Index do Item
+        $I->click('Iniciar Sessão');// da login
 
         $I->wait(5);
         $I->amOnPage('/item/index');
         $I->wait(5);
 
+
+
         //Create item
 
         $I->amOnPage('/item/create');
 
-        $I->fillField('Item[nome]','Nitendo Switch da Ines 6');
+        $I->fillField('Item[nome]','Nitendo Switch da Ines');
         $I->fillField('Item[serialNumber]','917576143');
         $I->fillField('Item[notas]','O rato nao funciona');
         $I->wait(5);
         $I->click('Guardar');
         $I->wait(5);
-        $url = $I->grabFromCurrentUrl();
 
-        $Item_id = explode("/", $url);
+        $url_item= $I->grabFromCurrentUrl();
+        $Item_id = explode("/", $url_item);
 
         $I->wait(5);
         //Pagina Inicial Item
@@ -74,6 +74,8 @@ class SigninCest
         $I->fillField('PedidoAlocacao[obs]','E da HP, ja caiu 3 vezes no chao');//preenche os dados nos campos
         $I->click('Alocar');
         $I->wait(5);
+        $url_alocacao= $I->grabFromCurrentUrl();
+        $Alocacao_id = explode("/", $url_alocacao);
         $I->amOnPage('/pedidoalocacao/index');
         $I->wait(5);
 
@@ -119,7 +121,7 @@ class SigninCest
         $I->wait(3);
         $I->click('Finalizar Pedido de Reparação');
         $I->wait(5);
-        $I->amOnPage('/pedidoalocacao/10');
+        $I->amOnPage('/pedidoalocacao/'.end($Alocacao_id));
         $I->wait(3);
         $I->click("Devolver");
         $I->wait(10);
