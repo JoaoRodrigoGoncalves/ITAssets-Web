@@ -9,32 +9,6 @@ use common\models\User;
 
 class ReparacaoCest
 {
-    public function _before(AcceptanceTester $I)
-    {
-        $user_aceitacao = User::findOne(['email' => 'aceitacao@itassets.pt']);
-        if($user_aceitacao == null)
-        {
-            // Criar utilizador necessário para executar o teste
-            $user_aceitacao = new Utilizador();
-            $user_aceitacao->username = "Aceitação";
-            $user_aceitacao->email = "aceitacao@itassets.pt";
-            $user_aceitacao->role = "administrador";
-            $user_aceitacao->createUser(true);
-        }
-        else
-        {
-            $user_aceitacao->status = User::STATUS_ACTIVE;
-            $user_aceitacao->save();
-        }
-    }
-
-    public function _after(AcceptanceTester $I)
-    {
-        $user_aceitacao = User::findOne(['email' => 'aceitacao@itassets.pt']);
-        $user_aceitacao->status = User::STATUS_INACTIVE;
-        $user_aceitacao->save();
-    }
-
     public function testPercursoReparacao(AcceptanceTester $I)
     {
         //Pagina Inicial do backofficie
