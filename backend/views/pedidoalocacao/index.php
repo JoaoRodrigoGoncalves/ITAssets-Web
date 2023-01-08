@@ -104,7 +104,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             },
                             'update' => function($url, $model)
                             {
-                                if($model->status == 10)
+                                if($model->status == PedidoAlocacao::STATUS_ABERTO)
                                 {
                                     return Html::a('<i class="fas fa-reply"></i>', ['pedidoalocacao/update', 'id' => $model->id], ['class' => 'btn btn-secondary']);
                                 }

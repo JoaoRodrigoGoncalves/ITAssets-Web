@@ -187,7 +187,7 @@ class PedidoreparacaoController extends Controller
 
                     case "Grupoitens":
                         $inner_model = Grupoitens::findOne($id);
-                        $objectosSelecionados[] = new CustomTableRow($id, $inner_model->nome, null);
+                        $objectosSelecionados[] = new CustomTableRow($id, $inner_model->nome, $inner_model->listItensHumanReadable(100));
                         break;
                 }
 

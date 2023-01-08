@@ -71,8 +71,8 @@ $this->params['breadcrumbs'][] = 'Seleção de Objetos';
                         'value' => 'nome'
                     ],
                     [
-                        'label' => 'Serial',
-                        'value' => 'serial'
+                        'label' => 'Informação Adicional',
+                        'value' => 'info_adicional'
                     ],
                 ]
             ]);

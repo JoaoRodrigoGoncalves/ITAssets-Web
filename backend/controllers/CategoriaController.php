@@ -57,7 +57,7 @@ class CategoriaController extends Controller
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => Categoria::find(),
+            'query' => Categoria::find()->where(['status' => Categoria::STATUS_ACTIVE]),
         ]);
 
         return $this->render('index', [

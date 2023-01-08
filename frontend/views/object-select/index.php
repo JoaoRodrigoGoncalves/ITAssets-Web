@@ -34,9 +34,9 @@ $this->title = "Seleção de objeto";
                                 'value' => 'nome'
                             ],
                             [
-                                'label' => 'Serial',
+                                'label' => 'Informação Adicional',
                                 'format' => 'html',
-                                'value' => 'serial'
+                                'value' => 'info_adicional'
                             ],
                         ]
                     ]);
@@ -61,9 +61,9 @@ $this->title = "Seleção de objeto";
                                 'value' => 'nome'
                             ],
                             [
-                                'label' => 'Serial',
+                                'label' => 'Informação Adicional',
                                 'format' => 'html',
-                                'value' => 'serial'
+                                'value' => 'info_adicional'
                             ],
                         ]
                     ]);

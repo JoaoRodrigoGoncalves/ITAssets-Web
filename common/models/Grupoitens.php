@@ -163,4 +163,21 @@ class Grupoitens extends ActiveRecord
 
         return $dataAlocacao;
     }
+
+    public function listItensHumanReadable($maxChar = null)
+    {
+        $string = "";
+
+        foreach ($this->items as $item) {
+            $string .= $item->nome . ", ";
+        }
+
+        $string = substr($string, 0, -2);
+
+        if($maxChar != null)
+        {
+            return substr($string, 0, $maxChar) . "...";
+        }
+        return $string;
+    }
 }

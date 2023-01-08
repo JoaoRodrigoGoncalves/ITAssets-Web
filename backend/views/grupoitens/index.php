@@ -53,8 +53,13 @@ $this->params['breadcrumbs'][] = $this->title;
                             },
                             'delete' => function($url, $model)
                             {
-                                return Html::a('<i class="fas fa-trash-alt"></i>', ['grupoitens/delete', 'id' => $model->id], ['class' => 'btn btn-danger',
-                                    'data'=>['method'=>'POST']]);
+                                return Html::a('<i class="fas fa-trash-alt"></i>', ['grupoitens/delete', 'id' => $model->id], [
+                                    'class' => 'btn btn-danger',
+                                    'data'=> [
+                                        'confirm' => 'Tem a certeza que quer eliminar este grupo de itens?',
+                                        'method'=> 'POST'
+                                    ]
+                                ]);
                             },
                         ],
                     ],

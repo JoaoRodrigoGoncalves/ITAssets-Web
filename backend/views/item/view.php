@@ -46,6 +46,19 @@ $this->params['breadcrumbs'][] = $this->title;
                 </div>
             </div>
         </div>
+        <div class="card-footer">
+            <div class="float-right">
+                <?= Html::a('<i class="fas fa-pencil-alt"></i>', ['item/update', 'id' => $item->id], ['class' => 'btn btn-warning text-white']) ?>
+
+                <?= Html::a('<i class="fas fa-trash"></i>', ['item/delete', 'id' => $item->id], [
+                    'class' => 'btn btn-danger',
+                    'data'=> [
+                        'confirm' => 'Tem a certeza que quer eliminar este item?',
+                        'method'=> 'POST'
+                    ]
+                ]) ?>
+            </div>
+        </div>
     </div>
     <div class="card">
         <div class="card-header">

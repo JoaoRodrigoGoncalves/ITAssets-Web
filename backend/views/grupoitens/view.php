@@ -45,11 +45,10 @@ $this->params['breadcrumbs'][] = $this->title;
 
                     <?= Html::a('<i class="fas fa-trash"></i>', ['delete', 'id' => $model->id], [
                         'class' => 'btn btn-danger',
-                        'data' => [
-                            'confirm' => 'Tens certeza que queres eliminar este grupo?',
-                            'method' => 'post',
-                        ],
-
+                        'data'=> [
+                            'confirm' => 'Tem a certeza que quer eliminar este grupo de itens?',
+                            'method'=> 'POST'
+                        ]
                     ]) ?>
                 </div>
             </div>

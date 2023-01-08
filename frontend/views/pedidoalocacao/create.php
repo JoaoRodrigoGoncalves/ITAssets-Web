@@ -66,7 +66,7 @@ $this->title = 'Novo Pedido de Alocação';
                         <?php if($customTableData != null): ?>
                             <tr>
                                 <td><?= $customTableData->nome ?></td>
-                                <td><?= $customTableData->serial ?></td>
+                                <td><?= $customTableData->info_adicional ?></td>
                             </tr>
                         <?php else: ?>
                             <tr>

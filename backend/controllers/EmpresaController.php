@@ -45,7 +45,7 @@ class EmpresaController extends Controller
      */
     public function actionIndex()
     {
-        $empresa = Empresa::find()->limit(1);
+        $empresa = Empresa::find()->limit(1)->one();
 
         if($empresa)
         {
@@ -66,7 +66,7 @@ class EmpresaController extends Controller
      */
     public function actionCreate()
     {
-        if(Empresa::find()->orderBy(1)->count() == 0) {
+        if(Empresa::find()->count() == 0) {
             $model = new Empresa();
 
             if ($this->request->isPost) {
@@ -91,7 +91,7 @@ class EmpresaController extends Controller
      */
     public function actionUpdate()
     {
-        $model = Empresa::findOne(['id' => 1]);
+        $model = Empresa::find()->limit(1)->one();
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
             return $this->redirect(Url::to(['empresa/index']));

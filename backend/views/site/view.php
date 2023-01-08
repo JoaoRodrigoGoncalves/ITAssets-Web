@@ -44,10 +44,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 <?= Html::a('<i class="fas fa-pencil"></i>', ['update', 'id' => $model->id], ['class' => 'btn btn-warning text-white']) ?>
                 <?= Html::a('<i class="fas fa-trash"></i>', ['delete', 'id' => $model->id], [
                     'class' => 'btn btn-danger',
-                    'data' => [
-                        'confirm' => 'Are you sure you want to delete this item?',
-                        'method' => 'post',
-                    ],
+                    'data'=> [
+                        'confirm' => 'Tem a certeza que quer eliminar este local?',
+                        'method'=> 'POST'
+                    ]
                 ]) ?>
             </div>
         </div>

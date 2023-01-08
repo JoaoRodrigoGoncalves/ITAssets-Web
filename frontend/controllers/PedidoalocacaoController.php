@@ -128,7 +128,7 @@ class PedidoalocacaoController extends Controller
 
                     case "Grupoitens":
                         $inner_model = Grupoitens::findOne($id);
-                        $customTableData = new CustomTableRow($id, $inner_model->nome, null);
+                        $customTableData = new CustomTableRow($id, $inner_model->nome, $inner_model->listItensHumanReadable(100));
                         break;
                 }
 

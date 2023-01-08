@@ -5,13 +5,13 @@ class CustomTableRow
 {
     public string $id;
     public string $nome;
-    public ?string $serial;
+    public ?string $info_adicional;
 
-    public function __construct($id, $nome, $serial)
+    public function __construct($id, $nome, $info_adicional)
     {
         $this->id = $id;
         $this->nome = $nome;
-        $this->serial = $serial;
+        $this->info_adicional = $info_adicional;
     }
 
 }
