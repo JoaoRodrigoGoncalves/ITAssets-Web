@@ -65,8 +65,8 @@ $this->params['breadcrumbs'][] = $this->title;
                         'value' => 'nome'
                     ],
                     [
-                        'label' => 'Serial',
-                        'value' => 'serial'
+                        'label' => 'Informações Adicionais',
+                        'value' => 'info_adicional'
                     ],
                 ]
             ]);

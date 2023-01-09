@@ -15,6 +15,8 @@ use yii\widgets\ActiveForm;
         'method' => 'get',
     ]); ?>
 
+<!--    TODO: Projeto final-->
+
     <?= $form->field($model, 'id') ?>
 
     <?= $form->field($model, 'dataPedido') ?>
