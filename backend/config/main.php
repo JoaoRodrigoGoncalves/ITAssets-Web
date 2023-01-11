@@ -52,6 +52,7 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'api/site', 'pluralize' => false],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'api/categoria', 'pluralize' => false],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'api/user', 'pluralize' => false],
                 [
