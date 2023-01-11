@@ -3,6 +3,8 @@
 namespace backend\modules\api\controllers;
 
 use common\models\Item;
+use common\models\PedidoAlocacao;
+use common\models\User;
 use Yii;
 use yii\filters\auth\HttpBearerAuth;
 use yii\filters\VerbFilter;
@@ -73,6 +75,29 @@ class ItemController extends ActiveController
     {
         $this->checkAccess("index");
         return Item::findAll(['status' => Item::STATUS_ACTIVE]);
+    }
+
+    public function actionItensuser($user_id)
+    {
+        $this->checkAccess('index'); // Porque é baseado em index
+
+        $authmgr = Yii::$app->authManager;
+        $allowedRoles = [$authmgr->getRole('administrador'), $authmgr->getRole('operadorlogistica')];
+
+        if(Yii::$app->user->id != $user_id && !in_array(Yii::$app->authManager->getRolesByUser(Yii::$app->user->id), $allowedRoles))
+        {
+            throw new ForbiddenHttpException();
+        }
+
+        $item_arr = [];
+        foreach (User::findOne($user_id)->pedidosAlocacaoAsRequester as $pedido)
+        {
+            if($pedido->status == PedidoAlocacao::STATUS_APROVADO)
+            {
+                $item_arr[] = $pedido->item;
+            }
+        }
+        return $item_arr;
     }
 
     public function actionDelete($id)

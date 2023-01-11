@@ -54,7 +54,17 @@ return [
             'rules' => [
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'api/categoria', 'pluralize' => false],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'api/user', 'pluralize' => false],
-                ['class' => 'yii\rest\UrlRule', 'controller' => 'api/item', 'pluralize' => false],
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/item',
+                    'pluralize' => false,
+                    'extraPatterns' => [
+                        'GET user/{user_id}' => 'itensuser',
+                    ],
+                    'tokens' => [
+                        '{user_id}' => '<user_id:\\d+>',
+                    ],
+                ],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'api/pedidoalocacao', 'pluralize' => false],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'api/grupoitens', 'pluralize' => false],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'api/sysinfo'],
