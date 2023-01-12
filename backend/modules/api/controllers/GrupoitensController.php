@@ -97,9 +97,10 @@ class GrupoitensController  extends ActiveController
 
                         $item=Item::findOne(['id'=>$itens[$i]]);
 
+                        //ve se o item existe na bd
                         if ($item != null)
                         {
-                            //
+                            //validação se o item esta associado algo
                             if (!$item->isInActivePedidoAlocacao() && !$item->isInActiveItemsGroup()  && !$item->isInActivePedidoReparacao())
                             {
                                 $grupoitensItem = new GruposItens_Item();
@@ -110,7 +111,7 @@ class GrupoitensController  extends ActiveController
                             }
                             else
                             {
-                                $model->delete();
+                                $model->delete();//elimina o grupo item que foi criado caso aconteça isto
                                 throw new BadRequestHttpException("O item ja esta associado");
                             }
 
