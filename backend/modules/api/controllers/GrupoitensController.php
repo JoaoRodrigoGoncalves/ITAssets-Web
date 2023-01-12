@@ -3,9 +3,11 @@
 namespace backend\modules\api\controllers;
 
 use common\models\Grupoitens;
+use common\models\GruposItens_Item;
 use Yii;
 use yii\filters\auth\HttpBearerAuth;
 use yii\rest\ActiveController;
+use yii\web\BadRequestHttpException;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
@@ -19,6 +21,7 @@ class GrupoitensController  extends ActiveController
     {
         $behaviors = parent::behaviors();
 
+        //para indicar que a resposta vem em json
         $behaviors['formats'] = [
             'class' => 'yii\filters\ContentNegotiator',
             'formats' => [
@@ -26,6 +29,7 @@ class GrupoitensController  extends ActiveController
             ],
         ];
 
+        //Token do user para confirmar a autenticação
         $behaviors['authenticator'] = [
             'class' => HttpBearerAuth::class,
         ];
@@ -36,7 +40,7 @@ class GrupoitensController  extends ActiveController
     public function actions()
     {
         $actions = parent::actions();
-        unset($actions['delete'], $actions['index']);
+        unset($actions['delete'], $actions['index'],$actions['create']);
         return $actions;
     }
 
@@ -70,6 +74,46 @@ class GrupoitensController  extends ActiveController
     {
         $this->checkAccess('index');
         return Grupoitens::findAll(['status' => Grupoitens::STATUS_ACTIVE]);
+    }
+
+    public function actionCreate()
+    {
+        $model = new Grupoitens();
+        $data= Yii::$app->getRequest()->getBodyParams();
+
+        if (isset($data['nome']))
+        {
+            if (isset($data['itens']))
+            {
+
+                //carregar os dados para o model
+                $model->nome=$data['nome'];
+                $model->notas=$data['notas'];
+                $model->save();
+
+                $itens = $data['itens'];
+                for ($i = 0; $i < count($itens); $i++)
+                {
+                    $grupoitensItem = new GruposItens_Item();
+                    $grupoitensItem->grupoItens_id = $model->id;
+                    $grupoitensItem->item_id = $itens[$i];
+                    $grupoitensItem->save();
+                }
+
+                return "Grupo Itens Criado com Sucesso";
+            }
+            else
+            {
+                throw new BadRequestHttpException("Por favor inserir itens");
+            }
+
+        }
+        else{
+            throw new BadRequestHttpException("Insira dados");
+        }
+
+
+
     }
 
     public function actionDelete($id)

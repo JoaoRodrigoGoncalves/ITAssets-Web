@@ -23,7 +23,7 @@ return [
         'request' => [
             'csrfParam' => '_csrf-backend',
             'parsers' => [
-               'application\json' => 'yii\web\JsonParser'
+               'application/json' => 'yii\web\JsonParser'
             ],
         ],
         'user' => [
