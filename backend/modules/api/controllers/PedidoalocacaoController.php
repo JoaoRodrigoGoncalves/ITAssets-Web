@@ -9,9 +9,12 @@ use Yii;
 use yii\filters\auth\HttpBearerAuth;
 use yii\rest\ActiveController;
 use yii\web\BadRequestHttpException;
+
+use yii\web\ConflictHttpException;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
+use yii\web\ServerErrorHttpException;
 use Yii\web\UnprocessableEntityHttpException;
 
 class PedidoalocacaoController extends ActiveController
@@ -100,86 +103,99 @@ class PedidoalocacaoController extends ActiveController
     }
 
     public function actionCreate(){
+        $this->checkAccess("create");
+
         //Cria um Novo Pedido de Alocação
         $model = new PedidoAlocacao();
-
-        $this->checkAccess("create", null);
-
         $data = Yii::$app->getRequest()->getBodyParams();
 
-        //Verifica se foi inserido um aprovador e guarda o status: caso inserido o estado é aprovado, caso não inserido o estado é aberto
-        if(isset($data['aprovador_id'])){
-            $model->status = PedidoAlocacao::STATUS_APROVADO;
-        }else{
-            $model->status = PedidoAlocacao::STATUS_ABERTO;
-        }
-
-        //Guarda os seguintes campos
-        $model->requerente_id = $data['requerente_id'];
-        $model->aprovador_id = $data['aprovador_id'];
         $model->obs = $data['obs'];
         $model->obsResposta = $data['obsResposta'];
+        $model->requerente_id = $data['requerente_id'];
+
+        $authmgr = Yii::$app->authManager;
+        if(in_array($authmgr->getRolesByUser(Yii::$app->user->id), [$authmgr->getRole('administrador'), $authmgr->getRole('operadorlogistica')]))
+        {
+            // Se for administrador ou operador logistico, o pedido é imediatamente aceite
+            $model->aprovador_id = Yii::$app->user->id;
+            $model->status = PedidoAlocacao::STATUS_APROVADO;
+        }
 
         //Valida se foi colocado um item e um grupo no mesmo pedido: caso aconteça tem de dar erro
-        if(isset($data['item_id']) && isset($data['grupoItem_id'])){
-            throw new BadRequestHttpException("Não é possível selecionar um item e um grupo de itens ");
+        if(isset($data['item_id']) && isset($data['grupoItem_id']))
+        {
+            throw new BadRequestHttpException("Não é possível selecionar um item e um grupo de itens.");
         }
 
         //Valida se o item exite na base de dados
         //Valida se o item não está associado num grupo de itens nem alocado
-        if(isset($data['item_id'])){
+        if(isset($data['item_id']))
+        {
             $item = Item::findOne($data['item_id']);
 
             //ve se o item existe na bd
-            if ($item != null) {
+            if ($item != null)
+            {
                 //O Item não pode estar num grupo de itens nem alocado
-                if (!$item->isInActiveItemsGroup() && !$item->isInActivePedidoAlocacao()) {
+                if (!$item->isInActiveItemsGroup() && !$item->isInActivePedidoAlocacao())
+                {
                     $model->item_id = $data['item_id'];
                     $model->grupoItem_id = null;
-
                     $model->save();
                     return $model;
-                } else {
+                }
+                else
+                {
                     throw new BadRequestHttpException("O Item não pode estar associado a um Grupo de itens e nem Alocado");
                 }
             }
-            else{
+            else
+            {
                 throw new BadRequestHttpException("O Item não existe");
             }
         }
+
         //Valida se o grupo de itens exite na base de dados
         //Valida se o grupo de itens não está alocado
-        elseif(isset($data['grupoItem_id'])){
+        if(isset($data['grupoItem_id']))
+        {
             $grupoItens = Grupoitens::findOne($data['grupoItem_id']);
 
             //ve se o grupo de itens existe na bd
-            if ($grupoItens != null) {
+            if ($grupoItens != null)
+            {
                 //O Grupo de Itens não pode estar alocado
-                if (!$grupoItens->isinActivePedidoAlocacao()) {
+                if (!$grupoItens->isinActivePedidoAlocacao())
+                {
                     $model->item_id = null;
                     $model->grupoItem_id = $data['grupoItem_id'];
 
                     $model->save();
                     return $model;
-                } else {
+                }
+                else
+                {
                     throw new BadRequestHttpException("O Grupo de Item não pode estar Alocado");
                 }
             }
-            else{
+            else
+            {
                 throw new BadRequestHttpException("O Grupo de Itens não existe");
             }
         }
+        throw new ServerErrorHttpException();
     }
 
     public function actionUpdate($id){
+        $this->checkAccess("update");
         $model = PedidoAlocacao::findOne(['id' => $id]);
 
         if($model != null)
         {
-            $this->checkAccess("update", null, ['id' => $id]);
             $data = Yii::$app->getRequest()->getBodyParams();
 
-            switch ($data['status']){
+            switch ($data['status'])
+            {
                 /** Caso o status seja igual a 9, ou seja, APROVADO **/
                 case PedidoAlocacao::STATUS_APROVADO:
                     if($model->status == PedidoAlocacao::STATUS_ABERTO)
@@ -189,8 +205,9 @@ class PedidoalocacaoController extends ActiveController
                         $model->obsResposta = $data['obsResposta'];
                         $model->save();
                     }
-                    else{
-                        throw new BadRequestHttpException("Não é possível aprovar um pedido depois de processado");
+                    else
+                    {
+                        throw new ConflictHttpException("Não é possível aprovar um pedido depois de processado.");
                     }
                     break;
 
@@ -203,20 +220,7 @@ class PedidoalocacaoController extends ActiveController
                     }
                     else
                     {
-                        throw new BadRequestHttpException("Não é possível devolver um pedido depois de processado");
-                    }
-                    break;
-
-                /** Caso o status seja igual a 0, ou seja, CANCELADO **/
-                case PedidoAlocacao::STATUS_CANCELADO:
-                    if($model->status == PedidoAlocacao::STATUS_ABERTO)
-                    {
-                        $model->status = PedidoAlocacao::STATUS_NEGADO;
-                        $model->save();
-                    }
-                    else
-                    {
-                        throw new BadRequestHttpException("Não é possível cancelar um pedido depois de processado");
+                        throw new ConflictHttpException("Não é possível devolver um pedido depois de processado.");
                     }
                     break;
 
@@ -231,9 +235,12 @@ class PedidoalocacaoController extends ActiveController
                     }
                     else
                     {
-                        throw new BadRequestHttpException("Não é possível negar um pedido depois de processado");
+                        throw new ConflictHttpException("Não é possível negar um pedido depois de processado");
                     }
                     break;
+
+                default:
+                    throw new UnprocessableEntityHttpException("Estado indicado inválido");
             }
             return $model;
         }
@@ -249,21 +256,22 @@ class PedidoalocacaoController extends ActiveController
 
         if($model != null)
         {
-            $this->checkAccess("delete", null, ['id' => $id]);
+            $this->checkAccess("delete", null, ['id' => $id]); // Deixar aqui mesmo porque o checkAccess requer que o pedido exista
 
             if($model->status == PedidoAlocacao::STATUS_ABERTO)
             {
                 $model->status = PedidoAlocacao::STATUS_CANCELADO;
                 $model->save();
+                Yii::$app->getResponse()->setStatusCode(204);
             }
             else
             {
-                throw new BadRequestHttpException("Não é possível cancelar um pedido depois de processado");
+                throw new BadRequestHttpException("Não é possível cancelar um pedido depois de processado.");
             }
         }
         else
         {
-            throw new NotFoundHttpException("Pedido de Alocação não encontrado");
+            throw new NotFoundHttpException("Pedido de Alocação não encontrado.");
         }
     }
 }

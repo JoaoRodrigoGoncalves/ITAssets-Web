@@ -108,8 +108,9 @@ class ItemController extends ActiveController
         {
             if(!$model->isInActiveItemsGroup() || !$model->isInActivePedidoAlocacao())
             {
-                $model->status = 0;
+                $model->status = Item::STATUS_DELETED;
                 $model->save();
+                Yii::$app->getResponse()->setStatusCode(204);
             }
             else
             {
