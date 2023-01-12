@@ -4,6 +4,7 @@ namespace backend\modules\api\controllers;
 
 use common\models\Grupoitens;
 use common\models\GruposItens_Item;
+use common\models\Item;
 use Yii;
 use yii\filters\auth\HttpBearerAuth;
 use yii\rest\ActiveController;
@@ -78,38 +79,56 @@ class GrupoitensController  extends ActiveController
 
     public function actionCreate()
     {
-        $model = new Grupoitens();
-        $data= Yii::$app->getRequest()->getBodyParams();
+        if(!$this->checkAccess('create')) {
 
-        if (isset($data['nome']))
-        {
-            if (isset($data['itens']))
-            {
+            $model = new Grupoitens();
+            $data = Yii::$app->getRequest()->getBodyParams();
 
-                //carregar os dados para o model
-                $model->nome=$data['nome'];
-                $model->notas=$data['notas'];
-                $model->save();
+            if (isset($data['nome'])) {
+                if (isset($data['itens'])) {
 
-                $itens = $data['itens'];
-                for ($i = 0; $i < count($itens); $i++)
-                {
-                    $grupoitensItem = new GruposItens_Item();
-                    $grupoitensItem->grupoItens_id = $model->id;
-                    $grupoitensItem->item_id = $itens[$i];
-                    $grupoitensItem->save();
+                    //carregar os dados para o model
+                    $model->nome = $data['nome'];
+                    $model->notas = $data['notas'];
+                    $model->save();
+                    $itens = $data['itens'];
+
+                    for ($i = 0; $i < count($itens); $i++) {
+
+                        $item=Item::findOne(['id'=>$itens[$i]]);
+
+                        if ($item != null)
+                        {
+                            //
+                            if (!$item->isInActivePedidoAlocacao() && !$item->isInActiveItemsGroup()  && !$item->isInActivePedidoReparacao())
+                            {
+                                $grupoitensItem = new GruposItens_Item();
+                                $grupoitensItem->grupoItens_id= $model->id;
+                                $grupoitensItem->item_id = $itens[$i];
+                                $grupoitensItem->save();
+
+                            }
+                            else
+                            {
+                                $model->delete();
+                                throw new BadRequestHttpException("O item ja esta associado");
+                            }
+
+                        }
+                        else
+                        {
+                            $model->delete();
+                            throw new BadRequestHttpException("O item nao existe");
+                        }
+                    }
+                    return "Grupo Itens Criado com Sucesso";
+                } else {
+                    throw new BadRequestHttpException("Por favor inserir itens");
                 }
 
-                return "Grupo Itens Criado com Sucesso";
+            } else {
+                throw new BadRequestHttpException("Insira dados");
             }
-            else
-            {
-                throw new BadRequestHttpException("Por favor inserir itens");
-            }
-
-        }
-        else{
-            throw new BadRequestHttpException("Insira dados");
         }
 
 
@@ -118,15 +137,18 @@ class GrupoitensController  extends ActiveController
 
     public function actionDelete($id)
     {
-        $model = Grupoitens::findOne(['id' => $id]);
-        if($model != null)
-        {
-            $model->status = Grupoitens::STATUS_DELETED;
-            $model->save();
-        }
-        else
-        {
-            throw new NotFoundHttpException("Grupo não encontrado");
+        if(!$this->checkAccess('create')) {
+            $model = Grupoitens::findOne(['id' => $id]);
+            if($model != null)
+            {
+                $model->status = Grupoitens::STATUS_DELETED;
+                $model->save();
+                return "O grupo de itens foi eliminado com sucesso";
+            }
+            else
+            {
+                throw new NotFoundHttpException("Grupo não encontrado");
+            }
         }
     }
 }
