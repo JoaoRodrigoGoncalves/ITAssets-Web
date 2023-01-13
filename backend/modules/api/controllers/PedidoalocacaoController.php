@@ -5,6 +5,7 @@ namespace backend\modules\api\controllers;
 use common\models\Grupoitens;
 use common\models\Item;
 use common\models\PedidoAlocacao;
+use common\models\User;
 use Yii;
 use yii\filters\auth\HttpBearerAuth;
 use yii\rest\ActiveController;
@@ -100,6 +101,17 @@ class PedidoalocacaoController extends ActiveController
             default:
                 throw new NotFoundHttpException();
         }
+    }
+
+    public function actionPedidoalocacaouser($user_id){
+        $this->checkAccess('index');
+
+        $pedidoAlocacao_arr = [];
+        foreach (User::findOne($user_id)->pedidosAlocacaoAsRequester as $pedido)
+        {
+            $pedidoAlocacao_arr[] = $pedido;
+        }
+        return $pedidoAlocacao_arr;
     }
 
     public function actionCreate(){

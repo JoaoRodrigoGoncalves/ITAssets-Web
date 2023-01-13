@@ -66,7 +66,17 @@ return [
                         '{user_id}' => '<user_id:\\d+>',
                     ],
                 ],
-                ['class' => 'yii\rest\UrlRule', 'controller' => 'api/pedidoalocacao', 'pluralize' => false],
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/pedidoalocacao',
+                    'pluralize' => false,
+                    'extraPatterns' => [
+                        'GET user/{user_id}' => 'pedidoalocacaouser',
+                    ],
+                    'tokens' => [
+                        '{user_id}' => '<user_id:\\d+>',
+                    ],
+                ],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'api/grupoitens', 'pluralize' => false],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'api/sysinfo'],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'api/login'],
