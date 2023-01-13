@@ -73,6 +73,14 @@ return [
                     'extraPatterns' => [
                         'GET user/{user_id}' => 'pedidoalocacaouser',
                     ],
+                ],
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/pedidoreparacao',
+                    'pluralize' => false,
+                    'extraPatterns' => [
+                        'GET user/{user_id}' => 'itensuser',
+                    ],
                     'tokens' => [
                         '{user_id}' => '<user_id:\\d+>',
                     ],

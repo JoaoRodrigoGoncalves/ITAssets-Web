@@ -53,6 +53,12 @@ class PedidoalocacaoController extends ActiveController
         switch ($action)
         {
             case "index":
+                if(!Yii::$app->user->can('readOthersPedidoAlocacao'))
+                {
+                    throw new ForbiddenHttpException();
+                }
+            break;
+
             case "create":
                 if(!Yii::$app->user->can('createPedidoAlocacao'))
                 {
@@ -214,6 +220,7 @@ class PedidoalocacaoController extends ActiveController
                     {
                         $model->status = PedidoAlocacao::STATUS_APROVADO;
                         $model->aprovador_id = $data['aprovador_id'];
+                        $model->dataInicio = date_format(date_create(), "Y-m-d H:i:s");
                         $model->obsResposta = $data['obsResposta'];
                         $model->save();
                     }
@@ -228,6 +235,7 @@ class PedidoalocacaoController extends ActiveController
                     if($model->status == PedidoAlocacao::STATUS_APROVADO)
                     {
                         $model->status = PedidoAlocacao::STATUS_DEVOLVIDO;
+                        $model->dataFim = date_format(date_create(), "Y-m-d H:i:s");
                         $model->save();
                     }
                     else
@@ -242,6 +250,7 @@ class PedidoalocacaoController extends ActiveController
                     {
                         $model->status = PedidoAlocacao::STATUS_NEGADO;
                         $model->aprovador_id = $data['aprovador_id'];
+                        $model->dataInicio = date_format(date_create(), "Y-m-d H:i:s");
                         $model->obsResposta = $data['obsResposta'];
                         $model->save();
                     }

@@ -74,6 +74,35 @@ class PedidoReparacao extends \yii\db\ActiveRecord
         ];
     }
 
+    public function fields()
+    {
+        $fields =  parent::fields();
+
+        $fields['objetos'] = function ()
+        {
+            $arr = [];
+
+            foreach ($this->linhasPedidoReparacao as $linha) {
+                if($linha->item != null)
+                {
+                    $arr['itens'][] = $linha->item;
+                }
+                else
+                {
+                    $arr['grupos'][] = $linha->grupo;
+                }
+            }
+            return $arr;
+        };
+
+        $fields['despesas'] = function ()
+        {
+            return $this->linhasDespesasReparacao;
+        };
+
+        return $fields;
+    }
+
     /**
      * Gets query for [[LinhasDespesasReparacao]].
      *
