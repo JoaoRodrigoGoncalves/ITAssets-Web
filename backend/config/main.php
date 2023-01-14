@@ -52,18 +52,32 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
-                ['class' => 'yii\rest\UrlRule', 'controller' => 'api/site', 'pluralize' => false],
-                ['class' => 'yii\rest\UrlRule', 'controller' => 'api/categoria', 'pluralize' => false],
-                ['class' => 'yii\rest\UrlRule', 'controller' => 'api/user', 'pluralize' => false],
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/site',
+                    'pluralize' => false
+                ],
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/categoria',
+                    'pluralize' => false
+                ],
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/user',
+                    'pluralize' => false
+                ],
                 [
                     'class' => 'yii\rest\UrlRule',
                     'controller' => 'api/item',
                     'pluralize' => false,
                     'extraPatterns' => [
                         'GET user/{user_id}' => 'itensuser',
+                        'GET {id}' => 'view'
                     ],
                     'tokens' => [
                         '{user_id}' => '<user_id:\\d+>',
+                        '{id}' => '<id:\\d+>',
                     ],
                 ],
                 [
@@ -72,6 +86,11 @@ return [
                     'pluralize' => false,
                     'extraPatterns' => [
                         'GET user/{user_id}' => 'pedidoalocacaouser',
+                        'GET {id}' => 'view'
+                    ],
+                    'tokens' => [
+                        '{user_id}' => '<user_id:\\d+>',
+                        '{id}' => '<id:\\d+>',
                     ],
                 ],
                 [
@@ -79,15 +98,37 @@ return [
                     'controller' => 'api/pedidoreparacao',
                     'pluralize' => false,
                     'extraPatterns' => [
-                        'GET user/{user_id}' => 'itensuser',
+                        'GET user/{user_id}' => 'pedidosreparacaouser',
+                        'GET {id}' => 'view'
                     ],
                     'tokens' => [
                         '{user_id}' => '<user_id:\\d+>',
+                        '{id}' => '<id:\\d+>',
                     ],
                 ],
-                ['class' => 'yii\rest\UrlRule', 'controller' => 'api/grupoitens', 'pluralize' => false],
-                ['class' => 'yii\rest\UrlRule', 'controller' => 'api/sysinfo'],
-                ['class' => 'yii\rest\UrlRule', 'controller' => 'api/login'],
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/grupoitens',
+                    'pluralize' => false,
+                    'extraPatterns' => [
+                        'GET user/{user_id}' => 'grupositensuser',
+                        'GET {id}' => 'view'
+                    ],
+                    'tokens' => [
+                        '{user_id}' => '<user_id:\\d+>',
+                        '{id}' => '<id:\\d+>',
+                    ],
+                ],
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/sysinfo',
+                    'pluralize' => false,
+                ],
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/login',
+                    'pluralize' => false
+                ],
                 // Isto tem de ficar aqui em baixo porque o Yii2 é estúpido
                 ['pattern' => '<controller:\w+>/<id:\d+>', 'route' => '<controller>/view'],
                 ['pattern' => '<controller:\w+>/<action:\w+>/<id:\d+>', 'route' => '<controller>/<action>'],

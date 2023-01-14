@@ -60,7 +60,7 @@ class PedidoreparacaoController extends ActiveController
                 }
             break;
 
-            case "itensUser":
+            case "pedidosreparacaouser":
             case "create":
                 if(!Yii::$app->user->can('createPedidoReparacao'))
                 {
@@ -111,9 +111,9 @@ class PedidoreparacaoController extends ActiveController
         }
     }
 
-    public function actionItensuser($user_id)
+    public function actionPedidosreparacaouser($user_id)
     {
-        $this->checkAccess('itensUser');
+        $this->checkAccess('pedidosreparacaouser');
         return PedidoReparacao::findAll(['requerente_id' => $user_id]);
     }
 
@@ -123,7 +123,10 @@ class PedidoreparacaoController extends ActiveController
 
         $data = Yii::$app->getRequest()->getBodyParams();
 
-        if(!isset($data['requerente_id'], $data['descricaoProblema'], ))
+        if(!isset($data['requerente_id'], $data['descricaoProblema']))
+        {
+            throw new UnprocessableEntityHttpException("Campo(s) em falta");
+        }
 
         $items_list = [];
         //Valida se o item exite na base de dados
@@ -150,13 +153,11 @@ class PedidoreparacaoController extends ActiveController
                     }
                     else
                     {
-                        // Terminate and delete all
-                        throw new BadRequestHttpException("O Item não pode estar associado a um Grupo de itens nem Alocado");
+                        throw new BadRequestHttpException("O Item não pode estar associado a um Grupo de itens ou já associado a um pedido de reparação");
                     }
                 }
                 else
                 {
-                    // Terminate and delete all
                     throw new BadRequestHttpException("O Item " . $item_id . " é inválido");
                 }
             }
@@ -197,6 +198,15 @@ class PedidoreparacaoController extends ActiveController
         }
 
         $model = new PedidoReparacao();
+
+        if($data['requerente_id'] != Yii::$app->user->id)
+        {
+            if(!Yii::$app->user->can('seeOthersPedidoReparacao'))
+            {
+                throw new ForbiddenHttpException("Não tem permissão para criar um pedido de reparação em nome de outro utilizador");
+            }
+        }
+
         $model->requerente_id = $data['requerente_id'];
         $model->descricaoProblema = $data['descricaoProblema'];
         $model->status = PedidoReparacao::STATUS_EM_PREPARACAO;
@@ -225,6 +235,9 @@ class PedidoreparacaoController extends ActiveController
             }
         }
 
+        $model->status = PedidoReparacao::STATUS_ABERTO;
+        $model->save();
+
         return PedidoReparacao::findOne($model->id); // Para ter a certeza que traz tudo
     }
 
@@ -245,6 +258,8 @@ class PedidoreparacaoController extends ActiveController
                         $model->status = PedidoReparacao::STATUS_EM_REVISAO;
                         $model->responsavel_id = Yii::$app->user->id;
                         $model->save();
+
+                        return $model;
                     }
                     else
                     {
@@ -259,6 +274,8 @@ class PedidoreparacaoController extends ActiveController
                         $model->status = PedidoReparacao::STATUS_CONCLUIDO;
                         $model->respostaObs = $data['respostaObs'];
                         $model->save();
+
+                        return $model;
                     }
                     else
                     {

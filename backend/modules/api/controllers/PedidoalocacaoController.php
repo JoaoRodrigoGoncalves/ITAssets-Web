@@ -59,6 +59,7 @@ class PedidoalocacaoController extends ActiveController
                 }
             break;
 
+            case "pedidoalocacaouser":
             case "create":
                 if(!Yii::$app->user->can('createPedidoAlocacao'))
                 {
@@ -110,14 +111,8 @@ class PedidoalocacaoController extends ActiveController
     }
 
     public function actionPedidoalocacaouser($user_id){
-        $this->checkAccess('index');
-
-        $pedidoAlocacao_arr = [];
-        foreach (User::findOne($user_id)->pedidosAlocacaoAsRequester as $pedido)
-        {
-            $pedidoAlocacao_arr[] = $pedido;
-        }
-        return $pedidoAlocacao_arr;
+        $this->checkAccess('pedidoalocacaouser');
+        return PedidoAlocacao::findAll(['requerente_id' => $user_id]);
     }
 
     public function actionCreate(){

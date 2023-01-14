@@ -78,6 +78,11 @@ class GrupoitensController  extends ActiveController
         return Grupoitens::findAll(['status' => Grupoitens::STATUS_ACTIVE]);
     }
 
+    public function actionGrupositensuser($user_id)
+    {
+
+    }
+
     public function actionCreate()
     {
         $this->checkAccess('create');
