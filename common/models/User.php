@@ -80,6 +80,18 @@ class User extends ActiveRecord implements IdentityInterface
         ];
     }
 
+    public function fields()
+    {
+        $fields = parent::fields();
+        unset($fields['auth_key'], $fields['password_hash'], $fields['password_reset_token'], $fields['verification_token']);
+        $fields['role'] = function ()
+        {
+            return array_keys(Yii::$app->authManager->getRolesByUser($this->id))[0];
+        };
+        return $fields;
+    }
+
+
     /**
      * Devikve uma span com o HTML indicado para apresentação da role
      * @return string

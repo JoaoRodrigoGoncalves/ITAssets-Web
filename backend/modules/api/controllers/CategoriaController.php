@@ -6,9 +6,11 @@ use common\models\Categoria;
 use Yii;
 use yii\filters\auth\HttpBearerAuth;
 use yii\rest\ActiveController;
+use yii\web\ConflictHttpException;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
+use yii\web\ServerErrorHttpException;
 
 class CategoriaController extends ActiveController
 {
@@ -70,8 +72,22 @@ class CategoriaController extends ActiveController
         $model = Categoria::findOne(['id' => $id]);
         if($model != null)
         {
-            $model->status = 0;
-            $model->save();
+            if(count($model->items) > 0)
+            {
+                $model->status = Categoria::STATUS_DELETED;
+                if($model->save())
+                {
+                    Yii::$app->getResponse()->setStatusCode(204);
+                }
+                else
+                {
+                    throw new ServerErrorHttpException("Erro ao guardar alterações");
+                }
+            }
+            else
+            {
+                throw new ConflictHttpException("A Categoria está em uso.");
+            }
         }
         else
         {

@@ -8,6 +8,7 @@ use common\models\Item;
 use common\models\LinhaPedidoReparacao;
 use common\models\PedidoReparacao;
 use common\models\User;
+use PHPUnit\Framework\InvalidDataProviderException;
 use Yii;
 use yii\filters\auth\HttpBearerAuth;
 use yii\rest\ActiveController;
@@ -44,7 +45,7 @@ class PedidoreparacaoController extends ActiveController
     public function actions()
     {
         $actions = parent::actions();
-        unset($actions['create'], $actions['update'], $actions['delete']);
+        unset($actions['view'], $actions['create'], $actions['update'], $actions['delete']);
         return $actions;
     }
 
@@ -115,6 +116,21 @@ class PedidoreparacaoController extends ActiveController
     {
         $this->checkAccess('pedidosreparacaouser');
         return PedidoReparacao::findAll(['requerente_id' => $user_id]);
+    }
+
+    public function actionView($id)
+    {
+        $this->checkAccess('view', null, ['id' => $id]);
+
+        $pedido = PedidoReparacao::findOne($id);
+        if($pedido != null)
+        {
+            return $pedido;
+        }
+        else
+        {
+            throw new NotFoundHttpException("Pedido de reparação não encontrado");
+        }
     }
 
     public function actionCreate()
@@ -210,35 +226,58 @@ class PedidoreparacaoController extends ActiveController
         $model->requerente_id = $data['requerente_id'];
         $model->descricaoProblema = $data['descricaoProblema'];
         $model->status = PedidoReparacao::STATUS_EM_PREPARACAO;
-        $model->save();
 
-        if(count($items_list) > 0)
+        if($model->save())
         {
-            foreach ($items_list as $item) {
-                $associacao = new LinhaPedidoReparacao();
-                $associacao->item_id = $item;
-                $associacao->grupo_id = null;
-                $associacao->pedido_id = $model->id;
-                $associacao->save();
-            }
-        }
-
-        if(count($grupos_list) > 0)
-        {
-            foreach ($grupos_list as $grupo)
+            if(count($items_list) > 0)
             {
-                $associacao = new LinhaPedidoReparacao();
-                $associacao->item_id = null;
-                $associacao->grupo_id = $grupo;
-                $associacao->pedido_id = $model->id;
-                $associacao->save();
+                foreach ($items_list as $item) {
+                    $associacao = new LinhaPedidoReparacao();
+                    $associacao->item_id = $item;
+                    $associacao->grupo_id = null;
+                    $associacao->pedido_id = $model->id;
+                    if(!$associacao->save())
+                    {
+                        LinhaPedidoReparacao::deleteAll(['pedido_id' => $model->id]);
+                        $model->delete();
+                        throw new ServerErrorHttpException("Erro ao guardar alterações");
+                    }
+                }
+            }
+
+            if(count($grupos_list) > 0)
+            {
+                foreach ($grupos_list as $grupo)
+                {
+                    $associacao = new LinhaPedidoReparacao();
+                    $associacao->item_id = null;
+                    $associacao->grupo_id = $grupo;
+                    $associacao->pedido_id = $model->id;
+                    if(!$associacao->save())
+                    {
+                        LinhaPedidoReparacao::deleteAll(['pedido_id' => $model->id]);
+                        $model->delete();
+                        throw new ServerErrorHttpException("Erro ao guardar alterações");
+                    }
+                }
+            }
+
+            $model->status = PedidoReparacao::STATUS_ABERTO;
+            if($model->save())
+            {
+                return PedidoReparacao::findOne($model->id); // Para ter a certeza que traz tudo
+            }
+            else
+            {
+                LinhaPedidoReparacao::deleteAll(['pedido_id' => $model->id]);
+                $model->delete();
+                throw new ServerErrorHttpException("Erro ao guardar alterações");
             }
         }
-
-        $model->status = PedidoReparacao::STATUS_ABERTO;
-        $model->save();
-
-        return PedidoReparacao::findOne($model->id); // Para ter a certeza que traz tudo
+        else
+        {
+            throw new ServerErrorHttpException("Erro ao guardar alterações");
+        }
     }
 
     public function actionUpdate($id){
@@ -256,10 +295,16 @@ class PedidoreparacaoController extends ActiveController
                     if($model->status == PedidoReparacao::STATUS_ABERTO)
                     {
                         $model->status = PedidoReparacao::STATUS_EM_REVISAO;
+                        $model->dataInicio = date_format(date_create(), "Y-m-d H:i:s");
                         $model->responsavel_id = Yii::$app->user->id;
-                        $model->save();
-
-                        return $model;
+                        if($model->save())
+                        {
+                            return $model;
+                        }
+                        else
+                        {
+                            throw new ServerErrorHttpException("Erro ao guardar alterações");
+                        }
                     }
                     else
                     {
@@ -271,11 +316,24 @@ class PedidoreparacaoController extends ActiveController
                 case PedidoReparacao::STATUS_CONCLUIDO:
                     if($model->status == PedidoReparacao::STATUS_EM_REVISAO)
                     {
-                        $model->status = PedidoReparacao::STATUS_CONCLUIDO;
-                        $model->respostaObs = $data['respostaObs'];
-                        $model->save();
-
-                        return $model;
+                        if(isset($data['respostaObs']))
+                        {
+                            $model->status = PedidoReparacao::STATUS_CONCLUIDO;
+                            $model->dataFim = date_format(date_create(), "Y-m-d H:i:s");
+                            $model->respostaObs = $data['respostaObs'];
+                            if($model->save())
+                            {
+                                return $model;
+                            }
+                            else
+                            {
+                                throw new ServerErrorHttpException("Erro ao guardar alterações");
+                            }
+                        }
+                        else
+                        {
+                            throw new UnprocessableEntityHttpException("Campo respostaObs obrigatório");
+                        }
                     }
                     else
                     {
@@ -286,7 +344,6 @@ class PedidoreparacaoController extends ActiveController
                 default:
                     throw new UnprocessableEntityHttpException("Estado indicado inválido");
             }
-            return $model;
         }
         else
         {
@@ -305,12 +362,18 @@ class PedidoreparacaoController extends ActiveController
             if($model->status == PedidoReparacao::STATUS_ABERTO)
             {
                 $model->status = PedidoReparacao::STATUS_CANCELADO;
-                $model->save();
-                Yii::$app->getResponse()->setStatusCode(204);
+                if($model->save())
+                {
+                    Yii::$app->getResponse()->setStatusCode(204);
+                }
+                else
+                {
+                    throw new ServerErrorHttpException("Erro ao guardar alterações");
+                }
             }
             else
             {
-                throw new BadRequestHttpException("Não é possível cancelar um pedido depois de processado.");
+                throw new ConflictHttpException("Não é possível cancelar um pedido depois de processado.");
             }
         }
         else

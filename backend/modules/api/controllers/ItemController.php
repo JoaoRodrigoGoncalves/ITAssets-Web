@@ -11,9 +11,11 @@ use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\rest\ActiveController;
 use yii\web\BadRequestHttpException;
+use yii\web\ConflictHttpException;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
+use yii\web\ServerErrorHttpException;
 
 class ItemController extends ActiveController
 {
@@ -89,7 +91,23 @@ class ItemController extends ActiveController
             throw new ForbiddenHttpException();
         }
 
-        return PedidoAlocacao::findAll(['requerente_id' => $user_id, 'status' => PedidoAlocacao::STATUS_APROVADO]);
+        $user = User::findOne($user_id);
+        if($user != null)
+        {
+            $item_arr = [];
+            foreach ($user->pedidosAlocacaoAsRequester as $pedido)
+            {
+                if($pedido->status == PedidoAlocacao::STATUS_APROVADO)
+                {
+                    $item_arr[] = $pedido->item;
+                }
+            }
+            return $item_arr;
+        }
+        else
+        {
+            throw new NotFoundHttpException("Utilizador inválido");
+        }
     }
 
     public function actionDelete($id)
@@ -101,12 +119,18 @@ class ItemController extends ActiveController
             if(!$model->isInActiveItemsGroup() || !$model->isInActivePedidoAlocacao())
             {
                 $model->status = Item::STATUS_DELETED;
-                $model->save();
-                Yii::$app->getResponse()->setStatusCode(204);
+                if($model->save())
+                {
+                    Yii::$app->getResponse()->setStatusCode(204);
+                }
+                else
+                {
+                    throw new ServerErrorHttpException("Erro ao guardar alterações");
+                }
             }
             else
             {
-                throw new BadRequestHttpException("Não é possível apagar o item porque este se encontra em uso");
+                throw new ConflictHttpException("Não é possível apagar o item porque este se encontra em uso");
             }
         }
         else
