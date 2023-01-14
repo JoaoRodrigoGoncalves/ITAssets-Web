@@ -82,22 +82,14 @@ class ItemController extends ActiveController
         $this->checkAccess('index'); // Porque é baseado em index
 
         $authmgr = Yii::$app->authManager;
-        $allowedRoles = [$authmgr->getRole('administrador'), $authmgr->getRole('operadorlogistica')];
+        $allowedRoles = [$authmgr->getRole('administrador')->name, $authmgr->getRole('operadorlogistica')->name];
 
-        if(Yii::$app->user->id != $user_id && !in_array(Yii::$app->authManager->getRolesByUser(Yii::$app->user->id), $allowedRoles))
+        if(!(Yii::$app->user->id == $user_id || in_array(array_keys($authmgr->getRolesByUser(Yii::$app->user->id))[0], $allowedRoles)))
         {
             throw new ForbiddenHttpException();
         }
 
-        $item_arr = [];
-        foreach (User::findOne($user_id)->pedidosAlocacaoAsRequester as $pedido)
-        {
-            if($pedido->status == PedidoAlocacao::STATUS_APROVADO)
-            {
-                $item_arr[] = $pedido->item;
-            }
-        }
-        return $item_arr;
+        return PedidoAlocacao::findAll(['requerente_id' => $user_id, 'status' => PedidoAlocacao::STATUS_APROVADO]);
     }
 
     public function actionDelete($id)
