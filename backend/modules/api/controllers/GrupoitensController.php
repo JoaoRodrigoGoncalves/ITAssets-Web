@@ -5,6 +5,8 @@ namespace backend\modules\api\controllers;
 use common\models\Grupoitens;
 use common\models\GruposItens_Item;
 use common\models\Item;
+use common\models\PedidoAlocacao;
+use common\models\User;
 use Yii;
 use yii\filters\auth\HttpBearerAuth;
 use yii\rest\ActiveController;
@@ -80,7 +82,30 @@ class GrupoitensController  extends ActiveController
 
     public function actionGrupositensuser($user_id)
     {
+        $this->checkAccess('index'); // Porque é baseado em index
 
+        $authmgr = Yii::$app->authManager;
+        $allowedRoles = [$authmgr->getRole('administrador')->name, $authmgr->getRole('operadorlogistica')->name];
+
+        if(!(Yii::$app->user->id == $user_id || in_array(array_keys($authmgr->getRolesByUser(Yii::$app->user->id))[0], $allowedRoles)))
+        {
+            throw new ForbiddenHttpException();
+        }
+
+
+        $grupo_arr = [];
+        foreach (User::findOne($user_id)->pedidosAlocacaoAsRequester as $pedido)
+        {
+            if($pedido->status == PedidoAlocacao::STATUS_APROVADO)
+            {
+                if ($pedido->grupoItem != null)
+                {
+                    $grupo_arr[] = $pedido->grupoItem;
+                }
+
+            }
+        }
+        return $grupo_arr;
     }
 
     public function actionCreate()
@@ -140,6 +165,7 @@ class GrupoitensController  extends ActiveController
             throw new UnprocessableEntityHttpException("O Campo \"nome\" é obrigatório.");
         }
     }
+
 
     public function actionDelete($id)
     {
