@@ -11,9 +11,11 @@ use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\rest\ActiveController;
 use yii\web\BadRequestHttpException;
+use yii\web\ConflictHttpException;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
+use yii\web\ServerErrorHttpException;
 
 class ItemController extends ActiveController
 {
@@ -82,22 +84,30 @@ class ItemController extends ActiveController
         $this->checkAccess('index'); // Porque é baseado em index
 
         $authmgr = Yii::$app->authManager;
-        $allowedRoles = [$authmgr->getRole('administrador'), $authmgr->getRole('operadorlogistica')];
+        $allowedRoles = [$authmgr->getRole('administrador')->name, $authmgr->getRole('operadorlogistica')->name];
 
-        if(Yii::$app->user->id != $user_id && !in_array(Yii::$app->authManager->getRolesByUser(Yii::$app->user->id), $allowedRoles))
+        if(!(Yii::$app->user->id == $user_id || in_array(array_keys($authmgr->getRolesByUser(Yii::$app->user->id))[0], $allowedRoles)))
         {
             throw new ForbiddenHttpException();
         }
 
-        $item_arr = [];
-        foreach (User::findOne($user_id)->pedidosAlocacaoAsRequester as $pedido)
+        $user = User::findOne($user_id);
+        if($user != null)
         {
-            if($pedido->status == PedidoAlocacao::STATUS_APROVADO)
+            $item_arr = [];
+            foreach ($user->pedidosAlocacaoAsRequester as $pedido)
             {
-                $item_arr[] = $pedido->item;
+                if($pedido->status == PedidoAlocacao::STATUS_APROVADO)
+                {
+                    $item_arr[] = $pedido->item;
+                }
             }
+            return $item_arr;
         }
-        return $item_arr;
+        else
+        {
+            throw new NotFoundHttpException("Utilizador inválido");
+        }
     }
 
     public function actionDelete($id)
@@ -109,12 +119,18 @@ class ItemController extends ActiveController
             if(!$model->isInActiveItemsGroup() || !$model->isInActivePedidoAlocacao())
             {
                 $model->status = Item::STATUS_DELETED;
-                $model->save();
-                Yii::$app->getResponse()->setStatusCode(204);
+                if($model->save())
+                {
+                    Yii::$app->getResponse()->setStatusCode(204);
+                }
+                else
+                {
+                    throw new ServerErrorHttpException("Erro ao guardar alterações");
+                }
             }
             else
             {
-                throw new BadRequestHttpException("Não é possível apagar o item porque este se encontra em uso");
+                throw new ConflictHttpException("Não é possível apagar o item porque este se encontra em uso");
             }
         }
         else

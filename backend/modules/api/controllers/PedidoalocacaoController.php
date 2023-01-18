@@ -5,7 +5,6 @@ namespace backend\modules\api\controllers;
 use common\models\Grupoitens;
 use common\models\Item;
 use common\models\PedidoAlocacao;
-use common\models\User;
 use Yii;
 use yii\filters\auth\HttpBearerAuth;
 use yii\rest\ActiveController;
@@ -16,7 +15,7 @@ use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use yii\web\ServerErrorHttpException;
-use Yii\web\UnprocessableEntityHttpException;
+use yii\web\UnprocessableEntityHttpException;
 
 class PedidoalocacaoController extends ActiveController
 {
@@ -43,7 +42,7 @@ class PedidoalocacaoController extends ActiveController
     public function actions()
     {
         $actions = parent::actions();
-        unset($actions['delete'], $actions['update'], $actions['create']);
+        unset($actions['view'], $actions['delete'], $actions['update'], $actions['create']);
         return $actions;
     }
 
@@ -59,6 +58,7 @@ class PedidoalocacaoController extends ActiveController
                 }
             break;
 
+            case "pedidoalocacaouser":
             case "create":
                 if(!Yii::$app->user->can('createPedidoAlocacao'))
                 {
@@ -110,14 +110,24 @@ class PedidoalocacaoController extends ActiveController
     }
 
     public function actionPedidoalocacaouser($user_id){
-        $this->checkAccess('index');
+        $this->checkAccess('pedidoalocacaouser');
+        return PedidoAlocacao::findAll(['requerente_id' => $user_id]);
+    }
 
-        $pedidoAlocacao_arr = [];
-        foreach (User::findOne($user_id)->pedidosAlocacaoAsRequester as $pedido)
+    public function actionView($id)
+    {
+        $this->checkAccess('view', null, ['id' => $id]);
+
+        $pedido =  PedidoAlocacao::findOne($id);
+
+        if($pedido != null)
         {
-            $pedidoAlocacao_arr[] = $pedido;
+            return $pedido;
         }
-        return $pedidoAlocacao_arr;
+        else
+        {
+            throw new NotFoundHttpException("Pedido de Alocação não encontrado");
+        }
     }
 
     public function actionCreate(){
@@ -127,16 +137,31 @@ class PedidoalocacaoController extends ActiveController
         $model = new PedidoAlocacao();
         $data = Yii::$app->getRequest()->getBodyParams();
 
-        $model->obs = $data['obs'];
-        $model->obsResposta = $data['obsResposta'];
+        if(!isset($data['requerente_id']))
+        {
+            throw new UnprocessableEntityHttpException("Campo \"requerente_id\" é obrigatório");
+        }
+
         $model->requerente_id = $data['requerente_id'];
 
+        if(isset($data['obs']))
+        {
+            $model->obs = $data['obs'];
+        }
+
         $authmgr = Yii::$app->authManager;
-        if(in_array($authmgr->getRolesByUser(Yii::$app->user->id), [$authmgr->getRole('administrador'), $authmgr->getRole('operadorlogistica')]))
+
+        if(in_array(array_keys($authmgr->getRolesByUser(Yii::$app->user->id))[0], [$authmgr->getRole('administrador')->name, $authmgr->getRole('operadorlogistica')->name]))
         {
             // Se for administrador ou operador logistico, o pedido é imediatamente aceite
             $model->aprovador_id = Yii::$app->user->id;
+            $model->dataInicio = date_format(date_create(), "Y-m-d H:i:s");
             $model->status = PedidoAlocacao::STATUS_APROVADO;
+        }
+
+        if(!isset($data['item_id']) && !isset($data['grupoItem_id']))
+        {
+            throw new UnprocessableEntityHttpException("É necessário indicar um item ou um grupo de itens");
         }
 
         //Valida se foi colocado um item e um grupo no mesmo pedido: caso aconteça tem de dar erro
@@ -159,8 +184,14 @@ class PedidoalocacaoController extends ActiveController
                 {
                     $model->item_id = $data['item_id'];
                     $model->grupoItem_id = null;
-                    $model->save();
-                    return $model;
+                    if($model->save())
+                    {
+                        return PedidoAlocacao::findOne($model->id);
+                    }
+                    else
+                    {
+                        throw new ServerErrorHttpException("Erro ao guardar alterações");
+                    }
                 }
                 else
                 {
@@ -188,8 +219,14 @@ class PedidoalocacaoController extends ActiveController
                     $model->item_id = null;
                     $model->grupoItem_id = $data['grupoItem_id'];
 
-                    $model->save();
-                    return $model;
+                    if($model->save())
+                    {
+                        return PedidoAlocacao::findOne($model->id);
+                    }
+                    else
+                    {
+                        throw new ServerErrorHttpException("Erro ao guardar alterações");
+                    }
                 }
                 else
                 {
@@ -219,10 +256,18 @@ class PedidoalocacaoController extends ActiveController
                     if($model->status == PedidoAlocacao::STATUS_ABERTO)
                     {
                         $model->status = PedidoAlocacao::STATUS_APROVADO;
-                        $model->aprovador_id = $data['aprovador_id'];
+                        $model->aprovador_id = Yii::$app->user->id;
                         $model->dataInicio = date_format(date_create(), "Y-m-d H:i:s");
-                        $model->obsResposta = $data['obsResposta'];
-                        $model->save();
+
+                        if(isset($data['obsResposta']))
+                        {
+                            $model->obsResposta = $data['obsResposta'];
+                        }
+
+                        if(!$model->save())
+                        {
+                            throw new ServerErrorHttpException("Erro ao guardar alterações");
+                        }
                     }
                     else
                     {
@@ -234,9 +279,22 @@ class PedidoalocacaoController extends ActiveController
                 case PedidoAlocacao::STATUS_DEVOLVIDO:
                     if($model->status == PedidoAlocacao::STATUS_APROVADO)
                     {
-                        $model->status = PedidoAlocacao::STATUS_DEVOLVIDO;
-                        $model->dataFim = date_format(date_create(), "Y-m-d H:i:s");
-                        $model->save();
+                        $authmgr = Yii::$app->authManager;
+                        $allowedRoles = [$authmgr->getRole('administrador')->name, $authmgr->getRole('operadorlogistica')->name];
+
+                        if(in_array(array_keys($authmgr->getRolesByUser(Yii::$app->user->id))[0], $allowedRoles))
+                        {
+                            $model->status = PedidoAlocacao::STATUS_DEVOLVIDO;
+                            $model->dataFim = date_format(date_create(), "Y-m-d H:i:s");
+                            if(!$model->save())
+                            {
+                                throw new ServerErrorHttpException("Erro ao guardar alterações");
+                            }
+                        }
+                        else
+                        {
+                            throw new ForbiddenHttpException("Apenas um utilizador administrativo pode marcar objetos como devolvidos");
+                        }
                     }
                     else
                     {
@@ -249,10 +307,18 @@ class PedidoalocacaoController extends ActiveController
                     if($model->status == PedidoAlocacao::STATUS_ABERTO)
                     {
                         $model->status = PedidoAlocacao::STATUS_NEGADO;
-                        $model->aprovador_id = $data['aprovador_id'];
+                        $model->aprovador_id = Yii::$app->user->id;
                         $model->dataInicio = date_format(date_create(), "Y-m-d H:i:s");
-                        $model->obsResposta = $data['obsResposta'];
-                        $model->save();
+
+                        if(isset($data['obsResposta']))
+                        {
+                            $model->obsResposta = $data['obsResposta'];
+                        }
+
+                        if(!$model->save())
+                        {
+                            throw new ServerErrorHttpException("Erro ao guardar alterações");
+                        }
                     }
                     else
                     {
@@ -282,12 +348,18 @@ class PedidoalocacaoController extends ActiveController
             if($model->status == PedidoAlocacao::STATUS_ABERTO)
             {
                 $model->status = PedidoAlocacao::STATUS_CANCELADO;
-                $model->save();
-                Yii::$app->getResponse()->setStatusCode(204);
+                if($model->save())
+                {
+                    Yii::$app->getResponse()->setStatusCode(204);
+                }
+                else
+                {
+                    throw new ServerErrorHttpException("Erro ao guardar alterações");
+                }
             }
             else
             {
-                throw new BadRequestHttpException("Não é possível cancelar um pedido depois de processado.");
+                throw new ConflictHttpException("Não é possível cancelar um pedido depois de processado.");
             }
         }
         else

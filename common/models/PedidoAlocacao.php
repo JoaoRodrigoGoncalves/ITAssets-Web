@@ -95,6 +95,26 @@ class PedidoAlocacao extends \yii\db\ActiveRecord
         ];
     }
 
+    public function fields()
+    {
+        $fields = parent::fields();
+
+        unset($fields['item_id'], $fields['grupoItem_id']);
+
+        $fields['item'] = function ()
+        {
+            return $this->item;
+        };
+
+        $fields['grupoItens'] = function ()
+        {
+            return $this->grupoItem;
+        };
+
+        return $fields;
+    }
+
+
     public function getPrettyStatus()
     {
         switch($this->status)

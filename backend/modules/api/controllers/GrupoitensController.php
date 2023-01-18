@@ -5,13 +5,17 @@ namespace backend\modules\api\controllers;
 use common\models\Grupoitens;
 use common\models\GruposItens_Item;
 use common\models\Item;
+use common\models\PedidoAlocacao;
+use common\models\User;
 use Yii;
 use yii\filters\auth\HttpBearerAuth;
 use yii\rest\ActiveController;
 use yii\web\BadRequestHttpException;
+use yii\web\ConflictHttpException;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
+use yii\web\ServerErrorHttpException;
 use yii\web\UnprocessableEntityHttpException;
 
 
@@ -42,7 +46,7 @@ class GrupoitensController  extends ActiveController
     public function actions()
     {
         $actions = parent::actions();
-        unset($actions['delete'], $actions['index'],$actions['create']);
+        unset($actions['index'], $actions['create'], $actions['update'], $actions['delete']);
         return $actions;
     }
 
@@ -78,6 +82,34 @@ class GrupoitensController  extends ActiveController
         return Grupoitens::findAll(['status' => Grupoitens::STATUS_ACTIVE]);
     }
 
+    public function actionGrupositensuser($user_id)
+    {
+        $this->checkAccess('index'); // Porque é baseado em index
+
+        $authmgr = Yii::$app->authManager;
+        $allowedRoles = [$authmgr->getRole('administrador')->name, $authmgr->getRole('operadorlogistica')->name];
+
+        if(!(Yii::$app->user->id == $user_id || in_array(array_keys($authmgr->getRolesByUser(Yii::$app->user->id))[0], $allowedRoles)))
+        {
+            throw new ForbiddenHttpException();
+        }
+
+
+        $grupo_arr = [];
+        foreach (User::findOne($user_id)->pedidosAlocacaoAsRequester as $pedido)
+        {
+            if($pedido->status == PedidoAlocacao::STATUS_APROVADO)
+            {
+                if ($pedido->grupoItem != null)
+                {
+                    $grupo_arr[] = $pedido->grupoItem;
+                }
+
+            }
+        }
+        return $grupo_arr;
+    }
+
     public function actionCreate()
     {
         $this->checkAccess('create');
@@ -90,8 +122,17 @@ class GrupoitensController  extends ActiveController
 
                 //carregar os dados para o model
                 $model->nome = $data['nome'];
-                $model->notas = $data['notas'];
-                $model->save();
+
+                if(isset($data['notas']))
+                {
+                    $model->notas = $data['notas'];
+                }
+
+                if(!$model->save())
+                {
+                    throw new ServerErrorHttpException("Erro ao guardar alterações");
+                }
+
                 $itens = $data['itens'];
 
                 for ($i = 0; $i < count($itens); $i++) {
@@ -102,21 +143,28 @@ class GrupoitensController  extends ActiveController
                     if ($item != null)
                     {
                         //validação se o item esta associado algo
-                        if (!$item->isInActivePedidoAlocacao() || !$item->isInActiveItemsGroup())
+                        if (!$item->isInActiveItemsGroup() && !$item->isInActivePedidoAlocacao())
                         {
                             $grupoitensItem = new GruposItens_Item();
                             $grupoitensItem->grupoItens_id= $model->id;
                             $grupoitensItem->item_id = $itens[$i];
-                            $grupoitensItem->save();
+                            if(!$grupoitensItem->save())
+                            {
+                                GruposItens_Item::deleteAll(['grupoItens_id' => $model->id]);
+                                $model->delete(); //elimina o grupo item que foi criado caso aconteça isto
+                                throw new ServerErrorHttpException("Erro ao guardar alterações");
+                            }
                         }
                         else
                         {
+                            GruposItens_Item::deleteAll(['grupoItens_id' => $model->id]);
                             $model->delete(); //elimina o grupo item que foi criado caso aconteça isto
                             throw new BadRequestHttpException("O Item " . $item->nome . " já se encontra em utilização.");
                         }
                     }
                     else
                     {
+                        GruposItens_Item::deleteAll(['grupoItens_id' => $model->id]);
                         $model->delete();
                         throw new BadRequestHttpException("O Item não existe.");
                     }
@@ -136,6 +184,40 @@ class GrupoitensController  extends ActiveController
         }
     }
 
+    public function actionUpdate($id)
+    {
+        $this->checkAccess('update');
+
+        $grupo = Grupoitens::findOne($id);
+        if($grupo != null)
+        {
+            $data = Yii::$app->getRequest()->getBodyParams();
+
+            if(isset($data['nome']))
+            {
+                $grupo->nome = $data['nome'];
+            }
+
+            if(isset($data['notas']))
+            {
+                $grupo->notas = $data['notas'];
+            }
+
+            if($grupo->save())
+            {
+                return $grupo;
+            }
+            else
+            {
+                throw new ServerErrorHttpException("Erro ao guardar alterações");
+            }
+        }
+        else
+        {
+            throw new NotFoundHttpException("Grupo não encontrado");
+        }
+    }
+
     public function actionDelete($id)
     {
         $this->checkAccess('create');
@@ -143,9 +225,22 @@ class GrupoitensController  extends ActiveController
         $model = Grupoitens::findOne(['id' => $id]);
         if($model != null)
         {
-            $model->status = Grupoitens::STATUS_DELETED;
-            $model->save();
-            Yii::$app->getResponse()->setStatusCode(204);
+            if(!$model->isinActivePedidoAlocacao())
+            {
+                $model->status = Grupoitens::STATUS_DELETED;
+                if($model->save())
+                {
+                    Yii::$app->getResponse()->setStatusCode(204);
+                }
+                else
+                {
+                    throw new ServerErrorHttpException("Erro ao guardar alterações");
+                }
+            }
+            else
+            {
+                throw new ConflictHttpException("O Grupo está alocado e por isso não pode ser removido.");
+            }
         }
         else
         {
