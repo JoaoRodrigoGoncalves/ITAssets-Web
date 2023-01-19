@@ -202,6 +202,7 @@ class PedidoalocacaoController extends Controller
         if($model->requerente_id == Yii::$app->user->id)
         {
             $model->status = PedidoAlocacao::STATUS_CANCELADO;
+            $model->dataInicio = date_format(date_create(), "Y-m-d H:i:s");
             $model->save();
             return $this->redirect(['index']);
         }
