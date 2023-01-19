@@ -348,6 +348,7 @@ class PedidoalocacaoController extends ActiveController
             if($model->status == PedidoAlocacao::STATUS_ABERTO)
             {
                 $model->status = PedidoAlocacao::STATUS_CANCELADO;
+                $model->dataInicio = date_format(date_create(), "Y-m-d H:i:s");
                 if($model->save())
                 {
                     Yii::$app->getResponse()->setStatusCode(204);
