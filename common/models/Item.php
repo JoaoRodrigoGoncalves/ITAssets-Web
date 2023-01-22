@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use backend\controllers\PedidoalocacaoController;
 use Yii;
 
 /**
@@ -79,6 +80,10 @@ class Item extends \yii\db\ActiveRecord
         {
             return $this->site;
         };
+        $fields['pedido_alocacao'] = function ()
+        {
+            return $this->getActivePedidoAlocacao()?->id;
+        };
         return $fields;
     }
 
@@ -152,6 +157,20 @@ class Item extends \yii\db\ActiveRecord
             }
         }
         return false;
+    }
+
+    public function getActivePedidoAlocacao()
+    {
+        if($this->pedidoAlocacaos != null)
+        {
+            foreach ($this->pedidoAlocacaos as $pedidoAlocacao) {
+                if($pedidoAlocacao->status == PedidoAlocacao::STATUS_APROVADO)
+                {
+                    return $pedidoAlocacao;
+                }
+            }
+        }
+        return null;
     }
 
     public function isInActiveItemsGroup()

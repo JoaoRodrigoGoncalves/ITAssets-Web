@@ -64,10 +64,12 @@ class Grupoitens extends ActiveRecord
         $fields['itens'] = function ($model) {
             return $this->items;
         };
+        $fields['pedido_alocacao'] = function ()
+        {
+            return $this->getActivePedidoAlocacao()?->id;
+        };
         return $fields;
     }
-
-
 
 
     /**
@@ -164,6 +166,20 @@ class Grupoitens extends ActiveRecord
         }
 
         return $dataAlocacao;
+    }
+
+    public function getActivePedidoAlocacao()
+    {
+        if($this->pedidoAlocacaos != null)
+        {
+            foreach ($this->pedidoAlocacaos as $pedidoAlocacao) {
+                if($pedidoAlocacao->status == PedidoAlocacao::STATUS_APROVADO)
+                {
+                    return $pedidoAlocacao;
+                }
+            }
+        }
+        return null;
     }
 
     public function listItensHumanReadable($maxChar = null)
