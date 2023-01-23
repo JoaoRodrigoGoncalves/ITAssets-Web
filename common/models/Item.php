@@ -84,6 +84,10 @@ class Item extends \yii\db\ActiveRecord
         {
             return $this->getActivePedidoAlocacao()?->id;
         };
+        $fields['pedido_reparacao'] = function ()
+        {
+            return $this->getActivePedidoReparacao()?->id;
+        };
         return $fields;
     }
 
@@ -168,6 +172,21 @@ class Item extends \yii\db\ActiveRecord
                 {
                     return $pedidoAlocacao;
                 }
+            }
+        }
+        return null;
+    }
+
+    public function getActivePedidoReparacao()
+    {
+        if($this->linhaPedidoReparacaos != null)
+        {
+            foreach ($this->linhaPedidoReparacaos as $linhaPedidoReparacao) {
+                if($linhaPedidoReparacao->pedido->status == PedidoReparacao::STATUS_ABERTO or $linhaPedidoReparacao->pedido->status == PedidoReparacao::STATUS_EM_REVISAO)
+                {
+                    return  $linhaPedidoReparacao->pedido;
+                }
+
             }
         }
         return null;
