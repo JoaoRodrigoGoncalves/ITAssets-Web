@@ -359,7 +359,7 @@ class PedidoreparacaoController extends ActiveController
         {
             $this->checkAccess("delete", null, ['id' => $id]); // Deixar aqui mesmo porque o checkAccess requer que o pedido exista
 
-            if($model->status == PedidoReparacao::STATUS_ABERTO)
+            if($model->status == PedidoReparacao::STATUS_ABERTO || $model->status == PedidoReparacao::STATUS_EM_PREPARACAO)
             {
                 $model->status = PedidoReparacao::STATUS_CANCELADO;
                 if($model->save())
