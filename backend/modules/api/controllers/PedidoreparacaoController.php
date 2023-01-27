@@ -182,7 +182,7 @@ class PedidoreparacaoController extends ActiveController
         $grupos_list = [];
         //Valida se o grupo de itens exite na base de dados
         //Valida se o grupo de itens não está alocado
-        if(isset($data['grupoItem_id']))
+        if(isset($data['grupoItens']))
         {
             foreach ((array)$data['grupoItens'] as $grupoItem)
             {
