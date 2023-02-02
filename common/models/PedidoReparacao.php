@@ -78,6 +78,25 @@ class PedidoReparacao extends \yii\db\ActiveRecord
     {
         $fields =  parent::fields();
 
+        unset($fields['requerente_id'], $fields['responsavel_id']);
+
+        $fields['requerente'] = function ()
+        {
+            return ['id' => $this->requerente_id, 'username' => $this->requerente->username];
+        };
+
+        $fields['responsavel'] = function ()
+        {
+            if($this->responsavel != null)
+            {
+                return ['id' => $this->responsavel_id, 'username' => $this->responsavel->username];
+            }
+            else
+            {
+                return null;
+            }
+        };
+
         $fields['objetos'] = function ()
         {
             $arr = [];
