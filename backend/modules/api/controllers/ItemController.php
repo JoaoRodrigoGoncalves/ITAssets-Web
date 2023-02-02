@@ -116,7 +116,7 @@ class ItemController extends ActiveController
         $model = Item::findOne(['id' => $id]);
         if($model != null)
         {
-            if(!$model->isInActiveItemsGroup() || !$model->isInActivePedidoAlocacao())
+            if(!$model->isInActiveItemsGroup() && !$model->isInActivePedidoAlocacao())
             {
                 $model->status = Item::STATUS_DELETED;
                 if($model->save())
