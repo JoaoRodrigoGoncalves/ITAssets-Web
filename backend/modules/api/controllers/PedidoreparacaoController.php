@@ -6,6 +6,7 @@ use common\models\Grupoitens;
 use common\models\GruposItens_Item;
 use common\models\Item;
 use common\models\LinhaPedidoReparacao;
+use common\models\PedidoAlocacao;
 use common\models\PedidoReparacao;
 use common\models\User;
 use PHPUnit\Framework\InvalidDataProviderException;
@@ -223,9 +224,17 @@ class PedidoreparacaoController extends ActiveController
             }
         }
 
-        $model->requerente_id = $data['requerente_id'];
         $model->descricaoProblema = $data['descricaoProblema'];
-        $model->status = PedidoReparacao::STATUS_EM_PREPARACAO;
+
+        $authmgr = Yii::$app->authManager;
+
+        if(in_array(array_keys($authmgr->getRolesByUser(Yii::$app->user->id))[0], [$authmgr->getRole('administrador')->name, $authmgr->getRole('operadorlogistica')->name]))
+        {
+            // Se for administrador ou operador logistico, o pedido é imediatamente aceite
+            $model->responsavel_id = Yii::$app->user->id;
+            $model->dataInicio = date_format(date_create(), "Y-m-d H:i:s");
+            $model->status = PedidoReparacao::STATUS_EM_REVISAO;
+        }
 
         if($model->save())
         {
@@ -262,7 +271,6 @@ class PedidoreparacaoController extends ActiveController
                 }
             }
 
-            $model->status = PedidoReparacao::STATUS_ABERTO;
             if($model->save())
             {
                 return PedidoReparacao::findOne($model->id); // Para ter a certeza que traz tudo
