@@ -138,11 +138,32 @@ class PedidoreparacaoController extends ActiveController
     {
         $this->checkAccess("create");
 
+        $model = new PedidoReparacao();
         $data = Yii::$app->getRequest()->getBodyParams();
 
         if(!isset($data['requerente_id'], $data['descricaoProblema']))
         {
             throw new UnprocessableEntityHttpException("Campo(s) em falta");
+        }
+
+        $model->descricaoProblema = $data['descricaoProblema'];
+
+        if($data['requerente_id'] != Yii::$app->user->id)
+        {
+            if(!Yii::$app->user->can('seeOthersPedidoReparacao'))
+            {
+                throw new ForbiddenHttpException("Não tem permissão para criar um pedido de reparação em nome de outro utilizador");
+            }
+        }
+
+        $authmgr = Yii::$app->authManager;
+
+        if(in_array(array_keys($authmgr->getRolesByUser(Yii::$app->user->id))[0], [$authmgr->getRole('administrador')->name, $authmgr->getRole('operadorlogistica')->name]))
+        {
+            // Se for administrador ou operador logistico, o pedido é imediatamente aceite
+            $model->responsavel_id = Yii::$app->user->id;
+            $model->dataInicio = date_format(date_create(), "Y-m-d H:i:s");
+            $model->status = PedidoReparacao::STATUS_EM_REVISAO;
         }
 
         $items_list = [];
@@ -214,27 +235,6 @@ class PedidoreparacaoController extends ActiveController
             }
         }
 
-        $model = new PedidoReparacao();
-
-        if($data['requerente_id'] != Yii::$app->user->id)
-        {
-            if(!Yii::$app->user->can('seeOthersPedidoReparacao'))
-            {
-                throw new ForbiddenHttpException("Não tem permissão para criar um pedido de reparação em nome de outro utilizador");
-            }
-        }
-
-        $model->descricaoProblema = $data['descricaoProblema'];
-
-        $authmgr = Yii::$app->authManager;
-
-        if(in_array(array_keys($authmgr->getRolesByUser(Yii::$app->user->id))[0], [$authmgr->getRole('administrador')->name, $authmgr->getRole('operadorlogistica')->name]))
-        {
-            // Se for administrador ou operador logistico, o pedido é imediatamente aceite
-            $model->responsavel_id = Yii::$app->user->id;
-            $model->dataInicio = date_format(date_create(), "Y-m-d H:i:s");
-            $model->status = PedidoReparacao::STATUS_EM_REVISAO;
-        }
 
         if($model->save())
         {
@@ -370,6 +370,7 @@ class PedidoreparacaoController extends ActiveController
             if($model->status == PedidoReparacao::STATUS_ABERTO || $model->status == PedidoReparacao::STATUS_EM_PREPARACAO)
             {
                 $model->status = PedidoReparacao::STATUS_CANCELADO;
+                $model->dataInicio = date_format(date_create(), "Y-m-d H:i:s");
                 if($model->save())
                 {
                     Yii::$app->getResponse()->setStatusCode(204);
