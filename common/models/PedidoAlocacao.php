@@ -99,7 +99,24 @@ class PedidoAlocacao extends \yii\db\ActiveRecord
     {
         $fields = parent::fields();
 
-        unset($fields['item_id'], $fields['grupoItem_id']);
+        unset($fields['item_id'], $fields['grupoItem_id'], $fields['requerente_id'], $fields['aprovador_id']);
+
+        $fields['requerente'] = function ()
+        {
+            return ['id' => $this->requerente_id, 'username' => $this->requerente->username];
+        };
+
+        $fields['aprovador'] = function ()
+        {
+            if($this->aprovador != null)
+            {
+                return ['id' => $this->aprovador_id, 'username' => $this->aprovador->username];
+            }
+            else
+            {
+                return null;
+            }
+        };
 
         $fields['item'] = function ()
         {
