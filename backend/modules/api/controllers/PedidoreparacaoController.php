@@ -226,16 +226,6 @@ class PedidoreparacaoController extends ActiveController
         $model->requerente_id = $data['requerente_id'];
         $model->descricaoProblema = $data['descricaoProblema'];
 
-        $authmgr = Yii::$app->authManager;
-
-        if(in_array(array_keys($authmgr->getRolesByUser(Yii::$app->user->id))[0], [$authmgr->getRole('administrador')->name, $authmgr->getRole('operadorlogistica')->name]))
-        {
-            // Se for administrador ou operador logistico, o pedido é imediatamente aceite
-            $model->responsavel_id = Yii::$app->user->id;
-            $model->dataInicio = date_format(date_create(), "Y-m-d H:i:s");
-            $model->status = PedidoReparacao::STATUS_EM_REVISAO;
-        }
-
         if($model->save())
         {
             if(count($items_list) > 0)
@@ -271,7 +261,17 @@ class PedidoreparacaoController extends ActiveController
                 }
             }
 
-            $model->status = PedidoReparacao::STATUS_ABERTO;
+            $authmgr = Yii::$app->authManager;
+
+            if(in_array(array_keys($authmgr->getRolesByUser(Yii::$app->user->id))[0], [$authmgr->getRole('administrador')->name, $authmgr->getRole('operadorlogistica')->name]))
+            {
+                // Se for administrador ou operador logistico, o pedido é imediatamente aceite
+                $model->responsavel_id = Yii::$app->user->id;
+                $model->dataInicio = date_format(date_create(), "Y-m-d H:i:s");
+                $model->status = PedidoReparacao::STATUS_EM_REVISAO;
+            }else{
+                $model->status = PedidoReparacao::STATUS_ABERTO;
+            }
 
             if($model->save())
             {
