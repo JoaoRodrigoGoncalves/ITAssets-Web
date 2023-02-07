@@ -6,7 +6,6 @@ use common\models\Grupoitens;
 use common\models\GruposItens_Item;
 use common\models\Item;
 use common\models\LinhaPedidoReparacao;
-use common\models\PedidoAlocacao;
 use common\models\PedidoReparacao;
 use common\models\User;
 use PHPUnit\Framework\InvalidDataProviderException;
@@ -224,6 +223,7 @@ class PedidoreparacaoController extends ActiveController
             }
         }
 
+        $model->requerente_id = $data['requerente_id'];
         $model->descricaoProblema = $data['descricaoProblema'];
 
         $authmgr = Yii::$app->authManager;
@@ -235,7 +235,6 @@ class PedidoreparacaoController extends ActiveController
             $model->dataInicio = date_format(date_create(), "Y-m-d H:i:s");
             $model->status = PedidoReparacao::STATUS_EM_REVISAO;
         }
-
 
         if($model->save())
         {
@@ -250,7 +249,7 @@ class PedidoreparacaoController extends ActiveController
                     {
                         LinhaPedidoReparacao::deleteAll(['pedido_id' => $model->id]);
                         $model->delete();
-                        throw new ServerErrorHttpException("Erro ao guardar alterações");
+                        throw new ServerErrorHttpException("Erro ao guardar alterações - Itens");
                     }
                 }
             }
@@ -267,26 +266,28 @@ class PedidoreparacaoController extends ActiveController
                     {
                         LinhaPedidoReparacao::deleteAll(['pedido_id' => $model->id]);
                         $model->delete();
-                        throw new ServerErrorHttpException("Erro ao guardar alterações");
+                        throw new ServerErrorHttpException("Erro ao guardar alterações - Grupos");
                     }
                 }
             }
 
-            /*if($model->save())
-            {
+            $model->status = PedidoReparacao::STATUS_ABERTO;
 
+            if($model->save())
+            {
+                return PedidoReparacao::findOne($model->id); // Para ter a certeza que traz tudo
             }
             else
             {
                 LinhaPedidoReparacao::deleteAll(['pedido_id' => $model->id]);
                 $model->delete();
                 throw new ServerErrorHttpException("Erro ao guardar alterações");
-            }*/
-            return PedidoReparacao::findOne($model->id); // Para ter a certeza que traz tudo
+            }
         }
         else
         {
-            throw new ServerErrorHttpException("Erro ao guardar alterações");
+            return $model->errors;
+            //throw new ServerErrorHttpException();
         }
     }
 
