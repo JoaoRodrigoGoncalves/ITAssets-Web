@@ -284,11 +284,27 @@ class PedidoalocacaoController extends ActiveController
 
                         if(in_array(array_keys($authmgr->getRolesByUser(Yii::$app->user->id))[0], $allowedRoles))
                         {
-                            $model->status = PedidoAlocacao::STATUS_DEVOLVIDO;
-                            $model->dataFim = date_format(date_create(), "Y-m-d H:i:s");
-                            if(!$model->save())
+                            if($model->item != null)
                             {
-                                throw new ServerErrorHttpException("Erro ao guardar alterações");
+                                $continue = !$model->item->isInActivePedidoReparacao();
+                            }
+                            else
+                            {
+                                $continue = !$model->grupoItem->isInActivePedidoReparacao();
+                            }
+
+                            if($continue)
+                            {
+                                $model->status = PedidoAlocacao::STATUS_DEVOLVIDO;
+                                $model->dataFim = date_format(date_create(), "Y-m-d H:i:s");
+                                if(!$model->save())
+                                {
+                                    throw new ServerErrorHttpException("Erro ao guardar alterações");
+                                }
+                            }
+                            else
+                            {
+                                throw new ConflictHttpException("Não é possível devolver um pedido que está numa reparação ativa.");
                             }
                         }
                         else
