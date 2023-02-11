@@ -135,43 +135,48 @@ class GrupoitensController  extends ActiveController
 
                 $itens = $data['itens'];
 
-                for ($i = 0; $i < count($itens); $i++) {
+                if(count($itens) > 0)
+                {
+                    for ($i = 0; $i < count($itens); $i++) {
+                        $item = Item::findOne(['id' => $itens[$i]]);
 
-                    $item = Item::findOne(['id' => $itens[$i]]);
-
-                    //ve se o item existe na bd
-                    if ($item != null)
-                    {
-                        //validação se o item esta associado algo
-                        if (!$item->isInActiveItemsGroup() && !$item->isInActivePedidoAlocacao())
+                        //ve se o item existe na bd
+                        if ($item != null)
                         {
-                            $grupoitensItem = new GruposItens_Item();
-                            $grupoitensItem->grupoItens_id= $model->id;
-                            $grupoitensItem->item_id = $itens[$i];
-                            if(!$grupoitensItem->save())
+                            //validação se o item esta associado algo
+                            if (!$item->isInActiveItemsGroup() && !$item->isInActivePedidoAlocacao())
+                            {
+                                $grupoitensItem = new GruposItens_Item();
+                                $grupoitensItem->grupoItens_id= $model->id;
+                                $grupoitensItem->item_id = $itens[$i];
+                                if(!$grupoitensItem->save())
+                                {
+                                    GruposItens_Item::deleteAll(['grupoItens_id' => $model->id]);
+                                    $model->delete(); //elimina o grupo item que foi criado caso aconteça isto
+                                    throw new ServerErrorHttpException("Erro ao guardar alterações");
+                                }
+                            }
+                            else
                             {
                                 GruposItens_Item::deleteAll(['grupoItens_id' => $model->id]);
                                 $model->delete(); //elimina o grupo item que foi criado caso aconteça isto
-                                throw new ServerErrorHttpException("Erro ao guardar alterações");
+                                throw new BadRequestHttpException("O Item " . $item->nome . " já se encontra em utilização.");
                             }
                         }
                         else
                         {
                             GruposItens_Item::deleteAll(['grupoItens_id' => $model->id]);
-                            $model->delete(); //elimina o grupo item que foi criado caso aconteça isto
-                            throw new BadRequestHttpException("O Item " . $item->nome . " já se encontra em utilização.");
+                            $model->delete();
+                            throw new BadRequestHttpException("O Item não existe.");
                         }
                     }
-                    else
-                    {
-                        GruposItens_Item::deleteAll(['grupoItens_id' => $model->id]);
-                        $model->delete();
-                        throw new BadRequestHttpException("O Item não existe.");
-                    }
+
+                    return $model; // Criado com sucesso
                 }
-
-                return $model; // Criado com sucesso
-
+                else
+                {
+                    throw new UnprocessableEntityHttpException("É obrigatório indicar pelo menos um item.");
+                }
             }
             else
             {
